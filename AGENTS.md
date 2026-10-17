@@ -5,7 +5,7 @@ You are one of up to three coding agents on this repo, each run by a different p
 ## Before you edit
 
 1. `git fetch origin`, then read from `origin/main`. `main` is protected: every change, docs included, lands through a PR that passes CI. See `docs/COORDINATION.md`.
-2. Read, in order: `docs/CONTEXT.md`, `docs/STATUS.md`, `docs/DECISIONS.md`, then `planning/README.md`, `planning/ARCHITECTURE.md`, and your lane's file in `planning/`.
+2. Read, in order: `docs/CONTEXT.md`, `docs/STATUS.md`, `docs/DECISIONS.md`, the open notes in `docs/NOTES.md`, then `planning/README.md`, `planning/ARCHITECTURE.md`, and your lane's file in `planning/`.
 3. If `docs/CONTEXT.md` says the track is **undecided**, do not scaffold an app, add dependencies, or pick a stack. You may edit coordination docs only after the human chooses a track and product sentence.
 4. Claim work before coding. See `docs/COORDINATION.md`.
 
@@ -18,6 +18,10 @@ If those files disagree with the chat, the files win. Ask the human to change th
 - Put shared facts on `main` as soon as they exist, through a docs-only `ctx/...` PR: track, product sentence, stack, API keys location (names only), schema, and anything another agent would otherwise redo.
 - Append decisions to `docs/DECISIONS.md`. Do not rewrite another person’s entries.
 - Secrets go in `.env`, never in git. Document the variable name in `docs/CONTEXT.md`.
+
+## Notes between lanes
+
+When you find something another lane must act on (a mismatch with your API, a bug in their files, a surprise from a third-party API), add it to `docs/NOTES.md` instead of fixing their files. Check the open notes addressed to your lane at session start and before each PR; reply under the note, and move it to "Resolved" once it's fixed.
 
 ## When you stop
 

@@ -18,8 +18,9 @@ Every person, and every agent at the start of a session:
 2. [`docs/CONTEXT.md`](docs/CONTEXT.md) — what we are building
 3. [`docs/STATUS.md`](docs/STATUS.md) — who owns which lane and files
 4. [`docs/DECISIONS.md`](docs/DECISIONS.md) — choices that are already made
-5. [`planning/README.md`](planning/README.md), [`planning/ARCHITECTURE.md`](planning/ARCHITECTURE.md), then your lane file
-6. [`docs/TRACKS.md`](docs/TRACKS.md) — prize constraints, only when checking eligibility
+5. [`docs/NOTES.md`](docs/NOTES.md) — open notes between lanes; check the ones addressed to you
+6. [`planning/README.md`](planning/README.md), [`planning/ARCHITECTURE.md`](planning/ARCHITECTURE.md), then your lane file
+7. [`docs/TRACKS.md`](docs/TRACKS.md) — prize constraints, only when checking eligibility
 
 ## Three lanes
 
