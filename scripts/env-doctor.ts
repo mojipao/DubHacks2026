@@ -17,6 +17,11 @@
  * plain hash anyone could look up.
  *
  * Paste the SYNC line in the team chat. Never paste the `.env` itself.
+ *
+ * `--share` is the one exception, and it exists because the team distributes secrets by
+ * hand (see `planning/README.md`): it prints the shared block **only**, so re-pasting it
+ * can never carry someone else's `PHOTON_INBOUND=on` onto your machine and have two
+ * listeners answering every customer twice. It writes nothing to disk.
  */
 import { createHmac } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
@@ -107,6 +112,35 @@ const strict = process.argv.includes("--strict");
 if (!existsSync(root(".env"))) {
   console.error("\n✗ No .env at the repo root. Copy .env.example to .env and fill it in.\n");
   process.exit(1);
+}
+
+/**
+ * Prints the shared block for hand-distribution: every shared value that is set, and
+ * nothing that is per-machine. Secrets go to stdout here by design, so it is opt-in.
+ */
+if (process.argv.includes("--share")) {
+  const shared = SPECS.filter((spec) => spec.kind !== "per-machine");
+  const set = shared.filter((spec) => {
+    const value = env.get(spec.name);
+    return value !== undefined && value !== "";
+  });
+  const empty = shared.filter((spec) => !set.includes(spec));
+  const perMachine = SPECS.filter((spec) => spec.kind === "per-machine").map((spec) => spec.name);
+
+  console.log(`\n# Back of House shared env — ${new Date().toISOString().slice(0, 16).replace("T", " ")}`);
+  console.log(`# CONTAINS SECRETS. Send through the team DM or a password manager, never git, never a screenshot.`);
+  console.log(`# Paste these lines into your own .env, replacing any you already have.`);
+  console.log(`#`);
+  console.log(`# Deliberately NOT included, because these differ per machine — keep your own:`);
+  console.log(`#   ${perMachine.join(", ")}`);
+  if (empty.length > 0) {
+    console.log(`#`);
+    console.log(`# Still nobody's: ${empty.map((spec) => `${spec.name} (${spec.owner})`).join(", ")}`);
+  }
+  console.log("");
+  for (const spec of set) console.log(`${spec.name}=${env.get(spec.name)}`);
+  console.log("");
+  process.exit(0);
 }
 
 const problems: string[] = [];
