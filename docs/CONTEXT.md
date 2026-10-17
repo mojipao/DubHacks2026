@@ -89,6 +89,16 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - `supabase/migrations/0001_init.sql`: never edited after it is applied; add new migrations.
 - Server HTTP API in `planning/ARCHITECTURE.md`.
 
+## Server (lane 2, live on `main`)
+
+- Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
+- Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
+- `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
+- `/dev/winback-scan` returns `501` until `@boh/agents` exports `runWinbackScan`. **Lane 3:** each win-back draft must list the customer in `reads` (`{ table: "customers", id }`); the server uses the first one to pick the conversation.
+- Seed: `pnpm seed` (idempotent) and `pnpm reset --yes` (wipes proposals, messages, conversations, events, agent orders, and non-seed customers, then reseeds in ~6 s). `next_sun` resolves to the Sunday after `next_sat`.
+- Ingredient need = that day's committed units plus the requested items, against `on_hand + on_order`. This matches lane 3's `scripts/check-seed.ts`.
+- `inventory.received` is a new event type (simulated supplier delivery).
+
 ## Photon project (lane 3)
 
 - **Project ID:** `pho_prj_01m55nwa3zesk81kyc2gb9krkj`. Shareable team config, also in the private `.env` as `PHOTON_PROJECT_ID`; point every script at this project.
@@ -110,4 +120,8 @@ From the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2
 
 ## Photon events
 
-None yet. Lane 2 records the received-message event type and field paths here.
+- Socket.IO `delivery(event, { seq, replyExpected })`. `event` is the same JSON as the webhook event (`{ id, type, ... }`). The received-message type is **`message.received`** (from Photon's OpenAPI example).
+- Its full schema is only served to authenticated keys (`GET /v1/projects/{id}/webhooks/event-types/message.received/schema`), so the server reads the message from `event.data.message`, `event.data.object`, `event.data`, or `event.message`, whichever exists. Lane 3: after the ping, paste one real `message.received` event (handles redacted) here so lane 2 can pin the path.
+- Message fields used (typed in `@photon-ai/api` as `ReceivedImessageMessage`): `id`, `platform: "imessage"`, `status: "received"`, `sentBy.handle`, `sentBy.kind`, `receivedBy.id` (our agent user, used as `senderId` when replying), `space.id`, `space.kind`, `content.type: "text"`, `content.text`.
+- Send: `photon.projects.sendMessage({ path: { id }, headers: { "idempotency-key" }, body: { spaceId, senderId, content: { type: "text", format: "plain", text } } })`. Assign: `photon.projects.platforms.imessage.assignments.create({ path: { id }, headers: { idempotencyKey }, body: { handle } })` → `assignedPhoneNumber`.
+- `subscribe({ startSeq: 0 })` starts live with no replay; a positive cursor resumes after that seq. `pnpm reset` sets the cursor to 0.
