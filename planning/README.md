@@ -87,7 +87,7 @@ flowchart LR
 
 ## Clock
 
-Assumed hacking end: **Sunday 2026-10-18, 10:00 AM PT.** A human must confirm the real deadline and edit this table. Shift every milestone by the same amount if it differs.
+Hacking end: **Sunday 2026-10-18, 10:00 AM PT** (confirmed 2026-10-17). Shift every milestone by the same amount only if organizers change it.
 
 | Milestone | Target (PT) | Definition of done | Lanes |
 | --- | --- | --- | --- |
@@ -107,7 +107,7 @@ After `v-core` is tagged, any change that breaks the loop gets reverted, not deb
 | --- | --- | --- | --- |
 | 1 | aahil1218 | Frontend | `apps/web/**` |
 | 2 | mojipao | Backend | repo root config, `apps/server/**`, `packages/shared/**`, `supabase/**`, `scripts/seed.ts`, `scripts/reset.ts` |
-| 3 | unassigned | Agents | `packages/agents/**`, `data/**`, `scripts/generate-history.ts`, `scripts/photon-ping.ts`, `submission/**` |
+| 3 | ybassyiouni | Agents | `packages/agents/**`, `data/**`, `scripts/generate-history.ts`, `scripts/photon-ping.ts`, `scripts/check-seed.ts`, `submission/**` |
 
 Shared docs (`docs/**`, `planning/**`) are edited on `main` in small commits by whoever learns the fact.
 

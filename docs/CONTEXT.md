@@ -11,9 +11,10 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 - **Sponsored tracks:** Photon, VEYZL, SideShift
 - **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
 - **Plan:** `planning/README.md`, then your lane file in `planning/`.
-- **Assumed deadline:** Sunday 2026-10-18, 10:00 AM PT. Unconfirmed; a human must verify with organizers.
+- **Deadline:** Sunday 2026-10-18, 10:00 AM PT. Confirmed by Yousuf (2026-10-17).
+- **Product name:** stays **Back of House** (confirmed).
 
-Open human decisions: confirm the deadline, confirm multi-track entry rules, and decide whether to keep the name "Back of House."
+Open human decisions: confirm multi-track entry rules with organizers (one title track plus several sponsored). Who texts as **Maya** in the live demo is still TBD; Maya is a synthetic customer persona, not the shop line.
 
 ## Team
 
@@ -21,21 +22,37 @@ Open human decisions: confirm the deadline, confirm multi-track entry rules, and
 | --- | --- | --- |
 | 1 | Frontend | aahil1218 |
 | 2 | Backend | mojipao |
-| 3 | Agents | unassigned |
+| 3 | Agents | ybassyiouni (Yousuf Al-Bassyiouni) |
 
 Claims and handoffs live in `docs/STATUS.md`.
+
+## Demo phones and personas
+
+Roles only. Every real number lives in the private `.env`, never in git, because this repo becomes public at submission.
+
+| Role | Env var | Who |
+| --- | --- | --- |
+| Shop Photon line (inbound) | `PHOTON_AGENT_HANDLE` | The Photon-assigned business iMessage number customers text. Not Maya. |
+| Owner (approver) | `OWNER_HANDLE` | Yousuf. Approves in the control room or by iMessage (`Y` / `N` / `?`). |
+| Maya | `DEMO_PERSONAS` | Synthetic customer persona. A teammate texts *as Maya* into the shop line; which phone is TBD. |
+| Jun, Priya, judges | `DEMO_PERSONAS`, `/join` | Phone simulator or `/join`, as planned. |
+
+Lane 3 holds the filled `.env`; ask in team chat for the numbers.
 
 ## Constraints that already apply
 
 - Hackathon: DubHacks 2026. Side-track rules: `docs/TRACKS.md` and the [organizer page](https://dubhacks.notion.site/26-Sponsored-Side-Tracks-5e3ff32c1d7e834d9844812256c9fa06).
-- Synthetic data only. Real phone numbers live only in the private `.env` (`DEMO_PERSONAS`), never in git.
-- No secrets in git. Env var names are listed in `planning/ARCHITECTURE.md`.
+- Synthetic data only. Every real phone number, the owner's and the shop line included, lives only in the private `.env`, never in git or docs.
+- No secrets in git. API keys never appear in docs, only env var **names**. The names are listed in `planning/ARCHITECTURE.md`.
 - Photon: use only the **beta** docs (`https://photon.codes/docs/beta/`) and `@photon-ai/api`. Not `spectrum-ts`.
 - Only the demo host runs `PHOTON_INBOUND=on`.
+- When an agent's own session notes disagree with repo `planning/*` or this file, **the repo wins**. An agent may still make a small judgment call and append a `docs/DECISIONS.md` row when a note is clearly better (a seed-data bugfix, for example).
 
 ## Env vars
 
-The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env`.
+The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env` (gitignored).
+
+**Secrets status (2026-10-17):** `PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, and `OWNER_HANDLE` are set in lane 3's private `.env`. **Square**, **AI Gateway / `AGENT_MODEL`**, `PHOTON_TEST_SENDER`, and `DEMO_PERSONAS` are not filled yet. Do not invent values.
 
 ## Workspace (live on `main`)
 
@@ -62,9 +79,16 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - `supabase/migrations/0001_init.sql`: never edited after it is applied; add new migrations.
 - Server HTTP API in `planning/ARCHITECTURE.md`.
 
+## Photon project (lane 3)
+
+- **Project ID:** `pho_prj_01m55nwa3zesk81kyc2gb9krkj`. Shareable team config, also in the private `.env` as `PHOTON_PROJECT_ID`; point every script at this project.
+- **API key:** private `.env` only, as `PHOTON_API_KEY`. Never commit it or paste it into docs.
+- Shop line and owner handle: see "Demo phones and personas" above.
+- Photon 2.0 beta only: dashboard `app.beta.photon.codes`, API `https://api.photon.codes/v1`, package `@photon-ai/api`. The `photon.co/beta` URL in `planning/LANE-3-AGENTS.md` step 1 is wrong.
+
 ## Photon facts verified
 
-None yet. Lane 3 records the ping round trip result here.
+None yet. Lane 3 records the ping round trip result here after `scripts/photon-ping.ts`.
 
 ## Photon events
 
