@@ -42,7 +42,11 @@ function world(text: string, handle: string) {
 }
 
 describe.skipIf(!live)(`live model path (${live ? modelId() : "skipped"})`, () => {
-  it("returns structured output the schema accepts", async () => {
+  // Retried on purpose: the free-tier model intermittently fails a structured call, and
+  // the question here is whether it *can* return valid output, not whether every single
+  // call does. Production covers the flake with the deterministic fallback — which is
+  // itself a reason to run the demo on a paid model.
+  it("returns structured output the schema accepts", { retry: 2, timeout: 30_000 }, async () => {
     const w = world("hi", MAYA);
     const catalog = await w.port.getCatalog();
 
@@ -68,7 +72,7 @@ describe.skipIf(!live)(`live model path (${live ? modelId() : "skipped"})`, () =
     expect(result.value.pickupLocal).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
     // Saturday means the next one, never today.
     expect(result.value.pickupLocal?.slice(0, 10)).toBe("2026-10-24");
-  }, 30_000);
+  });
 
   it("only ever returns product ids from the catalog", async () => {
     const w = world("hi", MAYA);

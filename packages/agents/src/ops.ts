@@ -14,7 +14,7 @@ import type {
   ReorderPayload,
   RiskFlag,
 } from "@boh/shared";
-import { addDays, isOpenOn, weekdayOf } from "./time.ts";
+import { addDays, isOpenOn, isoWithOffset, weekdayOf } from "./time.ts";
 
 export interface PlannedDay {
   localDate: string;
@@ -220,7 +220,11 @@ export function planReorder(
       payload: {
         supplier,
         lines: lines.map((l) => ({ ingredientId: l.ingredientId, qty: l.qty })),
-        neededBy: `${neededByDate}T${openAt}`,
+        // A full instant with an offset. `ReorderPayload.neededBy` is IsoDateTime
+        // (offset required), so a bare "2026-10-23T07:00" makes the server's
+        // ProposalDraft.parse reject the whole reorder draft — and Jun's counteroffer
+        // then arrives with no butter reorder, which is the demo's second beat.
+        neededBy: isoWithOffset(`${neededByDate}T${openAt}`, business.timezone),
       },
       title: `Reorder ${lines.map((l) => l.name.toLowerCase()).join(" and ")} from ${supplier}`,
       summary: `${spoken} from ${supplier}, needed by ${neededByDate}.`,

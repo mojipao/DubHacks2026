@@ -45,6 +45,15 @@ import { z } from "zod";
 
 const DraftText = z.object({ text: z.string().min(1).max(600) });
 
+/**
+ * Notes only count as an allergy when they say so.
+ *
+ * Maya's note is "Usual is 2 almond croissants…", and matching allergen words against
+ * the whole note flagged her own favourite order as an allergy risk — wrong flag and a
+ * wrong sentence on the demo's happiest ticket.
+ */
+const ALLERGY_INDICATOR = /\b(allerg(y|ic|ies)|intoleran(t|ce)|can'?t have|cannot eat|celiac|coeliac|anaphyla)/i;
+
 /** Allergen keywords per product, for matching a customer's noted allergy to the menu. */
 const ALLERGEN_KEYWORDS: Record<string, readonly string[]> = {
   "almond-flour": ["nut", "almond", "tree nut"],
@@ -396,7 +405,11 @@ function resolveRequest(
     }
   }
 
-  if (reading.needsClarification) flags.add("needs_clarification");
+  // The model sets needsClarification when it cannot tell what was ordered. If resolve
+  // then recovered items anyway — most often from the customer's usual, which the model
+  // has no way to know — the question has been answered and asking it again reads as
+  // broken.
+  if (reading.needsClarification && items.length === 0) flags.add("needs_clarification");
 
   const units = items.reduce((sum, i) => sum + i.qty, 0);
   const totalCents = items.reduce((sum, i) => sum + (known.get(i.productId)?.priceCents ?? 0) * i.qty, 0);
@@ -422,12 +435,13 @@ function resolveRequest(
 
   if (totalCents > business.largeOrderCents) flags.add("large_order");
 
-  // An allergy on the customer's record or in the message, against what they asked for.
-  const noted = `${customer?.notes ?? ""} ${reading.mentionsAllergy ? "allergy mentioned in message" : ""}`.trim();
-  if (noted && items.length > 0) {
-    const risky = items.some((item) => allergenRisk(item.productId, noted));
-    if (risky || reading.mentionsAllergy) flags.add("allergy_mentioned");
-  } else if (reading.mentionsAllergy) {
+  // An allergy on the customer's record, or raised in this message, against what they
+  // asked for. The record only counts when it actually describes an allergy.
+  const notes = customer?.notes ?? "";
+  const recordHasAllergy = ALLERGY_INDICATOR.test(notes);
+  if (reading.mentionsAllergy) {
+    flags.add("allergy_mentioned");
+  } else if (recordHasAllergy && items.length > 0 && items.some((item) => allergenRisk(item.productId, notes))) {
     flags.add("allergy_mentioned");
   }
 
@@ -584,7 +598,7 @@ function factLines(args: {
       if (product) lines.push(`Menu price: ${product.name} is $${(product.priceCents / 100).toFixed(2)} each`);
     }
   }
-  if (reading.needsClarification && reading.clarifyingQuestion) {
+  if (reading.needsClarification && reading.clarifyingQuestion && resolved.items.length === 0) {
     lines.push(`Needs clarification: ${reading.clarifyingQuestion}`);
   }
   if (resolved.items.length > 0 && !plan) {
@@ -708,10 +722,10 @@ function rationale(
   if (flags.has("injection_suspected") || flags.has("off_policy")) {
     return "Off-policy ask: declined it and offered something from the menu. No order.";
   }
-  if (flags.has("needs_clarification")) return "Not enough detail to place an order; asked one question.";
   if (plan && plan.days.length === 1) {
     return truncate(`Capacity and stock both cover it for ${weekdayLabel(plan.days[0]?.localDate ?? "", business.timezone)}.`, 160);
   }
+  if (flags.has("needs_clarification")) return "Not enough detail to place an order; asked one question.";
   return truncate(`Read as ${reading.intent}; answered without creating an order.`, 160);
 }
 
