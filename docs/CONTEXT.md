@@ -42,7 +42,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - pnpm workspace with `apps/*` and `packages/*`. Install pnpm 10 (`npm i -g pnpm@10`; old corepack versions fail pnpm's signature check), then `pnpm install` at the root.
 - `@boh/shared` is live. Depend on it with `"@boh/shared": "workspace:*"`. Next.js needs `transpilePackages: ["@boh/shared"]`.
 - `@boh/server`: `pnpm --filter @boh/server dev`, then `curl localhost:8787/health`. Runs with no keys; missing integrations show as `unconfigured`.
-- `@boh/web` (lane 1): Next.js control room under `apps/web`. Vercel is connected to this GitHub repo; set Root Directory to `apps/web` and the web env vars from the architecture table.
+- `@boh/web` (lane 1): Next.js control room under `apps/web` on branch `lane/1` (Phase 1 mock UI). Run `pnpm --filter @boh/web dev`. Vercel is connected to this GitHub repo; set Root Directory to `apps/web` and the web env vars from the architecture table.
 - New packages add a `typecheck` script (and `build`/`lint`/`test` if they have them) so CI covers them.
 - CI runs on Node 24. Local Node 22 works for the server today; Photon's examples ask for 24, so the demo host should use 24.
 
