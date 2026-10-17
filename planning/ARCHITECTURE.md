@@ -16,7 +16,7 @@ flowchart LR
   end
 
   subgraph ControlPlane[Control plane: propose, approve, execute, log]
-    Server[apps/server<br/>Hono on Node 24]
+    Server[apps/server<br/>Hono on Node]
     Agents[packages/agents<br/>Intake, Ops, Guard]
   end
 
@@ -72,24 +72,71 @@ These rules are also the story we tell VEYZL and the judges: human oversight, no
 
 Package names: `@boh/web`, `@boh/server`, `@boh/shared`, `@boh/agents`.
 
-## Stack
+## Tech stack
 
-| Concern | Choice | Notes |
+One language end to end: **TypeScript on Node.js**, in a **pnpm monorepo**. A **Next.js** control room reads **Supabase Postgres** live through **Supabase Realtime**. A long-running **Hono** server owns every write and every side effect. It talks to **Photon 2.0 beta** for iMessage and **Square sandbox** for payments, and runs the agents, which are built on the **Vercel AI SDK**. There is no ORM, no separate job queue, no Docker, and no second language.
+
+Versions below were the latest published on 2026-10-17. Install with a caret range on the listed major. Do not change a major version during the hackathon without a `docs/DECISIONS.md` row, because three agents share one lockfile.
+
+### By layer
+
+| Layer | Choice | Version | Used in | Why this and not something else |
+| --- | --- | --- | --- | --- |
+| Runtime | Node.js | 24 (CI, demo host); 22 works for local server dev | everything | Photon's beta walkthroughs target Node 24 |
+| Package manager | pnpm workspaces | 10 | root | One lockfile, fast installs, `workspace:*` links. Install with `npm i -g pnpm@10`; older corepack versions fail pnpm's signature check |
+| Language | TypeScript, strict, ESM | 5.9 | everything | Shared types across all three lanes |
+| Run TS directly | tsx | 4 | server, scripts | No build step for the server or scripts |
+| Validation | zod | 4 | shared, server, agents | One schema for runtime checks, model structured output, and TS types |
+| Env loading | dotenv | 17 | server, scripts | Reads the root `.env` |
+| Database | Supabase Postgres | hosted, free tier | server (writes), web (reads) | Postgres with realtime and row level security included; MCP access for migrations |
+| DB client | `@supabase/supabase-js` | 2 | server (service role), web (anon key) | Same client for queries and realtime subscriptions |
+| Live updates | Supabase Realtime (`postgres_changes`) | included | web | No websocket server of our own |
+| HTTP server | Hono + `@hono/node-server` | 4 + 1.19 (installed) | server | Small, typed, raw-body access for webhook signatures |
+| Messaging | Photon 2.0 beta: `@photon-ai/api` | 0.5 | server, `scripts/photon-ping.ts` | Sponsor track requirement; real iMessage |
+| Photon events | `socket.io-client` | 4 | server | Photon's beta event stream is Socket.IO with replay cursors |
+| Payments | Square sandbox, `square` SDK | 46 | server, seed | Free sandbox, payment links, signed webhooks, no partner approval |
+| Agents | Vercel AI SDK (`ai`) | 7 | agents | Provider-agnostic structured output with zod; one model ID swap |
+| Model access | Vercel AI Gateway (`AI_GATEWAY_API_KEY`), or a direct provider package | gateway 4 | agents | One key, any model; record the model in `docs/DECISIONS.md` |
+| Web framework | Next.js App Router + React | 16 + 19 | web | Route handlers proxy owner actions, so the owner token stays server side |
+| Styling | Tailwind CSS | 4 | web | Fast iteration on the "pass" design tokens |
+| Components | shadcn/ui (CLI `shadcn`) | 4 | web | Accessible primitives (sheet, dialog, tooltip) we own and restyle |
+| Motion | `motion` | 14 | web | Ticket slide-in and stamp animations |
+| Icons | `lucide-react` | 1 | web | |
+| Dates | `date-fns` (+ `Intl.DateTimeFormat` for time zones) | 4 | web, server, agents | Business-timezone math without a heavy library |
+| QR codes | `qrcode.react` | 4 | web (`/join/qr`) | |
+| Unit tests | Vitest | 5 | agents, server | Fast, TS-native; CI runs any `test` script |
+| Lint | ESLint (Next.js default config) | bundled | web | Other packages rely on `tsc --strict` |
+| CI | GitHub Actions | | repo | `.github/workflows/ci.yml`; check named `build` |
+| Tunnel | ngrok, free static domain | | demo host | Square webhooks reach the laptop at a stable URL |
+| Hosting | Server on the demo laptop; web on localhost or Vercel | | | The server holds a long-lived Photon socket, so it is not a serverless function |
+
+### Dependencies per package
+
+| Package | Dependencies | Dev dependencies |
 | --- | --- | --- |
-| Runtime | Node.js 24+ | Photon's TypeScript client requires Node 24 or later |
-| Package manager | pnpm workspaces | `corepack enable` |
-| Language | TypeScript, ESM everywhere | `"type": "module"` |
-| Validation | zod v4 | Shared schemas in `packages/shared` |
-| Database | Supabase Postgres + Realtime | One shared project for the team |
-| Server | Hono + `@hono/node-server`, run with `tsx` | Long-running process (holds the Photon socket) |
-| Messaging | Photon 2.0 beta: `@photon-ai/api` + `socket.io-client` | Beta docs only: [photon.codes/docs/beta](https://photon.codes/docs/beta/index) |
-| Payments | Square sandbox, `square` Node SDK | Payment links + `payment.updated` webhook |
-| Agents | Vercel AI SDK (`ai`) | Model ID in `AGENT_MODEL`; recorded in `docs/DECISIONS.md` |
-| Frontend | Next.js App Router, Tailwind, shadcn/ui, `@supabase/supabase-js` | `transpilePackages: ["@boh/shared"]` |
-| Tunnel | ngrok with a free static domain | Only for Square webhooks to the demo host |
-| Web hosting | Vercel (optional, M4+) | The demo can run on localhost |
+| root | | `typescript`, `tsx`, `@types/node`, `dotenv` |
+| `@boh/shared` | `zod` | |
+| `@boh/server` | `@boh/shared`, `@boh/agents` (once merged), `hono`, `@hono/node-server`, `@supabase/supabase-js`, `@photon-ai/api`, `socket.io-client`, `square`, `zod`, `dotenv` | `vitest` |
+| `@boh/agents` | `@boh/shared`, `ai`, `zod` (+ `@ai-sdk/gateway` or a provider package if not using the string model ID) | `vitest`, `tsx` |
+| `@boh/web` | `@boh/shared`, `next`, `react`, `react-dom`, `@supabase/supabase-js`, `motion`, `lucide-react`, `date-fns`, `qrcode.react`, shadcn's generated deps (`class-variance-authority`, `clsx`, `tailwind-merge`, Radix packages) | `tailwindcss`, `eslint`, `@types/react` |
 
-Workspace packages are consumed as TypeScript source (`"exports": { ".": "./src/index.ts" }`). The server runs them through `tsx`. Next.js compiles them through `transpilePackages`.
+Every package defines `typecheck`. Add `test`, `lint`, and `build` scripts where they apply; CI picks them up automatically.
+
+### How the packages connect
+
+Workspace packages are consumed as TypeScript source (`"exports": { ".": "./src/index.ts" }`), with no build step between them. The server and scripts run them through `tsx`. Next.js compiles them through `transpilePackages: ["@boh/shared"]`. The web app never imports `@boh/agents` or the server; it talks to Supabase (reads) and to the server over HTTP (actions).
+
+### Not in the stack
+
+These are deliberately out of scope. Agents should not add them:
+
+- `spectrum-ts` and the stable Photon docs (a different product from Photon 2.0 beta)
+- Twilio, Instagram, Gmail, or Toast integrations
+- An ORM (Prisma, Drizzle) or a second database
+- Express, Fastify, tRPC, GraphQL
+- Redux or another global state library (React context and a reducer are enough; Zustand is acceptable if needed)
+- Docker or Kubernetes
+- Python or any second language
 
 ### Photon 2.0 beta facts that shape the design
 

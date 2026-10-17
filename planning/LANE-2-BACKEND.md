@@ -48,7 +48,7 @@ Your human does these. If your human hasn't done one yet, set your row to `block
 
 Work on `lane/2`, open a PR as soon as this phase passes, and merge it. The other lanes are waiting on it.
 
-1. Check `node -v` reports 24 or later, then run `corepack enable`.
+1. Check `node -v` (24 for CI and the demo host; 22 works for local server work), then install pnpm 10 with `npm i -g pnpm@10`. Done: Phase 0 landed in PR #1.
 2. Create the root files:
 
    `pnpm-workspace.yaml`
@@ -75,7 +75,7 @@ Work on `lane/2`, open a PR as soon as this phase passes, and merge it. The othe
      "devDependencies": { "tsx": "^4", "typescript": "^5", "dotenv": "^16", "@types/node": "^24" }
    }
    ```
-   Pin `packageManager` to the exact pnpm version `corepack` installs (`pnpm -v`).
+   Pin `packageManager` to the exact pnpm version installed (`pnpm -v`).
 
    `tsconfig.base.json`: `target` ES2023, `module` and `moduleResolution` `Bundler`, `strict` true, `noUncheckedIndexedAccess` true, `skipLibCheck` true, `resolveJsonModule` true, `verbatimModuleSyntax` true.
 3. Create `packages/shared` with `package.json` (`"name": "@boh/shared"`, `"type": "module"`, `"exports": { ".": "./src/index.ts" }`, dependency `zod@^4`, script `"typecheck": "tsc --noEmit"`), a `tsconfig.json` extending the base, and `src/index.ts` copied verbatim from `planning/ARCHITECTURE.md`.

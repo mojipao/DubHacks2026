@@ -218,7 +218,7 @@ If the customer's last fulfilled order is more than `welcomeBackAfterDays` ago a
 
 ### Model wrapper
 
-`model.ts` wraps the AI SDK. Check the installed `ai` version: v5 uses `generateObject`; v6 prefers `generateText` with `output: Output.object(...)`. Use the zod schemas for structured output. Set a 6-second timeout per call with `abortSignal`, temperature low (0.2) for understand and moderate (0.6) for draft, and one retry on a parse failure. Read `AGENT_MODEL` from the environment and pass it as the model ID string through the AI Gateway (or a provider instance if the team chose a direct key).
+`model.ts` wraps the AI SDK (`ai` v7, per the stack table). The structured-output API has changed across majors (v5 `generateObject`, v6 `generateText` with `output: Output.object(...)`), so read the [AI SDK docs](https://ai-sdk.dev/docs) for the installed version before writing this file, and record the call shape you used in `docs/CONTEXT.md`. Use the zod schemas for structured output. Set a 6-second timeout per call with `abortSignal`, temperature low (0.2) for understand and moderate (0.6) for draft, and one retry on a parse failure. Read `AGENT_MODEL` from the environment and pass it as the model ID string through the AI Gateway (or a provider instance if the team chose a direct key).
 
 ## Phase 3: evals and the dev loop (from Sat 4:00 PM, continuous)
 
