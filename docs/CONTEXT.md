@@ -94,6 +94,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
+- **Leads:** `GET /contacts` (stage, money, counts per conversation; `?format=csv` to export) and `GET /contacts/:conversationId/messages` (paged full history). Owner token.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
 - `/dev/winback-scan` returns `501` until `@boh/agents` exports `runWinbackScan`. **Lane 3:** each win-back draft must list the customer in `reads` (`{ table: "customers", id }`); the server uses the first one to pick the conversation.
