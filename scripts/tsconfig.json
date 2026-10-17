@@ -7,6 +7,7 @@
   "include": [
     "seed.ts",
     "reset.ts",
+    "demo-host.ts",
     "generate-history.ts",
     "check-seed.ts",
     "photon-ping.ts",
