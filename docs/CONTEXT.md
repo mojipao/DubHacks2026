@@ -48,8 +48,10 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 
 ## Supabase
 
-- A new dedicated project is being created. **Do not use project `ykvvrkvihmfvcesbnker`**; it belongs to an unrelated project.
-- `supabase/migrations/0001_init.sql` is written but not applied yet. Lane 2 applies it to the new project and records the project URL here.
+- Project ref `jxluhvblusfzrlktqaee`, URL `https://jxluhvblusfzrlktqaee.supabase.co` (owned by mojipao). Use this for `SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_URL`. Keys come in the shared `.env`.
+- **Do not use project `ykvvrkvihmfvcesbnker`**; it belongs to an unrelated project.
+- The Supabase GitHub integration is not used. Lane 2 applies migrations through the Supabase MCP.
+- `supabase/migrations/0001_init.sql` is written but not applied yet. Lane 2 will note here when it is.
 
 ## Interfaces other agents must not break
 
