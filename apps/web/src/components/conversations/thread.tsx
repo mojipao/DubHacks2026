@@ -6,7 +6,14 @@ import { useStore } from "@/lib/data/store";
 import { maskHandle, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function ConversationThread() {
+export function ConversationThread({
+  standalone = false,
+  onOpenTicket,
+}: {
+  /** Fills its own panel (the Conversations tab) instead of sitting under the list. */
+  standalone?: boolean;
+  onOpenTicket?: (conversationId: string) => void;
+} = {}) {
   const { state } = useStore();
   const reduce = useReducedMotion();
   const conv = state.conversations.find(
@@ -22,23 +29,34 @@ export function ConversationThread() {
 
   if (!conv) {
     return (
-      <div className="flex h-40 items-center justify-center border-t border-line px-4 text-[13px] text-muted">
+      <div className={cn("flex h-40 flex-1 items-center justify-center px-4 text-[13px] text-muted", !standalone && "border-t border-line")}>
         Select a conversation
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col border-t border-line">
-      <div className="px-4 pt-3 pb-2">
-        <div className="text-[14px] font-medium text-fg">
-          {conv.customerName ?? maskHandle(conv.handle)}
+    <div className={cn("flex min-h-0 flex-1 flex-col", !standalone && "border-t border-line")}>
+      <div className={cn("flex items-center justify-between gap-3 px-4 pt-3 pb-2", standalone && "border-b border-line px-6 pt-4 pb-3")}>
+        <div className="min-w-0">
+          <div className={cn("truncate font-medium text-fg", standalone ? "font-serif text-[24px] leading-tight font-normal" : "text-[14px]")}>
+            {conv.role === "owner" ? "Owner" : (conv.customerName ?? maskHandle(conv.handle))}
+          </div>
+          <div className="font-mono text-[11px] text-muted">
+            {maskHandle(conv.handle)} · {conv.platform}
+          </div>
         </div>
-        <div className="font-mono text-[11px] text-muted">
-          {maskHandle(conv.handle)} · {conv.platform}
-        </div>
+        {onOpenTicket && conv.hasPendingTicket && (
+          <button
+            type="button"
+            onClick={() => onOpenTicket(conv.id)}
+            className="shrink-0 rounded-full bg-amber px-3.5 py-1.5 text-[13px] font-semibold text-ink hover:bg-amber/90"
+          >
+            Ticket waiting · open in the pass
+          </button>
+        )}
       </div>
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3">
+      <div className={cn("min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3", standalone && "mx-auto w-full max-w-3xl px-6 py-5")}>
         {messages.map((m) => (
           <motion.div
             key={m.id}

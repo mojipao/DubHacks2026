@@ -165,14 +165,14 @@ export function PassRail({
             <EmptyPass onOpenSim={onOpenSim} />
           ) : null
         ) : (
-          <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2 min-[1400px]:grid-cols-3">
             <AnimatePresence mode="popLayout" initial={false}>
               {visibleGroups.map(({ parent, children }) => (
                 <motion.div
                   key={parent.id}
                   layout={!reduce}
                   exit={reduce ? { opacity: 0 } : { x: 160, opacity: 0, transition: { duration: 0.35 } }}
-                  className={children.length > 0 ? "xl:col-span-2" : undefined}
+                  className={children.length > 0 ? "lg:col-span-2" : undefined}
                 >
                   {children.length > 0 ? (
                     <div className="relative">
