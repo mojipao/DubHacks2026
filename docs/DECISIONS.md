@@ -4,6 +4,9 @@ Append-only. Newest row at the top. Do not edit someone else’s row; add a new 
 
 | Date | Lane | Decision | Why |
 | --- | --- | --- | --- |
+| 2026-10-17 | 2 | `/health` masks `OWNER_HANDLE`; the phone simulator sends `"handle": "owner"` to `/dev/inbound` instead of reading the number from `/health`. Supersedes that detail in `planning/LANE-1-FRONTEND.md`. | `/health` is unauthenticated and reachable through the ngrok tunnel; a teammate's real number must not be. |
+| 2026-10-17 | 2 | Seed `next_sun` is the Sunday after `next_sat`, not the first Sunday after today. | Seeding on a Saturday otherwise puts Sunday's committed load on tomorrow and splits the demo weekend. |
+| 2026-10-17 | 2 | Paid-and-deduct uses a conditional update (`awaiting_payment` → `paid`) instead of a Postgres function; only the first delivery deducts stock. | Same idempotency without a migration; lane 2 has no Supabase MCP in this session. |
 | 2026-10-17 | 3 | Real phone numbers, the owner's and the shop Photon line included, stay in the private `.env`. `docs/CONTEXT.md` names roles and env vars only. The Photon project id may live in CONTEXT as shareable config; `PHOTON_API_KEY` never does. | The repo link goes public at submission, and git history is permanent. A project id is useless without the key; a personal cell is not. |
 | 2026-10-17 | 3 | ybassyiouni (Yousuf Al-Bassyiouni) owns lane 3 (agents), starting with Phase 0 Photon ping. Photon project id `pho_prj_01m55nwa3zesk81kyc2gb9krkj`; key configured locally. Square and AI Gateway keys are still missing. | Lane 3 was unclaimed; Phase 0 is the project's biggest external risk and needs the Photon account owner. |
 | 2026-10-17 | 3 | Submission deadline confirmed: Sunday 2026-10-18, 10:00 AM PT. The product name stays "Back of House". | Closes the two open human questions that `docs/CONTEXT.md` was holding. |
