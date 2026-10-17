@@ -1,0 +1,13 @@
+---
+description: Keep three concurrent agents from editing the same work
+alwaysApply: true
+---
+
+# Concurrent lanes
+
+- Work product code only on your lane branch: `lane/1`, `lane/2`, or `lane/3`.
+- One person per lane, recorded in `docs/STATUS.md`. Do not edit another lane's row.
+- Claim files in `docs/STATUS.md`, push that commit to `main`, then code. Full steps: `docs/COORDINATION.md`.
+- Do not edit files an `active` claim already lists.
+- Do not force-push `main` or another person's branch.
+- Before you stop, set your claim to `idle` or `blocked` and write a one-line handoff.

@@ -1,0 +1,19 @@
+---
+description: Read shared DubHacks context before editing
+alwaysApply: true
+---
+
+# Shared context
+
+This repo is used by three people at once. Chat is not shared. Git is.
+
+At the start of every session, pull `main`, then read in order:
+
+1. `AGENTS.md`
+2. `docs/CONTEXT.md`
+3. `docs/STATUS.md`
+4. `docs/DECISIONS.md`
+
+If `docs/CONTEXT.md` lists the track as undecided, do not add application code or dependencies.
+
+When you learn a fact another agent needs (track, product, stack, schema, env var names), update `docs/CONTEXT.md` and append `docs/DECISIONS.md` on `main` before continuing feature work.
