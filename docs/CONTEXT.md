@@ -19,8 +19,8 @@ Open human decisions: confirm the deadline, confirm multi-track entry rules, and
 
 | Lane | Role | GitHub user |
 | --- | --- | --- |
-| 1 | Frontend | mojipao |
-| 2 | Backend | unassigned |
+| 1 | Frontend | unassigned |
+| 2 | Backend | mojipao |
 | 3 | Agents | unassigned |
 
 Claims and handoffs live in `docs/STATUS.md`.

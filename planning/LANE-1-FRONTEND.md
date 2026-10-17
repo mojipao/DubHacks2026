@@ -11,7 +11,7 @@ Read `planning/README.md` and `planning/ARCHITECTURE.md` first. You read data st
 | `apps/web/**` | `packages/shared/**` (additive edits allowed with a `docs/DECISIONS.md` row) | `apps/server/**` |
 | | `apps/server/**`, `packages/agents/**`, `data/seed/**` | `packages/agents/**`, `data/**`, `supabase/**`, root config |
 
-Claim `apps/web/**` in `docs/STATUS.md` before writing code. Lane 1 belongs to **mojipao**.
+Claim `apps/web/**` in `docs/STATUS.md` before writing code. The owner of lane 1 is whoever is listed in `docs/STATUS.md`.
 
 ## What you need from others, and when
 

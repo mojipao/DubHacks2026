@@ -6,8 +6,8 @@ Status values: `idle`, `active`, `blocked`.
 
 | Lane | GitHub user | Branch | Status | Task | Files | Handoff |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | mojipao | `lane/1` | idle | Frontend | — | Plan ready: `planning/LANE-1-FRONTEND.md`. Start at Setup. |
-| 2 | unassigned | `lane/2` | idle | Backend | — | Claim this lane, then start `planning/LANE-2-BACKEND.md` Phase 0. Everyone waits on the scaffold. |
+| 1 | unassigned | `lane/1` | idle | Frontend | — | Released by mojipao (moved to lane 2). Claim this lane, then start `planning/LANE-1-FRONTEND.md` Setup. The empty `lane/1` branch on origin can be reused. |
+| 2 | mojipao | `lane/2` | active | Backend: scaffold, CI, contracts, database | `package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `tsconfig.base.json`, `.env.example`, `.gitignore`, `.github/**`, `apps/server/**`, `packages/shared/**`, `supabase/**`, `scripts/seed.ts`, `scripts/reset.ts` | Phase 0 in progress. Supabase: waiting on a new dedicated project (do not use project `ykvvrkvihmfvcesbnker`). |
 | 3 | unassigned | `lane/3` | idle | Agents | — | Claim this lane, then start `planning/LANE-3-AGENTS.md` Phase 0 (Photon ping). |
 
 ## How to read this

@@ -4,6 +4,9 @@ Append-only. Newest row at the top. Do not edit someone else’s row; add a new 
 
 | Date | Lane | Decision | Why |
 | --- | --- | --- | --- |
+| 2026-10-17 | 2 | CI on every PR and push to `main` (install, typecheck, build); `main` should require it to pass before merging. | Three agents merging in parallel; a broken `main` blocks everyone. |
+| 2026-10-17 | 2 | The team uses a new dedicated Supabase project. Never touch project `ykvvrkvihmfvcesbnker`; it belongs to another project of mojipao's. | That project was the MCP default and is unrelated to the hackathon. |
+| 2026-10-17 | 2 | mojipao moves from lane 1 to lane 2 (backend). Lane 1 is open. | Owner choice. Supersedes the lane 1 assignment in the roles row below. |
 | 2026-10-17 | 1 | Seed orders use dates relative to seed time; reseed before the demo. | Static dates go stale overnight and break "41 days ago" and this weekend's capacity numbers. |
 | 2026-10-17 | 1 | Owner can approve by iMessage (`Y code` / `N code` / `?`) only from `OWNER_HANDLE`; win-back scan is a post-`v-core` stretch. Both depend on unprompted sends, which Phase 0 tests. | Puts the agent where the owner already is; shared Photon lines can't start conversations. |
 | 2026-10-17 | 1 | Contract changes before any code: `ReplyPayload.orders` (0 to 2, one shared payment link), drafts carry `rationale` and `reads`, new flags `counteroffer`, `off_policy`, `abusive`, `off_topic`, products get `aliases`. | Needed for the counteroffer and the ticket-face trace. |
