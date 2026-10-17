@@ -81,11 +81,15 @@ async function findOrCreateCustomer(handle: string, name?: string): Promise<stri
 }
 
 async function upsertConversation(input: InboundMessage, handle: string, customerId: string | null, isOwner: boolean) {
-  const query = db().from("conversations").select("id, customer_id");
+  const query = db().from("conversations").select("id, customer_id, role");
   const { data: existing } = input.photon
     ? await query.eq("photon_space_id", input.photon.spaceId).maybeSingle()
     : await query.eq("handle", handle).eq("platform", input.platform).maybeSingle();
   if (existing) {
+    // The same phone can have texted as a customer before OWNER_HANDLE pointed at it; owner replies need this space.
+    if (isOwner && existing.role !== "owner") {
+      await db().from("conversations").update({ role: "owner", customer_id: null }).eq("id", existing.id);
+    }
     if (!existing.customer_id && customerId) {
       await db().from("conversations").update({ customer_id: customerId }).eq("id", existing.id);
     }
