@@ -51,7 +51,10 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Project ref `jxluhvblusfzrlktqaee`, URL `https://jxluhvblusfzrlktqaee.supabase.co` (owned by mojipao). Use this for `SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_URL`. Keys come in the shared `.env`.
 - **Do not use project `ykvvrkvihmfvcesbnker`**; it belongs to an unrelated project.
 - The Supabase GitHub integration is not used. Lane 2 applies migrations through the Supabase MCP.
-- `supabase/migrations/0001_init.sql` is written but not applied yet. Lane 2 will note here when it is.
+- `supabase/migrations/0001_init.sql` is **applied** (Supabase migration name `init`). All tables are empty until the seed runs.
+- Verified: the browser key (`NEXT_PUBLIC_SUPABASE_ANON_KEY`, the `sb_publishable_...` key) can read every app table, sees nothing in `photon_cursor`, and cannot write anything.
+- Typed rows: `import type { Database, Tables } from "@boh/shared"` (generated into `packages/shared/src/db.ts`; regenerate after each migration). Server client: `db()` in `apps/server/src/db.ts`.
+- Lane 2 applies migrations through the `supabase-boh` MCP entry (pinned to this project). Others: never apply schema changes; ask lane 2.
 
 ## Interfaces other agents must not break
 

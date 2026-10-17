@@ -2,58 +2,78 @@
 
 Three people, three agents, one `main`. Chat history is not shared. Git is.
 
+Repo: [mojipao/DubHacks2026](https://github.com/mojipao/DubHacks2026). If your clone still points at `aahil1218/DubHacks2026`, run `git remote set-url origin https://github.com/mojipao/DubHacks2026.git`.
+
+## `main` is protected
+
+`main` only accepts changes through pull requests whose `build` check passed. Direct pushes from non-admins are rejected, and force-pushes and deletions are blocked for everyone. This applies to docs and claims too, so every change, even a one-line status update, is a small PR that auto-merges when CI is green.
+
 ## Branches
 
-- `main` holds the latest shared context and integrated code.
-- `lane/1`, `lane/2`, and `lane/3` are the only feature branches. One GitHub user per lane, recorded in `docs/STATUS.md`.
+- `main`: the latest shared context and integrated code.
+- `lane/1`, `lane/2`, `lane/3`: product code. One GitHub user per lane, recorded in `docs/STATUS.md`.
+- `ctx/lane-N-<topic>`: short-lived branches for docs-only changes (claims, handoffs, context, decisions). Create from `origin/main`, merge, delete.
 
 Create your lane once, from an up-to-date `main`:
 
 ```bash
-git checkout main
-git pull --rebase origin main
-git checkout -b lane/1   # or lane/2, lane/3
+git fetch origin
+git checkout -b lane/1 origin/main   # or lane/2, lane/3
 git push -u origin HEAD
 ```
 
+## Context and claim changes (docs only)
+
+Use this for `docs/STATUS.md`, `docs/CONTEXT.md`, `docs/DECISIONS.md`, and `planning/**`:
+
+```bash
+git fetch origin
+git checkout -b ctx/lane-N-<topic> origin/main
+# edit only docs files
+git commit -am "claim: lane/N short-task-name"     # or a plain description
+git push -u origin HEAD
+gh pr create --base main --title "ctx: lane/N <topic>" --body "<one line>"
+gh pr merge --auto --merge --delete-branch
+```
+
+Auto-merge lands it as soon as `build` passes, usually within a minute. Then return to your lane: `git checkout lane/N && git fetch origin && git merge origin/main`.
+
 ## Claim before you code
 
-1. Pull `main`.
-2. Read `docs/STATUS.md`. If your files overlap a claim whose status is `active`, pick different files or wait.
-3. On `main`, fill your lane row: task, files you will touch, status `active`, and a one-line summary.
-4. Commit only `docs/STATUS.md` with message `claim: lane/N short-task-name` and push.
-5. If the push is rejected, `git pull --rebase origin main`, re-read `STATUS.md`, and claim again only if the overlap is gone.
-6. Check out your lane, merge `origin/main` into it, then edit the claimed files.
+1. `git fetch origin` and read `origin/main:docs/STATUS.md`. If your files overlap a claim whose status is `active`, pick different files or wait.
+2. Fill your lane row (task, files, status `active`, one-line summary) and land it with the docs-only flow above.
+3. If the PR has a merge conflict in `docs/STATUS.md`, someone claimed at the same time. Close it, re-read `STATUS.md`, and claim again only if the overlap is gone.
+4. Once the claim is on `main`, merge `origin/main` into your lane and edit the claimed files.
 
-Release the claim the same way when you stop: set status to `idle` or `blocked`, say what the next agent needs, commit, push.
+Release the claim the same way when you stop: set status to `idle` or `blocked`, say what the next agent needs, and land it with the docs-only flow.
 
 ## What goes where
 
 | Change | Branch | When |
 | --- | --- | --- |
-| Track, product, stack, schema, env var names | `main` (`docs/CONTEXT.md`, `docs/DECISIONS.md`) | Immediately, before more feature work |
-| Claim and handoff | `main` (`docs/STATUS.md`) | Before starting and before stopping |
-| Product code | Your `lane/N` | After the claim is on `origin/main` |
+| Track, product, stack, schema, env var names | `ctx/...` PR → `main` | Immediately, before more feature work |
+| Claim and handoff | `ctx/...` PR → `main` | Before starting and before stopping |
+| Product code | Your `lane/N` | After the claim is on `main` |
 | Finished slice | PR from `lane/N` into `main` | When it runs and does not rewrite other lanes |
 
 ## CI and merging
 
-`.github/workflows/ci.yml` runs on every PR and every push to `main`: `pnpm install --frozen-lockfile`, typecheck, lint, test, and build (each where a package defines it), then boots the server and checks `/health`. The check is named `build`.
+`.github/workflows/ci.yml` runs on every PR and every push to `main`: `pnpm install --frozen-lockfile`, typecheck, lint, test, and build (each where a package defines it), then boots the server and checks `/health`. The check is named `build`, and `main` requires it.
 
-Never merge a PR whose `build` check is not green:
+Lane PRs:
 
 ```bash
+git fetch origin && git merge origin/main      # bring main in first
+pnpm install && pnpm -r typecheck              # commit pnpm-lock.yaml if it changed
+git push
 gh pr create --base main --head lane/N --title "..." --body "..."
-gh pr checks --watch            # wait for build: pass
-gh pr merge --merge             # merge commit, not squash
+gh pr merge --auto --merge                     # merge commit, not squash; waits for build
 ```
 
-If CI fails, fix it on your lane and push again. Do not merge with a red or pending check, and do not disable the workflow. Before pushing, run `pnpm install` (commit `pnpm-lock.yaml` if it changed) and `pnpm -r typecheck` locally, because CI uses the frozen lockfile.
-
-Required-check enforcement on `main` needs a repo admin (aahil1218), and GitHub only allows branch protection on private repos with a paid plan or a public repo. Until it is enabled, this rule is the enforcement.
+If CI fails, fix it on your lane and push again; auto-merge resumes. Do not disable the workflow, remove the required check, or ask an admin to bypass it.
 
 ## Conflicts
 
-Bring `main` into your lane with `git fetch origin && git merge origin/main`. Do not rebase a lane branch that is already pushed. Merge lane PRs into `main` with a merge commit, not a squash. If a context file conflicts, keep both decision bullets and both claim notes, then leave the lane row accurate.
+Bring `main` into your lane with `git fetch origin && git merge origin/main`. Do not rebase a lane branch that is already pushed. If a context file conflicts, keep both decision rows and both claim notes, then leave the lane row accurate.
 
-Do not force-push. A rejected push means someone else wrote context you have not read yet.
+Do not force-push. A rejected push or a conflicted PR means someone else wrote context you have not read yet.
