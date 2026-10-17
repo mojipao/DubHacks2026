@@ -6,7 +6,7 @@ Status values: `idle`, `active`, `blocked`.
 
 | Lane | GitHub user | Branch | Status | Task | Files | Handoff |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | unassigned | `lane/1` | idle | — | — | Claim this lane by putting your GitHub login here, then push. |
+| 1 | mojipao | `lane/1` | idle | — | — | Lane claimed. No task yet. |
 | 2 | unassigned | `lane/2` | idle | — | — | Claim this lane by putting your GitHub login here, then push. |
 | 3 | unassigned | `lane/3` | idle | — | — | Claim this lane by putting your GitHub login here, then push. |
 
