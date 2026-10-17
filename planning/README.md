@@ -132,7 +132,7 @@ Do these in parallel, right now. Each lane doc repeats its own items with exact 
 | Lane 2 human | Create the Supabase project; create a Square developer account and sandbox app | Supabase URL, publishable/anon key, service role key; Square sandbox access token and location ID |
 | Lane 3 human | Create the Photon 2.0 beta project at [photon.co/beta](https://photon.co/beta) and an API key; choose and fund an LLM key; sign up for VEYZL | `PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `AI_GATEWAY_API_KEY` (or provider key) |
 | Lane 1 human | Collect each teammate's iMessage phone number for demo personas; set up Vercel; confirm the submission deadline and multi-track rules with organizers | Phone numbers into the shared `.env` only, never into git |
-| Repo owner (aahil1218) | Make sure all three GitHub users are collaborators; install the VEYZL GitHub app on this repo when lane 3 asks | Access |
+| Repo owner (mojipao) | Make sure all three GitHub users are collaborators; install the VEYZL GitHub app on this repo when lane 3 asks | Access |
 
 Secrets travel as one shared `.env` file through a private channel (team DM or password manager), never through git or a screenshot. `.env.example` in the repo lists the names.
 

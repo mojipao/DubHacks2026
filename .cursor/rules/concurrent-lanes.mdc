@@ -7,7 +7,8 @@ alwaysApply: true
 
 - Work product code only on your lane branch: `lane/1`, `lane/2`, or `lane/3`.
 - One person per lane, recorded in `docs/STATUS.md`. Do not edit another lane's row.
-- Claim files in `docs/STATUS.md`, push that commit to `main`, then code. Full steps: `docs/COORDINATION.md`.
+- `main` is protected: nothing is pushed to it directly. Docs and claims go through a `ctx/lane-N-<topic>` PR with `gh pr merge --auto --merge`; code goes through a `lane/N` PR. Both need the `build` check green.
+- Claim files in `docs/STATUS.md` via a `ctx/...` PR, wait for it to merge, then code. Full steps: `docs/COORDINATION.md`.
 - Do not edit files an `active` claim already lists.
 - Do not force-push `main` or another person's branch.
 - Before you stop, set your claim to `idle` or `blocked` and write a one-line handoff.
