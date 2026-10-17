@@ -26,8 +26,10 @@ Claim these in `docs/STATUS.md` before writing code: set your GitHub login on la
 | `SupabaseDataPort` implementing `AgentDataPort` | Lane 3 integration | Sat 5:30 PM |
 | Seeded database from `data/seed` | Everyone | Sat 6:00 PM |
 | Photon inbound and outbound live on the demo host | Demo | Sat 9:00 PM |
-| Square payment link and webhook | Demo | Sat 10:00 PM (M3) |
-| `POST /join` | Lane 1's join page | Sun 1:00 AM |
+| Square payment link (one link for a two-order counteroffer) and webhook; linked-set approve | `v-core` | Sat 10:30 PM (M3 at 11:00) |
+| `POST /join` | Lane 1's join page, judge Guard demo | Sat 10:30 PM |
+| Owner channel: notifications and Y/N commands over iMessage | Demo | Sun 1:00 AM |
+| `POST /dev/winback-scan` | Stretch | Sun 3:00 AM |
 
 ## Human-only steps
 
@@ -38,6 +40,7 @@ Your human does these. If your human hasn't done one yet, set your row to `block
 3. **ngrok.** Create a free ngrok account and claim the free static domain. Install with `brew install ngrok` and run `ngrok config add-authtoken <token>`. The webhook URL becomes `https://<your-static-domain>/webhooks/square`. Put it in `SQUARE_WEBHOOK_URL`.
 4. **Square webhook subscription.** In the Square app → Webhooks → Subscriptions (sandbox), add the URL from step 3, subscribe to `payment.created` and `payment.updated`, and copy the signature key into `SQUARE_WEBHOOK_SIGNATURE_KEY`.
 5. **Owner token.** Run `openssl rand -hex 24` and set `OWNER_TOKEN` in the shared `.env`.
+5a. **Owner phone.** Decide which teammate plays the bakery owner during the demo (not the one playing Maya). Put their iMessage phone in `OWNER_HANDLE`, assign that handle to the Photon line, and have them text the line "start" once so the owner conversation exists.
 6. **Distribute the `.env`** privately to the other two humans once steps 1, 2, and 5 are done. Update it when Photon and LLM keys arrive from lane 3's human.
 7. **Demo host.** By default your laptop is the demo host. Keep it plugged in, disable sleep during the demo (`caffeinate -dimsu` in a terminal), and bring it to judging.
 
@@ -95,10 +98,11 @@ Work on `lane/2`, open a PR as soon as this phase passes, and merge it. The othe
 
 Goal: lane 1 can click Approve on a ticket that came from a simulated text.
 
-1. `src/agents.ts`: if `AGENT_MODE=stub` or `@boh/agents` is not installed yet, use a stub `handleInbound` that returns one reply draft: "Hi! This is Larch & Rye. We got your message and will confirm shortly." with one evidence row and confidence 0.5. Once lane 3 merges, import `handleInbound` from `@boh/agents` when `AGENT_MODE=live`.
+1. `src/agents.ts`: if `AGENT_MODE=stub` or `@boh/agents` is not installed yet, use a stub `handleInbound` that returns one reply draft: "Hi! This is Larch & Rye. We got your message and will confirm shortly." with one evidence row, a `rationale`, a `reads` entry for the message, confidence 0.5, and two `ctx.trace` calls so lane 1 can build the trace UI against real events from day one. Once lane 3 merges, import `handleInbound` from `@boh/agents` when `AGENT_MODE=live`.
 2. `src/inbound.ts`: implement the inbound handling steps from the architecture doc as one function `ingestInbound({ platform, handle, name?, text, photon? })`. Include the 4-second debounce keyed by conversation ID and supersede older pending replies.
 3. `src/routes/dev.ts`: `POST /dev/inbound` calling `ingestInbound` with platform `simulated`.
-4. `src/execute.ts`: approve and reject exactly as specified, with the atomic `pending → executing` update. Implement the Photon and Square calls as interfaces (`Messenger`, `Payments`) with a no-op simulated implementation now; real ones come in phases 4 and 5.
+4. `src/execute.ts`: approve and reject exactly as specified, with the atomic `pending → executing` update, `payload.orders` as an array (0 to 2 orders, one shared payment link), and `includeLinked` executing the parent then its children. Implement the Photon and Square calls as interfaces (`Messenger`, `Payments`) with a no-op simulated implementation now; real ones come in phases 4 and 5.
+4a. When storing drafts, persist `rationale` and `reads`, write `guard.flagged` if the flags include `injection_suspected`, `off_policy`, or `abusive`, and turn each `ctx.trace` call into an `agent.step` event with the trace detail shape from the architecture doc.
 5. `src/routes/proposals.ts`: the approve and reject routes, owner-token middleware, CORS for `http://localhost:3000`.
 6. Test: `curl -X POST localhost:8787/dev/inbound -H "x-owner-token: $OWNER_TOKEN" -H 'content-type: application/json' -d '{"handle":"+12065550100","text":"usual for saturday?"}'`, wait 5 seconds, confirm a `pending` proposal exists, approve it, and confirm an outbound `messages` row and the events.
 7. Open a PR and merge. Update your `docs/STATUS.md` handoff: "Stub loop live: run `pnpm --filter @boh/server dev`, POST /dev/inbound."
@@ -110,13 +114,17 @@ Goal: lane 1 can click Approve on a ticket that came from a simulated text.
    - `getDayLoad(date)`: sum `order_items.qty` by product for orders whose `pickup_at` falls on that local date and whose status is `awaiting_payment` or `paid`, joined to `products.daily_capacity`.
    - `getIngredientNeeds(items, date)`: compute recipe totals for the day's committed units plus the requested items, compare to `on_hand + on_order`, and return every ingredient involved.
    - `getOrderHistory`: newest first, default limit 12, with product names joined.
+   - `getCatalog`: include `aliases`.
+   - `getNextOpenDays(date, count)`: the next `count` local dates after `date` where `BusinessProfile.hours` is not null, each with its `getDayLoad`.
+   - `getRegularCadences()`: per customer with at least `winbackMinOrders` orders, the median gap in days between consecutive orders, days since the last one, and whether an `imessage` conversation with a `photon_space_id` exists.
 2. Load `data/seed/business.json` (lane 3 owns it) into a `BusinessProfile` at startup. Until it exists, use a hard-coded default with the same shape.
 3. `scripts/seed.ts`, which must be idempotent:
    - Read `data/seed/{products,ingredients,recipes,customers,orders}.json`.
    - Apply `DEMO_PERSONAS` from the env: for each `key=+1...`, set that customer's `handle` and `is_demo_persona = true`. Real phone numbers never appear in `data/`.
    - Upsert products, ingredients, recipe lines, customers.
    - For each customer, create or reuse a Square sandbox customer (Customers API, store `square_customer_id`). Use the customer's UUID as the idempotency key.
-   - Insert historical orders and items with `source = 'history'`, `status = 'fulfilled'`, preserving their timestamps. Square cannot backdate orders, so history lives only in our database. The UI labels it "synthetic history."
+   - Orders in `orders.json` use **relative dates** (see lane 3's `SeedOrder` type). Resolve them at seed time in the business timezone: `history` orders get `pickup_at` = `daysAgo` days before today at `pickupLocalTime`, `created_at` one day earlier, `status = 'fulfilled'`. `upcoming` orders get `pickup_at` on the first Saturday or Sunday strictly after today at `pickupLocalTime`, `status = 'paid'`. All use `source = 'history'` and totals from product prices. Square cannot backdate orders, so history lives only in our database. The UI labels it "synthetic history."
+   - Because dates are relative, reseed shortly before the demo (`pnpm reset --yes`) so "41 days ago" and "this Saturday's load" are exactly as scripted.
 4. `scripts/reset.ts`: delete agent-created orders, all proposals, messages, conversations, and events, then reset `ingredients.on_hand` and `on_order` from the seed and set the Photon cursor to the current latest `seq` (not 0, or old messages replay). Require `--yes`. Write a `demo.reset` event.
 5. Run the seed against the shared project and announce it in `docs/STATUS.md`.
 
@@ -171,35 +179,44 @@ Lane 3's human proves the Photon round trip in the first hour with `scripts/phot
    ```
 8. Test with a teammate's phone: assign the handle, text the assigned number, see the proposal, approve it, and receive the reply on the phone.
 
-## Phase 5: Square (by Sat 10:00 PM, M3)
+## Phase 5: Square and the linked set (by Sat 10:30 PM, for M3 at 11:00)
 
 1. Install `square` (the current SDK exports `SquareClient` and `SquareEnvironment`; confirm on npm). Create the client with the sandbox environment and token.
-2. `src/square/payments.ts`, the real `Payments.createLink(order)`:
-   - Call the Checkout API's create payment link with `idempotency_key` `proposal:<id>`, and an `order` containing `location_id`, `customer_id` (the Square customer ID), and ad hoc `line_items` (`name`, `quantity` as a string, `base_price_money` in cents USD) built from our server-side prices. Add a discount line when the perk applies.
+2. `src/square/payments.ts`, the real `Payments.createLink(orders)`, which takes **all** orders from one reply (two for a counteroffer):
+   - Call the Checkout API's create payment link with `idempotency_key` `proposal:<id>`, and an `order` containing `location_id`, `customer_id` (the Square customer ID), and ad hoc `line_items` (`name` including the pickup day, such as "Butter croissant · Sat 10/24 9:00", `quantity` as a string, `base_price_money` in cents USD) built from our server-side prices. Add a discount line when the perk applies.
    - Pass the customer's phone in `pre_populated_data.buyer_phone_number` when it is a phone number.
-   - Store `payment_link.id`, `payment_link.url`, and `payment_link.order_id`.
+   - Store `payment_link.id`, `payment_link.url`, and `payment_link.order_id` on every one of our order rows from that reply.
    - Reference: [Create payment link](https://developer.squareup.com/reference/square/checkout-api/create-payment-link).
 3. `POST /webhooks/square`:
    - Read the raw body with `await c.req.text()` before parsing.
    - Verify with the SDK's webhook signature helper using `SQUARE_WEBHOOK_SIGNATURE_KEY` and `SQUARE_WEBHOOK_URL`. Reject with `403` on mismatch.
-   - Handle `payment.updated` (and `payment.created`) where the payment status is `COMPLETED`. Find our order by `order_id` → `square_order_id`. Do the paid and inventory updates in one transaction (a Postgres function via `rpc` is easiest), and make it idempotent: no-op if already `paid`.
+   - Handle `payment.updated` (and `payment.created`) where the payment status is `COMPLETED`. Find every order of ours with that `order_id` as `square_order_id` (a counteroffer has two). Do the paid and inventory updates for all of them in one transaction (a Postgres function via `rpc` is easiest), and make it idempotent: no-op if already `paid`.
    - Return `200` within a second; do the work after responding if needed.
 4. Run `ngrok http --url=<static-domain> 8787` on the demo host. Pay a link with Square's sandbox test card (see Square's sandbox testing docs for current values) and watch the order flip to paid.
+5. `POST /dev/mark-paid/:orderId`: runs the same paid-and-deduct transaction without Square, for the demo fallback.
+6. Reorder execution as specified (`on_order` increments), so the linked butter reorder works in `v-core`.
+7. `v-core` test, run with lanes 1 and 3: simulated Jun sends "Can I get 4 dozen croissants for Saturday 9am?", two linked tickets appear, "Approve both" executes the reply (one link, two orders) and the reorder (`on_order` rises), paying the link marks both orders paid.
 
 ## Phase 6: depth (by Sun 3:00 AM, M4)
 
 Do these in order; stop when time runs out.
 
-1. Reorder execution as specified (`on_order` increments). Simulate delivery with `POST /dev/receive-delivery` that moves `on_order` into `on_hand`, if lane 1 wants a button for it.
-2. `POST /dev/ops-scan`: call lane 3's `runOpsScan` if exported, and store the drafts.
-3. Perk validation: the server, not the agent, decides eligibility from the customer's last fulfilled order date.
+1. **Owner channel** (see "Owner channel" in the architecture doc). This is the first post-`v-core` item.
+   - Route inbound from `OWNER_HANDLE` to `src/owner.ts`, never to agents. Hard equality on the normalized handle.
+   - On each new top-level proposal, assign a `short_code` and, if `OWNER_NOTIFY=on` and the owner conversation exists, send the templated notification. Write it with server data only: customer name, what was asked, what the plan is, server-computed totals, the code. Set `owner_notified_at` and write `owner.notified`.
+   - Parse `Y [code]`, `N [code]`, `?`. Call the same executor with `includeLinked: true` and actor `owner`, with `data.via = "imessage"`. Confirm back in the owner conversation. Write `owner.command`.
+   - If Phase 0 showed unprompted sends don't arrive, skip the push notification and support pull mode only (`?` lists pending).
+   - Test: a customer handle texting "Y K7" must go to Intake, not approve. Put that test's output in the PR.
+2. Simulate delivery with `POST /dev/receive-delivery` that moves `on_order` into `on_hand`, if lane 1 wants a button for it.
+3. `POST /dev/winback-scan`: call lane 3's `runWinbackScan` if exported and store the drafts. On approval, send through Photon only if the customer has an `imessage` conversation; otherwise execute on the `simulated` platform.
+3a. Perk validation: the server, not the agent, decides eligibility from the customer's last fulfilled order date.
 4. Hardening: wrap each executor step in try/catch with precise `error` messages; make sure a failure in Photon after Square succeeded marks the proposal `failed` but keeps the order and link, so a retry can resend without double-charging (reuse the stored link).
 5. `POST /proposals/:id/retry` for `failed` proposals, reusing stored side-effect IDs.
 6. Address VEYZL findings that land in your paths. Keep the before-and-after in the PR description.
 
 ## Phase 7: demo readiness (by Sun 7:00 AM)
 
-1. `pnpm reset --yes` works in under 10 seconds and leaves the three demo personas, their histories, and full stock.
+1. `pnpm reset --yes` works in under 10 seconds and leaves the four demo personas, their histories, this weekend's committed load, and seed stock.
 2. A one-command demo host start: `pnpm demo:host` runs the server with `PHOTON_INBOUND=on` and prints the ngrok URL check. Document it in `docs/CONTEXT.md`.
 3. Health check `GET /health` reports Photon socket connected, Square mode, and agent mode, so the team can check everything is live at a glance.
 4. Rehearse the failure paths in `planning/DEMO-AND-SUBMISSION.md` with the team.
@@ -211,6 +228,8 @@ Do these in order; stop when time runs out.
 - Double-approve the same proposal concurrently; exactly one execution happens.
 - Send the same Photon delivery twice; exactly one message row.
 - Replay a Square webhook; the order is paid once and ingredients deducted once.
+- A counteroffer reply creates two orders and exactly one payment link; paying marks both paid.
+- A message from any handle other than `OWNER_HANDLE` never executes an owner command.
 
 ## Risks and fallbacks
 

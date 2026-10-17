@@ -4,7 +4,8 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 
 ## Status
 
-- **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders; nothing goes out until the owner approves it in a live control room.
+- **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders, including counteroffers when a request can't be met as asked; nothing goes out until the owner approves it in the live control room or by replying to an iMessage.
+- **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-croissant counteroffer with a linked butter reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
 - **Demo business:** Larch & Rye, a fictional Seattle bakery. All data synthetic.
 - **Title track:** Cook Smarter
 - **Sponsored tracks:** Photon, VEYZL, SideShift

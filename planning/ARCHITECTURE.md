@@ -127,6 +127,7 @@ create table products (
   category text not null check (category in ('pastry','bread','drink','cake','savory')),
   price_cents integer not null check (price_cents >= 0),
   daily_capacity integer not null check (daily_capacity >= 0),
+  aliases text[] not null default '{}',
   active boolean not null default true
 );
 
@@ -152,6 +153,7 @@ create table conversations (
   id uuid primary key default gen_random_uuid(),
   customer_id uuid references customers(id),
   handle text not null,
+  role text not null default 'customer' check (role in ('customer','owner')),
   platform text not null default 'imessage' check (platform in ('imessage','simulated')),
   photon_space_id text unique,
   photon_agent_user_id text,
@@ -181,10 +183,14 @@ create table proposals (
   parent_proposal_id uuid references proposals(id),
   title text not null,
   summary text not null,
+  rationale text not null default '',
   payload jsonb not null,
   evidence jsonb not null default '[]',
+  reads jsonb not null default '[]',
   confidence numeric check (confidence between 0 and 1),
   risk_flags text[] not null default '{}',
+  short_code text unique,
+  owner_notified_at timestamptz,
   created_at timestamptz not null default now(),
   decided_at timestamptz,
   executed_at timestamptz,
@@ -200,13 +206,14 @@ create table orders (
   pickup_at timestamptz not null,
   total_cents integer not null,
   discount_cents integer not null default 0,
-  square_order_id text unique,
+  square_order_id text,             -- shared by both orders of a split counteroffer
   square_payment_link_id text,
   payment_url text,
   proposal_id uuid references proposals(id),
   created_at timestamptz not null default now(),
   paid_at timestamptz
 );
+create index orders_square_idx on orders (square_order_id);
 create index orders_customer_idx on orders (customer_id, created_at desc);
 create index orders_pickup_idx on orders (pickup_at);
 
@@ -271,7 +278,40 @@ The browser can read every table, including synthetic customer names and handles
 | `payment_link.created` | server | order |
 | `inventory.deducted` / `inventory.reordered` | server | ingredient |
 | `customer.joined` | server | customer |
+| `guard.flagged` | server, when a stored draft carries `injection_suspected`, `off_policy`, or `abusive` | proposal; `data.flags` |
+| `owner.notified` | server | proposal; the iMessage sent to the owner |
+| `owner.command` | server | proposal; `data.command` (`approve`, `reject`, `list`, `unknown`) |
+| `winback.scanned` | server | none; `data.candidates` |
 | `demo.reset` | reset script | none |
+
+### Trace detail shape
+
+Every `agent.step` event's `data` has this shape so the UI can render it without special cases:
+
+```json
+{
+  "agent": "intake | ops | guard | winback",
+  "step": "context | understand | resolve | ops_check | plan | draft | guard",
+  "ms": 812,
+  "summary": "One line a judge can read, e.g. 'Saturday butter croissants: 12 of 36 committed'",
+  "reads": [{ "table": "orders", "id": "..." }],
+  "flags": ["capacity_shortfall"]
+}
+```
+
+### Friction saved
+
+The control room shows a running tally computed from `events` since the last `demo.reset`. Nothing is hard-coded.
+
+| Counter | Counted from |
+| --- | --- |
+| Messages handled | `proposal.executed` where the proposal kind is `reply` |
+| Orders created | `order.created` |
+| Reorders drafted | `proposal.created` where kind is `reorder` |
+| Guard catches | `guard.flagged` |
+| Owner minutes saved (est.) | Sum over executed proposals of `BusinessProfile.minutesSaved[...]` by type: reply, order, counteroffer (a reply with two orders or the `counteroffer` flag), reorder, guard catch |
+
+The estimate's assumptions are visible in a tooltip, for example "≈3 min per reply typed by hand, ≈6 min to check stock and call a supplier."
 
 ## Shared contracts
 
@@ -301,12 +341,18 @@ export const RiskFlag = z.enum([
   "injection_suspected",
   "needs_clarification",
   "complaint",
+  "counteroffer",        // the agent could not do what was asked and proposes an alternative
+  "off_policy",          // asked for free items, unlisted discounts, other customers' data, etc.
+  "abusive",
+  "off_topic",
 ]);
+
+export const RecordRef = z.object({ table: z.string(), id: z.string() });
 
 export const Evidence = z.object({
   label: z.string(),
   value: z.string(),
-  source: z.object({ table: z.string(), id: z.string() }).optional(),
+  source: RecordRef.optional(),
 });
 
 export const OrderLine = z.object({ productId: ProductId, qty: z.number().int().positive() });
@@ -317,9 +363,10 @@ export const OrderDraft = z.object({
   perk: z.enum(["welcome_back_10"]).optional(),
 });
 
+/** Zero orders: a plain reply. One: a normal order. Two: a split counteroffer (e.g. 24 Saturday + 24 Sunday) behind one payment link. */
 export const ReplyPayload = z.object({
   text: z.string().min(1).max(1200),
-  order: OrderDraft.optional(),
+  orders: z.array(OrderDraft).max(2).default([]),
 });
 
 export const ReorderPayload = z.object({
@@ -332,7 +379,11 @@ const DraftBase = z.object({
   agent: AgentName,
   title: z.string().max(80),
   summary: z.string().max(280),
+  /** One line: why the agent proposes this, in plain words. Shown on the ticket face. */
+  rationale: z.string().max(160),
   evidence: z.array(Evidence),
+  /** Every record the agent read to build this draft. The ticket shows counts by table. */
+  reads: z.array(RecordRef),
   confidence: z.number().min(0).max(1),
   riskFlags: z.array(RiskFlag),
   /** Index of another draft in the same returned array that this one depends on. */
@@ -344,6 +395,7 @@ export const ProposalDraft = z.discriminatedUnion("kind", [
   DraftBase.extend({ kind: z.literal("reorder"), payload: ReorderPayload }),
 ]);
 
+export type RecordRef = z.infer<typeof RecordRef>;
 export type Evidence = z.infer<typeof Evidence>;
 export type RiskFlag = z.infer<typeof RiskFlag>;
 export type OrderLine = z.infer<typeof OrderLine>;
@@ -365,8 +417,20 @@ export interface BusinessProfile {
   cateringLeadHours: number;
   largeOrderCents: number;          // flag above this total
   welcomeBackAfterDays: number;     // perk eligibility
+  winbackOverdueFactor: number;     // flag a regular when days since last order > factor × their median interval
+  winbackMinOrders: number;         // only customers with at least this many orders count as regulars
+  minutesSaved: { reply: number; order: number; counteroffer: number; reorder: number; guardCatch: number };
   voice: string;                    // one paragraph describing how the shop texts
   poweredByFooter: string;          // appended by the server to every customer reply
+}
+
+export interface RegularCadence {
+  customerId: string;
+  name: string;
+  orderCount: number;
+  medianIntervalDays: number;
+  daysSinceLast: number;
+  hasOpenConversation: boolean;     // a Photon space exists, so the line can message them
 }
 
 export interface CustomerProfile {
@@ -392,6 +456,7 @@ export interface Product {
   category: "pastry" | "bread" | "drink" | "cake" | "savory";
   priceCents: number;
   dailyCapacity: number;
+  aliases: string[];   // "croissants" → butter croissant
   active: boolean;
 }
 
@@ -429,6 +494,9 @@ export interface AgentDataPort {
   getDayLoad(localDate: string): Promise<DayLoad[]>;   // "YYYY-MM-DD" in business timezone
   getIngredientNeeds(items: OrderLine[], localDate: string): Promise<IngredientNeed[]>;
   getPendingProposals(conversationId: string): Promise<{ id: string; kind: "reply" | "reorder"; summary: string }[]>;
+  /** Next open days after localDate with remaining capacity per product, for counteroffers. */
+  getNextOpenDays(localDate: string, count: number): Promise<{ localDate: string; load: DayLoad[] }[]>;
+  getRegularCadences(): Promise<RegularCadence[]>;
 }
 
 export interface AgentContext {
@@ -443,9 +511,11 @@ export interface InboundInput { conversationId: string; messageId: string }
 
 /** Implemented by packages/agents. */
 export type HandleInbound = (input: InboundInput, ctx: AgentContext) => Promise<ProposalDraft[]>;
+/** Proactive: proposes win-back replies for overdue regulars. Optional export. */
+export type RunWinbackScan = (ctx: AgentContext) => Promise<ProposalDraft[]>;
 ```
 
-`packages/agents` exports `handleInbound: HandleInbound`. Until lane 3 merges, lane 2 uses a stub that returns one canned reply draft.
+`packages/agents` exports `handleInbound: HandleInbound` and, once built, `runWinbackScan: RunWinbackScan`. Until lane 3 merges, lane 2 uses a stub that returns one canned reply draft.
 
 ## Server HTTP API
 
@@ -456,11 +526,12 @@ Owner routes require the header `x-owner-token: $OWNER_TOKEN`. The browser never
 | Method and path | Auth | Body | Result |
 | --- | --- | --- | --- |
 | `GET /health` | none | | `{ ok, photonInbound, squareMode, agentMode }` |
-| `POST /proposals/:id/approve` | owner | `{ editedText?: string }` | `{ proposal }` after execution, or `409` if not pending |
-| `POST /proposals/:id/reject` | owner | `{ reason?: string }` | `{ proposal }` |
+| `POST /proposals/:id/approve` | owner | `{ editedText?: string, includeLinked?: boolean }` | `{ proposals }` after execution (the parent plus linked children when `includeLinked`), or `409` if not pending |
+| `POST /proposals/:id/reject` | owner | `{ reason?: string, includeLinked?: boolean }` | `{ proposals }` |
 | `POST /join` | none, rate-limited | `{ name: string, handle: string }` | `{ agentNumber: string, customerId: string }` |
 | `POST /dev/inbound` | owner | `{ handle: string, name?: string, text: string }` | `{ conversationId, messageId }`; uses platform `simulated` |
-| `POST /dev/ops-scan` | owner | `{}` | `{ created: number }` (stretch) |
+| `POST /dev/winback-scan` | owner | `{}` | `{ created: number }`; also the "Morning scan" button in the UI |
+| `POST /dev/mark-paid/:orderId` | owner | `{}` | Demo fallback when the Square webhook can't reach the laptop |
 | `POST /webhooks/square` | Square signature | raw Square event | `200` quickly |
 
 ### Approve and execute
@@ -479,7 +550,7 @@ For a `reply` proposal the server, in order:
 
 1. Moves `pending` → `executing` with `update ... where status = 'pending' returning *`. If no row comes back, return `409`.
 2. If `editedText` is present, validate it the same way as `ReplyPayload.text` and use it.
-3. If `payload.order` exists: price each line from `products`, apply the perk only if the customer is eligible under `BusinessProfile.welcomeBackAfterDays`, insert `orders` (status `awaiting_payment`, source `agent`) and `order_items`, then create a Square payment link with idempotency key `proposal:<id>` and store `square_order_id`, `square_payment_link_id`, `payment_url`.
+3. If `payload.orders` is not empty: for each order, price each line from `products` and insert `orders` (status `awaiting_payment`, source `agent`) and `order_items`. Apply the perk only if the customer is eligible under `BusinessProfile.welcomeBackAfterDays`, once per reply. Then create **one** Square payment link covering every order, with line item names that include the pickup day ("Butter croissant · Sat 10/24 9:00"), idempotency key `proposal:<id>`, and store the same `square_order_id`, `square_payment_link_id`, and `payment_url` on each order row. Paying the link is the customer's acceptance of a counteroffer.
 4. Replace `{{payment_link}}` in the text with the URL. If the token is missing and a link exists, append the URL on a new line. Append `BusinessProfile.poweredByFooter`.
 5. Send: platform `imessage` goes through `photon.projects.sendMessage` with idempotency key `proposal:<id>`. Platform `simulated` skips Photon.
 6. Insert the outbound `messages` row, mark the proposal `executed`, and write events for each step.
@@ -487,10 +558,30 @@ For a `reply` proposal the server, in order:
 
 For a `reorder` proposal: add each line's quantity to `ingredients.on_order`, write `inventory.reordered`, mark `executed`. Supplier delivery is simulated and says so in the UI.
 
+With `includeLinked`, the server executes the parent first, then each child whose `parent_proposal_id` is the parent, and reports each result separately. A failed child does not undo the parent.
+
+### Owner channel (approve from the phone)
+
+The owner can run the shop from iMessage as well as from the control room. Both paths call the same executor.
+
+- `OWNER_HANDLE` in the env is the owner's iMessage phone. Inbound messages from exactly that handle go to `conversations.role = 'owner'` and the **owner command parser, never to the Intake agent**. A customer texting "Y" never approves anything; this check is a hard equality on the handle.
+- The owner must text the line once (for example "start") before notifications can work, because a shared Photon line cannot send the first message. The server stores that space as the owner conversation.
+- When a new top-level proposal is stored and `OWNER_NOTIFY=on`, the server assigns a two-character `short_code` (alphabet without `0 O 1 I L`) and sends a templated, server-written notification. No model writes it, and prices come from the server:
+
+  > Jun Park asked for 48 croissants Sat 9am. Saturday only has 24 left, so I drafted 24 Sat + 24 Sun ($216.00) and a butter reorder from Rainier Dairy ($38.40). Reply Y K7 to approve all, N K7 to skip.
+
+- Commands (case-insensitive, code optional): `Y [code]` approves with `includeLinked`, `N [code]` rejects with `includeLinked`, and `?` lists pending proposals with codes. Without a code the command applies to the most recently notified pending proposal. Unknown text returns a one-line help message.
+- After executing, the server confirms in the owner conversation ("Sent to Jun ✓ · butter reorder placed").
+- If a later unprompted send to the owner space fails (Phase 0 tests this), fall back to pull mode: the owner texts `?` and gets the pending list as a reply.
+
+### Proactive win-back
+
+`POST /dev/winback-scan` (and the UI's "Morning scan" button) calls `runWinbackScan`. It finds regulars whose days since last order exceed `winbackOverdueFactor` × their median interval, and drafts one personal reply with their usual order and the welcome-back perk. On approval, the message goes out only if the customer `hasOpenConversation`. Otherwise the proposal executes on the `simulated` platform and the ticket says "would send when Photon allows outbound." Shared lines cannot start conversations.
+
 ### Inbound handling
 
 1. Receive (Photon delivery, or `POST /dev/inbound`). Ignore anything that is not an inbound human message on the configured platform, and anything the agent itself sent.
-2. Upsert `conversations` by `photon_space_id` (or by handle for simulated). Link `customer_id` by handle.
+2. Upsert `conversations` by `photon_space_id` (or by handle for simulated). Link `customer_id` by handle. If the handle equals `OWNER_HANDLE`, set `role = 'owner'`, store the message, run the owner command parser, and stop here.
 3. Insert `messages` with `photon_message_id` (unique, so redeliveries are no-ops). Write `message.received`.
 4. Mark any `pending` reply proposals in this conversation `superseded`.
 5. Debounce 4 seconds per conversation so a burst of texts becomes one agent run, then call `handleInbound`.
@@ -499,7 +590,7 @@ For a `reorder` proposal: add each line's quantity to `ingredients.on_order`, wr
 
 ### Square webhook
 
-Verify the `x-square-hmacsha256-signature` header against the raw body and the exact notification URL using the Square SDK's webhook helper. On `payment.updated` with status `COMPLETED`: find the order by `square_order_id`, mark it `paid` with `paid_at` (idempotent), subtract recipe ingredient amounts from `ingredients.on_hand`, write `order.paid` and `inventory.deducted`.
+Verify the `x-square-hmacsha256-signature` header against the raw body and the exact notification URL using the Square SDK's webhook helper. On `payment.updated` with status `COMPLETED`: find every order with that `square_order_id` (two for a split counteroffer), mark each `paid` with `paid_at` (idempotent), subtract recipe ingredient amounts from `ingredients.on_hand`, write `order.paid` and `inventory.deducted`.
 
 ## Environment variables
 
@@ -515,6 +606,8 @@ One `.env` at the repo root, shared privately. `apps/web/.env.local` holds the w
 | `PHOTON_API_KEY` | server, ping script | Project key with `project:read`, `project:write`, `platforms:read`, `platforms:write` |
 | `PHOTON_INBOUND` | server | `on` only on the demo host; `off` everywhere else |
 | `PHOTON_TEST_SENDER` | ping script | A teammate's iMessage phone, E.164 |
+| `OWNER_HANDLE` | server | The teammate playing the owner, E.164. Only this handle can approve by text. |
+| `OWNER_NOTIFY` | server | `on` to send owner notifications (demo host only) |
 | `SQUARE_ACCESS_TOKEN` | server, scripts | Sandbox token |
 | `SQUARE_LOCATION_ID` | server, scripts | Sandbox location |
 | `SQUARE_ENVIRONMENT` | server, scripts | `sandbox` |
