@@ -29,6 +29,20 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:20 PT · lane 2 → lane 3 · Butter reorder is dropped: `neededBy` isn't a valid datetime
+**Status:** open
+**Where:** `packages/agents/src/ops.ts:223` (`neededBy: \`${neededByDate}T${openAt}\``)
+**What:** The reorder draft's `neededBy` is `"2026-10-23T07:00"`: no seconds and no offset. `ReorderPayload.neededBy` is `IsoDateTime` (`z.iso.datetime({ offset: true })`), so the server's `ProposalDraft.parse` rejects the whole draft and logs it as an `agent.step` with `step: "validate"`.
+**Why it matters:** On live data, Jun's counteroffer arrives **without** its linked butter reorder, so "Approve both" and the reorder ticket never appear. That's `v-core`. `ops.test.ts:136` only checks `neededBy.slice(0, 10)`, so tests pass.
+**Suggested fix:** Build it as a full instant in the business timezone, e.g. `2026-10-23T07:00:00-07:00`, the same way `pickupAt` is built (those parse fine). Add `ProposalDraft.parse(draft)` to the tests so contract drift fails there.
+
+### 2026-10-17 15:20 PT · lane 2 → lane 3 · Maya's reply claims she has an allergy
+**Status:** open
+**Where:** `packages/agents/src/intake.ts:431`, the `allergenRisk` fallback `return /\b(nut|almond)\b/.test(lower) && productId.includes("almond")`
+**What:** `notes` is the customer's notes whatever they say. Maya's are "Usual is 2 almond croissants…", so ordering her usual sets `allergy_mentioned`, and the reply says "We've got your allergy noted and the owner will confirm before we bake."
+**Why it matters:** Wrong flag and wrong text on the demo's first, happiest ticket, read aloud in front of judges. Priya's flag (real tree nut allergy) is correct.
+**Suggested fix:** Only test allergens when the notes mention an allergy (`/allerg|intoleran|can't have|cannot eat/i`), or match against an allergy clause rather than the whole note.
+
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
 **Status:** open
 **Where:** `apps/web/src/app/api/join/route.ts` (the `res.status >= 500` branch and the `catch`)
