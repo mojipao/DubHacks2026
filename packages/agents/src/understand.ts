@@ -53,11 +53,26 @@ export interface UnderstandInput {
   recentTurns?: { direction: "inbound" | "outbound"; body: string }[];
 }
 
-export async function understand(
-  input: UnderstandInput,
-  budget: Budget,
-): Promise<{ value: Understanding; source: "model" | "deterministic"; ms: number }> {
-  if (isModelConfigured() && !budget.exhausted()) {
+export interface UnderstandResult {
+  value: Understanding;
+  source: "model" | "deterministic";
+  ms: number;
+  /**
+   * Why the model path was not used. Silently degrading to keywords is the dangerous
+   * failure: everything keeps working, a little worse, and nobody notices for hours.
+   * The trace carries this so a dashboard can show "read without the model: <reason>".
+   */
+  fallbackReason?: string;
+}
+
+export async function understand(input: UnderstandInput, budget: Budget): Promise<UnderstandResult> {
+  let fallbackReason: string | undefined;
+
+  if (!isModelConfigured()) {
+    fallbackReason = "no model key configured";
+  } else if (budget.exhausted()) {
+    fallbackReason = "time budget spent before the call";
+  } else {
     try {
       const result = await generateStructured({
         schema: Understanding,
@@ -67,15 +82,19 @@ export async function understand(
         budget,
         step: "understand",
       });
-      const value = sanitize(result.value, input);
-      return { value, source: "model", ms: result.ms };
-    } catch {
-      // Fall through: a deterministic reading beats no reading.
+      return { value: sanitize(result.value, input), source: "model", ms: result.ms };
+    } catch (error) {
+      fallbackReason = error instanceof Error ? error.message : String(error);
     }
   }
 
   const startedAt = Date.now();
-  return { value: understandDeterministically(input), source: "deterministic", ms: Date.now() - startedAt };
+  return {
+    value: understandDeterministically(input),
+    source: "deterministic",
+    ms: Date.now() - startedAt,
+    fallbackReason,
+  };
 }
 
 /**
@@ -87,7 +106,7 @@ function sanitize(value: Understanding, input: UnderstandInput): Understanding {
   const items = value.items.filter((i) => known.has(i.productId));
   const dropped = items.length !== value.items.length;
 
-  const pickupLocal = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value.pickupLocal ?? "") ? value.pickupLocal : null;
+  const pickupLocal = normalizeLocalDateTime(value.pickupLocal);
 
   return {
     ...value,
@@ -96,6 +115,28 @@ function sanitize(value: Understanding, input: UnderstandInput): Understanding {
     needsClarification: value.needsClarification || dropped,
     confidence: dropped ? Math.min(value.confidence, 0.5) : value.confidence,
   };
+}
+
+/**
+ * Accepts the shapes a model actually returns and trims them to minutes.
+ *
+ * Rejecting anything but exactly "YYYY-MM-DDTHH:mm" looks strict and safe, but the
+ * failure is silent and expensive: a model that answers "2026-10-24T09:00:00" loses its
+ * pickup time, which means no order, which means no counteroffer. Normalize what is
+ * unambiguous, reject what is not.
+ */
+export function normalizeLocalDateTime(value: string | null | undefined): string | null {
+  if (typeof value !== "string") return null;
+  const match = /^(\d{4})-(\d{2})-(\d{2})[T ](\d{1,2}):(\d{2})/.exec(value.trim());
+  if (!match) return null;
+  const [, y, mo, d, h, mi] = match as unknown as [string, string, string, string, string, string];
+  const hour = Number(h);
+  const minute = Number(mi);
+  if (hour > 23 || minute > 59) return null;
+  const month = Number(mo);
+  const day = Number(d);
+  if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+  return `${y}-${mo}-${d}T${String(hour).padStart(2, "0")}:${mi}`;
 }
 
 // ---------------------------------------------------------------------------

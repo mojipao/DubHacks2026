@@ -8,6 +8,11 @@
  * PHOTON_TEST_SENDER. The script polls for it, replies once in the same space,
  * and prints a redacted dump of the received message for `docs/CONTEXT.md`.
  *
+ * `--assign=+1...` assigns a sender to a shared line first. A shared line only receives
+ * from assigned handles, so an unassigned phone's texts are dropped with no error
+ * anywhere; the preflight checks for this before you start texting. Assignments are
+ * releasable, so a consumed slot is recoverable (the free plan allows 25).
+ *
  * `--followup` additionally sends two unprompted messages into the same space,
  * at +2 and +15 minutes, with no new inbound message. Owner notifications and
  * the win-back scan both depend on whether those arrive, so the result goes in
@@ -34,6 +39,8 @@ const AGENT_HANDLE = process.env.PHOTON_AGENT_HANDLE;
 
 const args = new Set(process.argv.slice(2));
 const WITH_FOLLOWUP = args.has("--followup");
+/** `--assign` with no value assigns PHOTON_TEST_SENDER. */
+const ASSIGN = args.has("--assign") ? TEST_SENDER : argValue("--assign");
 const PING_TEXT = (argValue("--text") ?? "ping").toLowerCase();
 const WAIT_MS = Number(argValue("--wait") ?? 120) * 1_000;
 
@@ -72,7 +79,13 @@ interface ApiResult<T> {
 async function api<T>(
   method: "GET" | "POST",
   path: string,
-  init: { query?: Record<string, string | undefined>; body?: unknown; idempotencyKey?: string } = {},
+  init: {
+    query?: Record<string, string | undefined>;
+    body?: unknown;
+    idempotencyKey?: string;
+    /** Statuses to return instead of failing, for calls where a 4xx is a valid state. */
+    allowStatuses?: number[];
+  } = {},
 ): Promise<ApiResult<T>> {
   const url = new URL(API + path);
   for (const [key, value] of Object.entries(init.query ?? {})) {
@@ -102,7 +115,7 @@ async function api<T>(
       continue;
     }
 
-    if (!response.ok) {
+    if (!response.ok && !(init.allowStatuses ?? []).includes(response.status)) {
       const detail = typeof body === "object" && body ? JSON.stringify(redact(body)) : text.slice(0, 400);
       fail(
         `${method} ${path} → ${response.status}\n  ${detail}\n` +
@@ -162,16 +175,46 @@ interface Assignment {
   createdAt: string;
 }
 
+/** Assigns a sender to a shared line and returns the agent number it was given. */
+async function assignSender(handle: string): Promise<string | null> {
+  console.log(`  assigning ${handle} to a shared line…`);
+  const result = await api<Assignment>("POST", `/projects/${PROJECT_ID}/platforms/imessage/assignments`, {
+    // Keyed to the handle so re-running never burns a second slot from the 25.
+    idempotencyKey: `assign:${handle}`,
+    body: { handle },
+    // Already assigned is the state we wanted; the listing below reports the number.
+    allowStatuses: [409],
+  });
+  if (result.status === 409) {
+    console.log(`  ${handle} already has a live assignment, leaving it alone\n`);
+    return null;
+  }
+  console.log(`✓ ${handle} now texts ${result.body.assignedPhoneNumber} (assignment ${result.body.assignmentId})`);
+  console.log(`  set PHOTON_AGENT_HANDLE=${result.body.assignedPhoneNumber} in .env\n`);
+  return result.body.assignedPhoneNumber;
+}
+
 /** Fail loudly before the human starts texting, rather than after a silent two-minute wait. */
 async function preflight(): Promise<void> {
   const project = await api<{ id: string; name?: string; slug?: string }>("GET", `/projects/${PROJECT_ID}`);
   console.log(`✓ project ${project.body.name ?? project.body.id} (auth ok)`);
 
-  const assignments = await api<{ items: Assignment[] }>(
+  if (ASSIGN) await assignSender(ASSIGN);
+
+  // Note the key: messages come back under `items`, assignments under `assignments`.
+  // Defaulting a missing key to [] would report "0 assignments" for a shape mismatch,
+  // which reads as "go assign your phone" when the real problem is this script.
+  const assignments = await api<{ assignments: Assignment[] }>(
     "GET",
     `/projects/${PROJECT_ID}/platforms/imessage/assignments`,
   );
-  const live = (assignments.body.items ?? []).filter((a) => !a.releasedAt);
+  if (!Array.isArray(assignments.body.assignments)) {
+    fail(
+      "The assignments response has no `assignments` array, so this script is reading the wrong shape.\n" +
+        `  Got: ${JSON.stringify(redact(assignments.body)).slice(0, 200)}`,
+    );
+  }
+  const live = assignments.body.assignments.filter((a) => !a.releasedAt);
 
   console.log(`\n  shared iMessage assignments (${live.length} live, free plan allows 25):`);
   for (const a of live) {
@@ -182,9 +225,8 @@ async function preflight(): Promise<void> {
   const mine = live.find((a) => a.handle === TEST_SENDER);
   if (!mine) {
     fail(
-      `${TEST_SENDER} is not assigned to a shared line, so Photon will drop its texts.\n` +
-        `  Assign it in the dashboard (app.beta.photon.codes → iMessage) or with\n` +
-        `  POST /v1/projects/${PROJECT_ID}/platforms/imessage/assignments  { "handle": "${TEST_SENDER}" }`,
+      `${TEST_SENDER} is not assigned to a shared line, so Photon will drop its texts with no error.\n` +
+        `  Fix it by re-running with --assign, or in the dashboard at app.beta.photon.codes → iMessage.`,
     );
   }
   if (AGENT_HANDLE && mine.assignedPhoneNumber !== AGENT_HANDLE) {
