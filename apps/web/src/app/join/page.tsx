@@ -57,7 +57,7 @@ export default function JoinPage() {
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
         <p className="font-mono text-[12px] tracking-[0.18em] text-amber uppercase">{BUSINESS.name}</p>
-        <h1 className="mt-2 text-[28px] leading-tight font-semibold tracking-tight text-fg">
+        <h1 className="mt-2 font-serif text-[36px] leading-tight tracking-tight text-fg">
           You&apos;re in. Text the shop.
         </h1>
 
@@ -127,7 +127,7 @@ export default function JoinPage() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
       <p className="font-mono text-[12px] tracking-[0.18em] text-amber uppercase">{BUSINESS.name} · Seattle</p>
-      <h1 className="mt-2 text-[32px] leading-tight font-semibold tracking-tight text-fg">Text the bakery like a regular.</h1>
+      <h1 className="mt-2 font-serif text-[40px] leading-[1.05] tracking-tight text-fg">Text the bakery like a regular.</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">
         An AI drafts every reply from the shop&apos;s real orders and stock. Nothing reaches you until the owner approves
         it.

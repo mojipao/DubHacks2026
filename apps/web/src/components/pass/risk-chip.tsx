@@ -6,10 +6,10 @@ export function RiskChip({ flag }: { flag: string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-[4px] px-1.5 py-0.5 text-[11px] font-semibold tracking-wide uppercase",
-        meta.tone === "tomato" && "bg-[color-mix(in_srgb,var(--tomato)_18%,transparent)] text-[#9a2f12]",
-        meta.tone === "amber" && "bg-[color-mix(in_srgb,var(--amber)_22%,transparent)] text-[#7a4a0a]",
-        meta.tone === "muted" && "bg-black/5 text-ink/70",
+        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium",
+        meta.tone === "tomato" && "border-[#e9b4a4] bg-[#fbe6df] text-[#9a2f12]",
+        meta.tone === "amber" && "border-[#ecd29f] bg-[#fbf0d9] text-[#7a4a0a]",
+        meta.tone === "muted" && "border-ink/10 bg-ink/5 text-ink/70",
       )}
     >
       {meta.label}

@@ -92,11 +92,13 @@ export function ControlRoom() {
   }).format(new Date(state.now));
 
   return (
-    <div className="flex h-dvh min-h-[720px] flex-col">
-      <TopBar onOpenSim={() => setSimOpen(true)} />
-      <FrictionStrip />
-      <div className="flex min-h-0 flex-1">
-        <aside className="flex w-[272px] shrink-0 flex-col border-r border-line bg-panel/30 min-[1400px]:w-[320px]">
+    <div className="flex h-dvh min-h-[720px] flex-col gap-2.5 p-2.5">
+      <div className="surface rounded-xl">
+        <TopBar onOpenSim={() => setSimOpen(true)} />
+        <FrictionStrip />
+      </div>
+      <div className="flex min-h-0 flex-1 gap-2.5">
+        <aside className="surface flex w-[268px] shrink-0 flex-col overflow-hidden rounded-xl min-[1400px]:w-[312px]">
           <div className="min-h-0 flex-[1.1]">
             <ConversationList />
           </div>
@@ -107,10 +109,11 @@ export function ControlRoom() {
 
         <PassRail onOpenSim={() => setSimOpen(true)} drawer={drawer} onDrawer={setDrawer} />
 
-        <aside className="w-[288px] shrink-0 overflow-y-auto bg-panel/30 px-4 py-3 min-[1400px]:w-[340px]">
-          <h2 className="mb-3 font-mono text-[12px] tracking-[0.2em] text-muted uppercase">
-            Today · {dayLabel}
-          </h2>
+        <aside className="surface w-[284px] shrink-0 overflow-y-auto rounded-xl px-4 py-3.5 min-[1400px]:w-[332px]">
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="eyebrow">Today</h2>
+            <span className="font-mono text-[12px] text-fg/80">{dayLabel}</span>
+          </div>
           <PickupsBoard />
           <StockBars />
           <TodayRevenue />

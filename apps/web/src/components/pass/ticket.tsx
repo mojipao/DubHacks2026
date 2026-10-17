@@ -14,9 +14,16 @@ import { friendlyPickup, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // Tickets are paper, so their buttons need paper colors rather than the dark shadcn defaults.
-const TICKET_APPROVE = "bg-[#2f7d47] font-semibold text-white hover:bg-[#276a3c]";
-const TICKET_SECONDARY = "border-ink/25 bg-transparent font-semibold text-ink hover:bg-ink/5 hover:text-ink";
-const TICKET_REJECT = "border-[#b8401f]/50 bg-transparent font-semibold text-[#9c2f12] hover:bg-tomato/10 hover:text-[#9c2f12]";
+const TICKET_APPROVE = "rounded-full bg-ink px-3.5 font-semibold text-ticket hover:bg-ink/85";
+const TICKET_SECONDARY = "rounded-full border-ink/20 bg-transparent px-3 font-semibold text-ink hover:bg-ink/5 hover:text-ink";
+const TICKET_REJECT = "rounded-full border-transparent bg-transparent px-3 font-semibold text-[#a3341a] hover:bg-tomato/10 hover:text-[#a3341a]";
+
+const AGENT_STRIPE: Record<string, string> = {
+  intake: "bg-sky",
+  ops: "bg-amber",
+  winback: "bg-basil",
+  guard: "bg-tomato",
+};
 
 function ConfidenceMeter({ value }: { value: number }) {
   const filled = Math.round(value * 5);
@@ -29,9 +36,9 @@ function ConfidenceMeter({ value }: { value: number }) {
             "h-1.5 w-2.5 rounded-[1px]",
             i < filled
               ? value < 0.6
-                ? "bg-amber"
-                : "bg-ink/70"
-              : "bg-ink/15",
+                ? "bg-[#c77a12]"
+                : "bg-ink/75"
+              : "bg-ink/12",
           )}
         />
       ))}
@@ -57,7 +64,6 @@ function readsSummary(reads: UiProposal["reads"]): string {
 export function Ticket({
   proposal,
   focused,
-  linked,
   rotation,
   onFocus,
   onOpen,
@@ -69,7 +75,6 @@ export function Ticket({
 }: {
   proposal: UiProposal;
   focused: boolean;
-  linked?: boolean;
   rotation: number;
   onFocus: () => void;
   onOpen: () => void;
@@ -97,28 +102,25 @@ export function Ticket({
       onClick={onFocus}
       onDoubleClick={onOpen}
       className={cn(
-        "ticket-paper relative w-full overflow-hidden rounded-[6px] shadow-[0_10px_28px_rgba(0,0,0,0.35)]",
-        focused && "ring-2 ring-amber",
+        "ticket-paper ticket-shadow relative w-full overflow-hidden rounded-[8px]",
+        focused && "ring-2 ring-amber ring-offset-2 ring-offset-bg",
         proposal.status === "executing" && "ticket-executing",
         proposal.status === "failed" && "ring-2 ring-tomato",
-        linked && "ring-1 ring-ink/10",
       )}
     >
-      <div className="ticket-perforation h-2 w-full bg-transparent" />
-      <div
-        className={cn(
-          "flex items-center justify-between gap-2 px-3 py-1.5 text-[11px] font-semibold tracking-[0.14em] text-white uppercase",
-          proposal.agent === "intake" && "bg-[#3d342e]",
-          proposal.agent === "ops" && "bg-[#5a3d1a]",
-          proposal.agent === "winback" && "bg-[#1f4a2e]",
-        )}
-      >
-        <span className="min-w-0 truncate">
-          {proposal.agent} · {proposal.kind}
-          {proposal.customerName ? ` · ${proposal.customerName}` : " · unknown"}
+      {/* Agent stripe: the only strong color on the paper, so a glance tells you who drafted it. */}
+      <div className={cn("h-1 w-full", AGENT_STRIPE[guardFlags.length > 0 ? "guard" : proposal.agent])} />
+      <div className="flex items-center justify-between gap-2 border-b border-dashed border-ink/15 px-3.5 pt-2.5 pb-2">
+        <span className="flex min-w-0 items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
+          <span className={cn("size-1.5 shrink-0 rounded-full", AGENT_STRIPE[proposal.agent])} />
+          <span className="whitespace-nowrap text-ink/55">
+            {proposal.agent}
+            <span className="hidden min-[1400px]:inline"> · {proposal.kind}</span>
+          </span>
+          <span className="truncate text-ink">{proposal.customerName ?? "Unknown"}</span>
         </span>
-        <div className="flex shrink-0 items-center gap-2 tracking-normal normal-case">
-          <span className="font-mono text-[10px] whitespace-nowrap text-white/70">
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="font-mono text-[10px] whitespace-nowrap text-ink/50">
             {shortRelativeTime(proposal.createdAt)}
           </span>
           <ConfidenceMeter value={proposal.confidence} />
@@ -137,13 +139,13 @@ export function Ticket({
         <Stamp kind="rejected" delay={proposal.parentProposalId ? 0.35 : 0} />
       )}
 
-      <div className="space-y-2.5 px-3 py-3 text-ink">
+      <div className="space-y-3 px-3.5 py-3 text-ink">
         <div className="flex flex-wrap items-start gap-2">
-          <p className="min-w-0 flex-1 text-[15px] font-bold leading-snug">
+          <p className="min-w-0 flex-1 text-[15.5px] leading-snug font-semibold tracking-[-0.01em]">
             {proposal.rationale}
           </p>
           {proposal.riskFlags.includes("counteroffer") && (
-            <span className="shrink-0 rounded-[4px] bg-tomato px-1.5 py-0.5 text-[10px] font-black tracking-wider text-white uppercase">
+            <span className="shrink-0 rounded-full bg-ink px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber uppercase">
               Counteroffer
             </span>
           )}
@@ -169,8 +171,9 @@ export function Ticket({
         )}
 
         {guardFlags.length > 0 && (
-          <div className="flex gap-2 rounded-[4px] bg-tomato px-2.5 py-2 text-[13px] leading-snug text-white">
-            <Shield className="mt-0.5 size-4 shrink-0" />
+          <div className="flex gap-2 rounded-md bg-[#2a1712] px-3 py-2.5 text-[13px] leading-snug text-[#ffd9cc] ring-1 ring-tomato/50">
+            <span className="sr-only">Guard:</span>
+            <Shield className="mt-0.5 size-4 shrink-0 text-tomato" />
             <p>
               {proposal.guardSummary ??
                 "Guard flagged this draft. Reply declines; no order."}
@@ -180,13 +183,13 @@ export function Ticket({
 
         {reply && (
           <div className="space-y-2">
-            <p className="whitespace-pre-wrap font-mono text-[13px] leading-relaxed text-ink/90">
+            <p className="whitespace-pre-wrap font-mono text-[12.5px] leading-relaxed text-ink/85">
               {reply.text.split(PAYMENT_LINK_TOKEN).map((chunk, i, arr) => (
                 <span key={i}>
                   {chunk}
                   {i < arr.length - 1 && (
                     <span
-                      className="mx-0.5 inline-flex rounded-full bg-sky/20 px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-[#1a4f7a]"
+                      className="mx-0.5 inline-flex rounded-full bg-[#dce9fb] px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-[#1f4f87]"
                       title="The server creates the Square payment link when you approve"
                     >
                       Square link · on approve
@@ -198,7 +201,7 @@ export function Ticket({
             {reply.orders.map((order, idx) => (
               <div
                 key={idx}
-                className="rounded-[4px] border border-dashed border-ink/15 bg-white/40 px-2 py-1.5 font-mono text-[12px]"
+                className="rounded-md border border-ink/10 bg-ink/[0.035] px-2.5 py-1.5 font-mono text-[12px]"
               >
                 <div className="font-semibold">
                   {friendlyPickup(order.pickupAt)}
@@ -209,7 +212,7 @@ export function Ticket({
                   </div>
                 ))}
                 {order.perk === "welcome_back_10" && (
-                  <div className="text-basil">Perk: welcome back 10%</div>
+                  <div className="text-[#1f7a4a]">Perk: welcome back 10%</div>
                 )}
               </div>
             ))}
@@ -217,7 +220,7 @@ export function Ticket({
         )}
 
         {reorder && (
-          <div className="rounded-[4px] border border-dashed border-ink/15 bg-white/40 px-2 py-1.5 font-mono text-[12px]">
+          <div className="rounded-md border border-ink/10 bg-ink/[0.035] px-2.5 py-1.5 font-mono text-[12px]">
             <div className="font-semibold">{reorder.supplier}</div>
             {reorder.lines.map((line) => (
               <div key={line.ingredientId}>

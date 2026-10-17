@@ -72,17 +72,20 @@ In a restaurant kitchen, the pass is where tickets hang on a rail and nothing le
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--bg` | `#14110F` | App background, warm charcoal |
-| `--panel` | `#1D1916` | Columns |
-| `--line` | `#2E2824` | Dividers, borders |
-| `--ticket` | `#F5EFE4` | Ticket paper |
-| `--ink` | `#1B1714` | Text on tickets |
-| `--muted` | `#9C9188` | Secondary text on dark |
-| `--fg` | `#EEE7DD` | Primary text on dark |
-| `--tomato` | `#E4572E` | Needs attention, risk flags, reject |
-| `--amber` | `#F2A541` | Pending, executing |
-| `--basil` | `#4FAE6A` | Approved, executed, paid |
-| `--sky` | `#6BA4D8` | Customer messages, iMessage blue nod |
+| `--bg` | `#0B0A09` | App background, near-black warm neutral with a faint dot grid |
+| `--surface` | `#131211` | Panels (bento columns, header, ticker), hairline border |
+| `--surface-2` | `#1B1A18` | Hover and selected rows |
+| `--line` / `--line-strong` | `#272523` / `#36332F` | Borders |
+| `--ticket` | `#FBF7EF` | Ticket paper |
+| `--ink` | `#191613` | Text on tickets; primary ticket button |
+| `--muted` | `#9D968E` | Secondary text on dark |
+| `--fg` | `#F2EDE6` | Primary text on dark |
+| `--amber` (saffron) | `#F5B14C` | The one brand accent: pending, focus, Ops stripe, primary action on dark |
+| `--tomato` | `#EF6A4C` | Risk, Guard, reject, low stock |
+| `--basil` | `#49C08A` | Approved, paid, minutes saved, Win-back stripe |
+| `--sky` | `#6AAEFF` | Customer messages, Intake stripe |
+
+Redesign (Sat ~5:30 PM): "night service." Everything around the tickets is quiet so the paper carries the color; each ticket has a 4px agent stripe instead of a filled header; healthy stock bars are neutral so only low stock and on-order stand out. Wordmark and page headings use Instrument Serif.
 
 - Typography: Geist Sans for UI, Geist Mono (or JetBrains Mono) for ticket bodies, timestamps, order lines, and the event ticker.
 - Tickets: paper color, slightly rounded (6px), a perforated top edge (CSS radial-gradient mask), a subtle drop shadow, and a 0.5° random rotation that straightens on hover.
