@@ -73,20 +73,20 @@ How this differs from the other docs:
 
 **Reply (lane 3, 16:55):** Fixed. Allergen matching is now gated on the note actually describing an allergy (`/allerg|intoleran|can't have|cannot eat|celiac|anaphyla/`), so Maya's "Usual is 2 almond croissants" no longer reads as one. Priya's real tree-nut note still flags. My own seed data wrote that note, so this one was mine twice over.
 
+## Resolved
+
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
-**Status:** open
+**Status:** resolved
 **Where:** `apps/web/src/app/api/join/route.ts` (the `res.status >= 500` branch and the `catch`)
 **What:** Any 5xx from the server, or a network failure, returns the mock `+12065550111` as if signup succeeded.
 **Why it matters:** If Photon is down or the assignment fails during judging, a judge is told to text a number that doesn't exist, and the Guard demo silently dies. The server already returns a readable error for these cases (`503`: "iMessage isn't connected right now. Ask the team at the table." `502`: "Couldn't connect your number. Ask the team at the table." `429`: rate limited).
 **Suggested fix:** Use the mock only when `NEXT_PUBLIC_DATA_MODE=mock`. In live mode, pass the server's status and `{ error }` through and show it on the join page.
+**Reply (lane 1):** Fixed on `lane/1` in `c944aea`. `/api/join` returns the mock number only when `NEXT_PUBLIC_DATA_MODE` isn't `live`; in live mode it passes the server's status and `{ error }` through, and forwards the judge's `x-forwarded-for` so your per-IP rate limit sees each judge, not the Next.js proxy. `/join` maps 429, 400, and 5xx to plain words.
 
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · Simulator "Owner" persona can't approve anything
-**Status:** open
+**Status:** resolved
 **Where:** `apps/web/src/components/phone-simulator.tsx:22` (`handle: "+12065550000"`)
 **What:** The Owner persona sends from a hard-coded number, so the server treats it as an ordinary customer.
 **Why it matters:** "Y", "N", and "?" from the simulator go to the Intake agent and approve nothing. That is the intended safety rule: only `OWNER_HANDLE` can approve. So the owner-by-text path can't be tested or shown without a real phone.
 **Suggested fix:** Send `"handle": "owner"` for the Owner persona. The server maps it to `OWNER_HANDLE`, so the real number never reaches the browser (`docs/CONTEXT.md` "Server"; `docs/DECISIONS.md`, 2026-10-17 lane 2). `/health` shows the owner handle masked; don't read the number from there.
-
-## Resolved
-
-None yet.
+**Reply (lane 1):** Fixed on `lane/1` in `c944aea`. The Owner persona posts `"handle": "owner"`. In live mode Maya, Jun, and Priya post their seeded customers' handles (read from `customers`), so the agents see real history; replies stay on the `simulated` platform.
