@@ -1,5 +1,14 @@
 {
   "extends": "../tsconfig.base.json",
-  "compilerOptions": { "noEmit": true, "allowImportingTsExtensions": true },
-  "include": ["seed.ts", "reset.ts"]
+  "compilerOptions": {
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "seed.ts",
+    "reset.ts",
+    "generate-history.ts",
+    "check-seed.ts",
+    "photon-ping.ts"
+  ]
 }

@@ -157,6 +157,10 @@ export interface IngredientNeed {
   onOrder: number;
   shortfall: number;   // max(0, need - onHand - onOrder)
   supplier: string;
+  /** Optional, additive: lets agents size a reorder that also tops stock back up. */
+  reorderPoint?: number;
+  /** Optional, additive: lets a reorder draft state its cost without a second lookup. */
+  unitCostCents?: number;
 }
 
 export interface ConversationContext {
