@@ -29,6 +29,8 @@ config({ path: fileURLToPath(new URL("../.env", import.meta.url)), quiet: true }
 
 const API = "https://api.photon.codes/v1";
 const POLL_INTERVAL_MS = 2_000;
+/** Also accept a text sent shortly BEFORE the script started, so order of operations stops mattering. */
+const LOOKBACK_MS = 120_000;
 const REQUEST_TIMEOUT_MS = 15_000;
 const FOLLOWUP_DELAYS_MS = [2 * 60_000, 15 * 60_000];
 
@@ -42,7 +44,9 @@ const WITH_FOLLOWUP = args.has("--followup");
 /** `--assign` with no value assigns PHOTON_TEST_SENDER. */
 const ASSIGN = args.has("--assign") ? TEST_SENDER : argValue("--assign");
 const PING_TEXT = (argValue("--text") ?? "ping").toLowerCase();
-const WAIT_MS = Number(argValue("--wait") ?? 120) * 1_000;
+const WAIT_MS = Number(argValue("--wait") ?? 240) * 1_000;
+/** Take any text from the sender, not just one containing the keyword. */
+const ACCEPT_ANY = args.has("--any");
 
 function required(name: string): string {
   const value = process.env[name];
@@ -248,7 +252,9 @@ function isPing(m: ReceivedMessage): boolean {
     m.content.format === "plain" &&
     m.sentBy.handle === TEST_SENDER &&
     m.space.kind === "direct" &&
-    (m.content.text ?? "").trim().toLowerCase() === PING_TEXT
+    // Substring, not equality: "Ping!", trailing spaces and autocorrect all still count,
+    // and a failed match costs another four minutes of someone's evening.
+    (ACCEPT_ANY || (m.content.text ?? "").toLowerCase().includes(PING_TEXT))
   );
 }
 
@@ -274,14 +280,17 @@ async function pollForPing(createdSince: string): Promise<ReceivedMessage> {
       return match;
     }
 
-    process.stdout.write(`  poll ${polls}: nothing yet\r`);
+    const left = Math.ceil((deadline - Date.now()) / 1000);
+    process.stdout.write(`  waiting… ${left}s left (poll ${polls})            \r`);
     await sleep(POLL_INTERVAL_MS);
   }
 
   fail(
-    `No "${PING_TEXT}" from ${TEST_SENDER} within ${WAIT_MS / 1000}s.\n` +
-      "  Check: blue iMessage bubble (not green SMS), the right agent number, the sender assigned\n" +
-      "  after the conversation started, and the dashboard's API Activities page for inbound traffic.",
+    `No message containing "${PING_TEXT}" from ${TEST_SENDER} in the last ${(WAIT_MS + LOOKBACK_MS) / 1000}s.\n` +
+      "  Most likely: the text was not actually sent inside the window — send it while this is running.\n" +
+      "  Otherwise check: blue iMessage bubble (not green SMS), the right agent number, and the\n" +
+      "  dashboard's API Activities page to see whether the message reached Photon at all.\n" +
+      "  Re-run with --any to accept any text from your phone, in case the wording is the problem.",
   );
 }
 
@@ -305,7 +314,7 @@ async function sendText(
 
 async function main(): Promise<void> {
   console.log("Photon 2.0 beta ping test\n");
-  const startedAt = new Date(Date.now() - 10_000).toISOString();
+  const startedAt = new Date(Date.now() - LOOKBACK_MS).toISOString();
   await preflight();
 
   const detectedAt = Date.now();
