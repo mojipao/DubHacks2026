@@ -4,6 +4,7 @@ Append-only. Newest row at the top. Do not edit someone else’s row; add a new 
 
 | Date | Lane | Decision | Why |
 | --- | --- | --- | --- |
+| 2026-10-17 | 2 | Repo moved to `mojipao/DubHacks2026`. `main` requires the `build` check, blocks force-push and deletion, and auto-merge is on. Every change, docs included, lands by PR (`ctx/lane-N-<topic>` for docs, `lane/N` for code). | Enforces "no merging failing builds" in GitHub instead of by convention. |
 | 2026-10-17 | 1 | aahil1218 claims lane 1 (frontend). Vercel GitHub integration is connected; deploy root will be `apps/web` with `NEXT_PUBLIC_*` + `SERVER_URL` / `OWNER_TOKEN` server envs. Design direction stays "the pass" (warm charcoal + ticket paper), with motion/layout cues from Framer/Webflow/Dribbble/FreeFrontend-style product sites. | Lane was open after mojipao moved to backend; hosting ready once the app exists. |
 | 2026-10-17 | 2 | CI on every PR and push to `main` (install, typecheck, build); `main` should require it to pass before merging. | Three agents merging in parallel; a broken `main` blocks everyone. |
 | 2026-10-17 | 2 | The team uses a new dedicated Supabase project. Never touch project `ykvvrkvihmfvcesbnker`; it belongs to another project of mojipao's. | That project was the MCP default and is unrelated to the hackathon. |

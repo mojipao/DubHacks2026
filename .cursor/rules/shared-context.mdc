@@ -7,7 +7,7 @@ alwaysApply: true
 
 This repo is used by three people at once. Chat is not shared. Git is.
 
-At the start of every session, pull `main`, then read in order:
+At the start of every session, `git fetch origin` and read `origin/main`, in order:
 
 1. `AGENTS.md`
 2. `docs/CONTEXT.md`
@@ -16,4 +16,4 @@ At the start of every session, pull `main`, then read in order:
 
 If `docs/CONTEXT.md` lists the track as undecided, do not add application code or dependencies.
 
-When you learn a fact another agent needs (track, product, stack, schema, env var names), update `docs/CONTEXT.md` and append `docs/DECISIONS.md` on `main` before continuing feature work.
+When you learn a fact another agent needs (track, product, stack, schema, env var names), update `docs/CONTEXT.md` and append `docs/DECISIONS.md` through a docs-only `ctx/...` PR (see `docs/COORDINATION.md`) before continuing feature work.

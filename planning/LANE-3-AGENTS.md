@@ -38,7 +38,7 @@ Claim these in `docs/STATUS.md` before writing code.
 4. **Run the ping test** with your agent (Phase 0 below). Text exactly `ping` as an iMessage (blue bubble, not SMS) to the assigned number after the script prints Ready.
 5. **Assign the other two teammates** the same way (or via `/join` once lane 2 builds it). Each sender may receive a different agent number; record which number each person should text in the team chat, not in git.
 6. **LLM key.** Use the Vercel AI Gateway (vercel.com → AI Gateway → API keys) and set `AI_GATEWAY_API_KEY`, or use a direct provider key if the hackathon gave credits. Pick a fast model for `AGENT_MODEL`; the whole agent run should finish in under 8 seconds. Record the choice in `docs/DECISIONS.md`.
-7. **VEYZL.** Sign up through the link from the VEYZL sponsor (ask at their table if it isn't on the organizer page). Ask the repo owner (aahil1218) to install the VEYZL GitHub app on `aahil1218/DubHacks2026`, since only an admin can. Confirm a check appears on the next PR.
+7. **VEYZL.** Sign up through the link from the VEYZL sponsor (ask at their table if it isn't on the organizer page). Ask the repo owner (mojipao) to install the VEYZL GitHub app on `mojipao/DubHacks2026`, since only an admin can. Confirm a check appears on the next PR.
 8. **Send the keys** from steps 1, 2, and 6 to lane 2's human so the shared `.env` is complete.
 
 ## Phase 0: Photon ping (Sat 12:30 to 1:30 PM)
