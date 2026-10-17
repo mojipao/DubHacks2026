@@ -4,6 +4,7 @@ import { env, features } from "./env.ts";
 import { HttpError } from "./execute.ts";
 import { maskHandle } from "./inbound.ts";
 import { photonStatus } from "./photon/inbound.ts";
+import { contacts } from "./routes/contacts.ts";
 import { dev } from "./routes/dev.ts";
 import { join } from "./routes/join.ts";
 import { proposals } from "./routes/proposals.ts";
@@ -37,5 +38,6 @@ app.get("/health", (c) =>
 
 app.route("/proposals", proposals);
 app.route("/dev", dev);
+app.route("/contacts", contacts);
 app.route("/join", join);
 app.route("/webhooks", webhooks);
