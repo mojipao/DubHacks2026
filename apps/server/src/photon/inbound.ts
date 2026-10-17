@@ -34,10 +34,9 @@ export function toReceivedText(raw: unknown): ReceivedText | null {
   return { id: String(m.id), handle: sentBy.handle, text: content.text, spaceId: space.id, agentUserId: receivedBy.id };
 }
 
-/** The message inside a `message.received` event. The event mirrors the webhook payload; accept the documented nestings. */
+/** The message inside a `message.received` event: `event.data.object` (confirmed against a live delivery, API version 2026-07-01). */
 function messageFromEvent(event: Record<string, unknown>): unknown {
-  const data = event.data as Record<string, unknown> | undefined;
-  return data?.message ?? data?.object ?? data ?? event.message;
+  return (event.data as { object?: unknown } | undefined)?.object;
 }
 
 async function handle(raw: unknown) {
