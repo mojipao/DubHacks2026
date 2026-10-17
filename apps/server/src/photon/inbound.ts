@@ -23,7 +23,8 @@ export function toReceivedText(raw: unknown): ReceivedText | null {
   const m = raw as Partial<Message> & Record<string, unknown>;
   if (m.platform !== "imessage" || m.status !== "received") return null;
   const sentBy = m.sentBy as { handle?: string; kind?: string } | undefined;
-  const receivedBy = m.receivedBy as { id?: string } | undefined;
+  // receivedBy is optional; addressedTo carries the same agent user when it's the one Photon fills in.
+  const receivedBy = (m.receivedBy ?? m.addressedTo) as { id?: string } | undefined;
   const space = m.space as { id?: string; kind?: string } | undefined;
   const content = m.content as { type?: string; text?: string } | undefined;
   if (!m.id || !sentBy?.handle || !receivedBy?.id || !space?.id) return null;
