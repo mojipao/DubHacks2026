@@ -120,9 +120,11 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
       ms: reading.ms,
       summary: `${reading.value.intent}${reading.value.items.length ? `, ${reading.value.items.map((i) => `${i.qty}x ${i.productId}`).join(", ")}` : ""}${
         reading.value.pickupLocal ? ` for ${reading.value.pickupLocal}` : ""
-      }${reading.source === "deterministic" ? " (read without the model)" : ""}`,
+      }${reading.source === "deterministic" ? ` (read without the model: ${reading.fallbackReason ?? "unknown"})` : ""}`,
       reads: [],
       flags: [...flags],
+      source: reading.source,
+      ...(reading.fallbackReason ? { fallbackReason: reading.fallbackReason } : {}),
     });
 
     // 3. Resolve ------------------------------------------------------------

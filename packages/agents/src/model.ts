@@ -6,23 +6,32 @@
  * retry on a parse failure, and a shared deadline that stops the pipeline from
  * spending its budget on a retry it cannot afford.
  *
- * Checked against the installed AI SDK: `ai` 7.0.143 exports both `generateObject` and
- * `generateText` + `Output.object`. `generateObject` is the narrower of the two and is
- * what this file uses.
+ * Checked against the installed AI SDK: `ai` 7.0.143 still exports `generateObject` but
+ * warns that it is deprecated in favour of `generateText` with an `output` setting, so
+ * this file uses `generateText` + `Output.object`.
  *
  * A bare model id string routes through the Vercel AI Gateway using
  * `AI_GATEWAY_API_KEY`. With no key configured, `isModelConfigured()` is false and the
  * pipeline takes its deterministic path instead of throwing.
  */
-import { generateObject } from "ai";
+import { Output, generateText } from "ai";
 import type { z } from "zod";
 
 /**
- * Fast by default, because the pipeline has roughly four seconds after the server's
- * debounce and spends it on two calls. `anthropic/claude-sonnet-5` is the step up if
- * the venue network turns out to be kind; record the swap in docs/DECISIONS.md.
+ * Verified working on the gateway's free tier (about 1.1s per structured call).
+ *
+ * Two things to know before changing this. The gateway spells Anthropic ids with
+ * **dots**, not dashes: `anthropic/claude-haiku-4.5`, and a dashed id comes back as a
+ * 403 whose message says "free tier users do not have access to this model", which
+ * reads like a billing problem rather than a typo. And every `anthropic/*` id really
+ * is blocked without paid credits, so this default has to be something that works out
+ * of the box.
+ *
+ * Top up credits and `anthropic/claude-haiku-4.5` is the better choice — the Guard's
+ * injection calls and the shop-voice drafting are both judged, and both reward a
+ * stronger model. Record the swap in docs/DECISIONS.md.
  */
-export const DEFAULT_MODEL = "anthropic/claude-haiku-4-5";
+export const DEFAULT_MODEL = "google/gemini-2.5-flash-lite";
 
 export const PER_CALL_TIMEOUT_MS = 6_000;
 /** The whole pipeline's model budget. Leaves room for the data loads and the guard. */
@@ -116,15 +125,15 @@ export async function generateStructured<T extends z.ZodType>(
     if (slice < 500) break;
 
     try {
-      const { object } = await generateObject({
+      const { output } = await generateText({
         model: modelId(),
-        schema: call.schema,
+        output: Output.object({ schema: call.schema }),
         system: call.system,
         prompt: call.prompt,
         temperature: call.temperature,
         abortSignal: AbortSignal.timeout(slice),
       });
-      return { value: object as z.infer<T>, ms: Date.now() - startedAt, attempts: attempt };
+      return { value: output as z.infer<T>, ms: Date.now() - startedAt, attempts: attempt };
     } catch (error) {
       lastError = error;
       // Out of time, or aborted: a retry cannot help.

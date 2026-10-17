@@ -62,6 +62,14 @@ const ALLERGEN_SAFETY_CLAIMS: readonly RegExp[] = [
   /\bwon'?t\s+(hurt|affect)\s+you\b/i,
 ];
 
+/**
+ * Marks a clause as a refusal rather than an offer. "We can't give away free items" is
+ * exactly what a good decline says, and flagging it would push the model to rewrite a
+ * correct reply into a vaguer one.
+ */
+const NEGATED_OFFER =
+  /\b(can'?t|cannot|can not|won'?t|will not|do not|don'?t|doesn'?t|unable|not able|no|never|afraid|sorry|unfortunately|isn'?t|aren'?t)\b/i;
+
 /** A URL that is not our payment-link placeholder. */
 const URL_PATTERN = /\b(?:https?:\/\/|www\.)\S+/gi;
 const DOLLARS_PATTERN = /\$\s?(\d+(?:\.\d{2})?)/g;
@@ -160,11 +168,17 @@ export function checkReply(text: string, facts: GuardFacts): GuardResult {
     }
   }
 
-  // 4. Discount language, only with a real perk.
+  // 4. Discount language, only with a real perk — but declining to give something away
+  //    is the behaviour we want, and "we can't do free items" must not read as an offer.
   if (!facts.perkApplies) {
-    const offender = DISCOUNT_PATTERNS.find((p) => p.test(text));
-    if (offender) {
-      blocking.push("Remove the discount language: this customer is not eligible for a perk.");
+    const offering = text
+      .split(/(?<=[.!?])\s+|\n+|,\s+(?=but\b)|\s+(?=but\b)/)
+      .filter((clause) => DISCOUNT_PATTERNS.some((p) => p.test(clause)))
+      .filter((clause) => !NEGATED_OFFER.test(clause));
+    if (offering.length > 0) {
+      blocking.push(
+        `Remove the discount language in "${truncateClause(offering[0] as string)}": this customer is not eligible for a perk.`,
+      );
       flags.add("off_policy");
     }
   }
@@ -213,6 +227,9 @@ export function checkReply(text: string, facts: GuardFacts): GuardResult {
     confidencePenalty: ok ? 1 : 0.6,
   };
 }
+
+const truncateClause = (clause: string): string =>
+  clause.trim().length <= 48 ? clause.trim() : `${clause.trim().slice(0, 47)}…`;
 
 function summarize(flags: Set<RiskFlag>, blocking: string[], facts: GuardFacts): string {
   const caught: string[] = [];

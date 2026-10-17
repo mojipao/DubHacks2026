@@ -92,6 +92,8 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 ## Server (lane 2, live on `main`)
 
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
+- **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
+- `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
 - `/dev/winback-scan` returns `501` until `@boh/agents` exports `runWinbackScan`. **Lane 3:** each win-back draft must list the customer in `reads` (`{ table: "customers", id }`); the server uses the first one to pick the conversation.
@@ -108,7 +110,15 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 
 ## Photon facts verified
 
-From the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2026-10-17). The live round trip is still pending; `scripts/photon-ping.ts` records latency and field names here once it runs.
+**Observed on a real inbound iMessage (2026-10-17, project `dubhack`).** A text from a teammate's phone reached the project and came back from `listMessages` with:
+
+- `platform: "imessage"`, `status: "received"`, `space.kind: "direct"`, `content.type: "text"`, `content.format: "plain"`, `sentBy.kind: "human"`, `timestamps.receivedAt` set.
+- **`receivedBy` present, `addressedTo` absent.** So `receivedBy.id` is the agent identity to reply from, and the `addressedTo` fallback is a safety net rather than the primary path. The OpenAPI spec marks `receivedBy` optional, which is why the fallback is still worth keeping.
+- One live shared-line assignment; the assigned agent number matched `PHOTON_AGENT_HANDLE` exactly, and `handle` matched the sending phone.
+
+**Still unproven:** the outbound half. No message has been sent from this project yet (`direction=sent` returns nothing), so reply latency and the unprompted follow-up question are both still open. `scripts/photon-ping.ts --followup` answers them.
+
+The rest below is from the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2026-10-17).
 
 - **Send:** `POST /v1/projects/{id}/messages` with an `idempotency-key` **header that is required, not optional**. Body needs `spaceId`, `senderId`, `content: { type: "text", format: "plain", text }`; `parentMessageId` is optional. Success is `202`, which means accepted, not delivered.
 - **Agent identity:** `receivedBy` is **optional** on a received message, and `addressedTo` is also defined. Reply from whichever is present, never from one global agent id, because agent numbers differ per sender. The ping script reports which field Photon actually populates.
@@ -116,6 +126,7 @@ From the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2
 - **Poll shape:** `GET /v1/projects/{id}/messages` takes `createdSince`, `direction`, `platform`, `order`, `pageSize`, `spaceId`, `pageToken`. A page is `{ items: [...] }`.
 - **Reactions and polls are not available on iMessage.** `ImessageMessageContent` is only `text`, `attachment`, `message.read`, `space.typing.update`, and `group`. The `reaction`/`poll` content types exist in the cross-platform union but not iMessage's, so tapback acknowledgements and native polls are off the table. **Typing indicators** (`POST /v1/projects/{id}/spaces/{spaceId}/typing`) and **read receipts** (`POST /v1/projects/{id}/messages/{messageId}/read`) are real.
 - **Assignments can be released:** `DELETE /v1/projects/{id}/platforms/imessage/assignments/{assignmentId}`, and `releasedAt` is a field. The free plan's 25-assignment cap is recyclable, so `/join` can reclaim slots instead of hard-failing.
+- **List responses do not share a key.** Messages come back under `items` (`MessagePage`), shared-line assignments under `assignments` (`SharedLineAssignmentPage`). Reading the wrong one and defaulting to `[]` silently reports "no assignments", which looks like an unassigned phone rather than a parsing bug.
 - **Rate limits** come back as `429` with `Retry-After`, plus `RateLimit` and `RateLimit-Policy` headers.
 
 ## Photon events
