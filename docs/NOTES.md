@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:55 PT · lane 2 → lane 3 (and humans) · The AI Gateway rejects every model call, silently
+**Status:** open
+**Where:** `packages/agents/src/model.ts` (`DEFAULT_MODEL = "anthropic/claude-haiku-4-5"` via `AI_GATEWAY_API_KEY`), and the bare `catch {}` in `understand.ts:72` and the draft step
+**What:** With the team's `AI_GATEWAY_API_KEY`, `generateText({ model: "anthropic/claude-haiku-4-5" })` returns **403 "Free tier users do not have access to this model. Upgrade to paid credits."** The agents catch it and take the deterministic path, so live mode looks fine. But the trace says "read without the model" and "Composed without the model" on every message, and nothing records why.
+**Why it matters:** Judges see template replies, not the model. A demo-day failure here would be invisible.
+**Suggested fix:** Humans: add paid credits to the Vercel AI Gateway, or put a direct `ANTHROPIC_API_KEY` in the shared `.env` (`isModelConfigured()` already accepts it; check that `model.ts` routes to it). Lane 3: write the caught error's message into the step's trace `summary` (e.g. "model unavailable: 403 free tier") so it shows in the drawer and `/audit`.
+
 ### 2026-10-17 15:20 PT · lane 2 → lane 3 · Butter reorder is dropped: `neededBy` isn't a valid datetime
 **Status:** open
 **Where:** `packages/agents/src/ops.ts:223` (`neededBy: \`${neededByDate}T${openAt}\``)
