@@ -112,13 +112,20 @@ export async function seed() {
       "free persona handles",
     );
   }
+  // The database is shared: a teammate seeding without DEMO_PERSONAS must not erase the persona
+  // phones someone else set. So only customers whose number this machine knows get a handle written.
+  const withPhone = customers.filter((c) => c.personaKey && handles.has(c.personaKey));
+  const withoutPhone = customers.filter((c) => !withPhone.includes(c));
+  if (withPhone.length) {
+    check(
+      await db().from("customers").upsert(
+        withPhone.map((c) => ({ id: c.id, name: c.name, notes: c.notes ?? null, handle: handles.get(c.personaKey!)!, is_demo_persona: true })),
+      ),
+      "persona customers",
+    );
+  }
   check(
-    await db().from("customers").upsert(
-      customers.map((c) => {
-        const handle = c.personaKey ? (handles.get(c.personaKey) ?? null) : null;
-        return { id: c.id, name: c.name, notes: c.notes ?? null, handle, is_demo_persona: Boolean(handle) };
-      }),
-    ),
+    await db().from("customers").upsert(withoutPhone.map((c) => ({ id: c.id, name: c.name, notes: c.notes ?? null }))),
     "customers",
   );
 
