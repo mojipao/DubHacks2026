@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type { Database, Json, Tables, TablesInsert, TablesUpdate } from "./db.ts";
+
 export const ProductId = z.string().min(1);
 export const IsoDateTime = z.iso.datetime({ offset: true });
 
