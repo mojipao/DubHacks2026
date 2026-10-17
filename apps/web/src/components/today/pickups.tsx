@@ -5,42 +5,24 @@ import { AlertTriangle } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStore } from "@/lib/data/store";
 import { BUSINESS } from "@/lib/business";
+import { addDaysKey, localDateKey } from "@/lib/format";
 import { cn } from "@/lib/utils";
-
-function localDateKey(iso: string): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: BUSINESS.timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(iso));
-}
-
-function addLocalDays(base: Date, days: number): string {
-  const d = new Date(base);
-  d.setDate(d.getDate() + days);
-  return localDateKey(d.toISOString());
-}
-
-function nextWeekday(from: Date, weekday: number): string {
-  const d = new Date(from);
-  const delta = (weekday + 7 - d.getDay()) % 7 || 7;
-  d.setDate(d.getDate() + delta);
-  return localDateKey(d.toISOString());
-}
+import { toast } from "sonner";
 
 export function PickupsBoard() {
-  const { state } = useStore();
+  const { state, markPaid } = useStore();
   const [tab, setTab] = useState("today");
 
+  const todayKey = localDateKey(state.now);
   const keys = useMemo(() => {
-    const now = new Date(state.now);
+    const weekday = new Date(`${todayKey}T12:00:00Z`).getUTCDay();
     return {
-      today: localDateKey(state.now),
-      tomorrow: addLocalDays(now, 1),
-      saturday: nextWeekday(now, 6),
+      today: todayKey,
+      tomorrow: addDaysKey(todayKey, 1),
+      // Next Saturday; on a Saturday that's a week out, since "Today" already covers it.
+      saturday: addDaysKey(todayKey, (6 + 7 - weekday) % 7 || 7),
     };
-  }, [state.now]);
+  }, [todayKey]);
 
   const selectedKey =
     tab === "tomorrow"
@@ -88,7 +70,7 @@ export function PickupsBoard() {
           return (
             <li
               key={o.id}
-              className="flex items-center justify-between gap-2 rounded-md border border-line bg-bg/50 px-2.5 py-2"
+              className="group flex items-center justify-between gap-2 rounded-md border border-line bg-bg/50 px-2.5 py-2"
             >
               <div className="min-w-0">
                 <div className="truncate text-[13px] text-fg">
@@ -99,6 +81,20 @@ export function PickupsBoard() {
               <div className="flex items-center gap-1.5">
                 {o.hasShortfall && (
                   <AlertTriangle className="size-3.5 text-tomato" />
+                )}
+                {o.status === "awaiting_payment" && (
+                  <button
+                    type="button"
+                    title="Demo fallback when the Square webhook can't reach this laptop"
+                    onClick={() =>
+                      void markPaid(o.id)
+                        .then(() => toast.success("Marked paid"))
+                        .catch((e: Error) => toast.error(e.message))
+                    }
+                    className="rounded px-1.5 py-0.5 text-[10px] text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-fg focus-visible:opacity-100"
+                  >
+                    mark paid
+                  </button>
                 )}
                 <span
                   className={cn(

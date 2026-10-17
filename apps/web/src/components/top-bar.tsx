@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { MoreHorizontal, QrCode } from "lucide-react";
+import { MoreHorizontal, QrCode, Sunrise, Truck } from "lucide-react";
+import { toast } from "sonner";
 import { AgentStatus } from "@/components/agent-status";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,14 +14,15 @@ import {
 } from "@/components/ui/dialog";
 import { BUSINESS } from "@/lib/business";
 import { useStore } from "@/lib/data/store";
-import { localClock, money } from "@/lib/format";
+import { localClock, localDateKey, money } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
-  const { state, mode } = useStore();
+  const { state, mode, winbackScan, receiveDelivery } = useStore();
   const pending = state.proposals.filter((p) => p.status === "pending").length;
+  const today = localDateKey(state.now);
   const paidToday = state.orders
-    .filter((o) => o.status === "paid")
+    .filter((o) => o.paidAt && localDateKey(o.paidAt) === today)
     .reduce((sum, o) => sum + o.totalCents - o.discountCents, 0);
 
   return (
@@ -88,6 +90,31 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
               </Button>
               <Button variant="outline" asChild>
                 <Link href="/join">Judge join page</Link>
+              </Button>
+              <div className="mt-2 border-t border-line pt-3 font-mono text-[11px] tracking-[0.14em] text-muted uppercase">
+                Demo controls
+              </div>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  void winbackScan()
+                    .then((n) => toast.message(n > 0 ? `Morning scan drafted ${n} win-back${n === 1 ? "" : "s"}` : "Morning scan: no lapsed regulars"))
+                    .catch((e: Error) => toast.error(e.message))
+                }
+              >
+                <Sunrise className="size-4" />
+                Morning scan
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  void receiveDelivery()
+                    .then(() => toast.success("Supplier delivery received"))
+                    .catch((e: Error) => toast.error(e.message))
+                }
+              >
+                <Truck className="size-4" />
+                Receive supplier delivery (simulated)
               </Button>
             </div>
           </DialogContent>

@@ -11,8 +11,9 @@ export type AgentLabel = "intake" | "ops" | "winback" | "guard";
 
 export type UiCustomer = {
   id: string;
-  name: string | null;
-  handle: string;
+  name: string;
+  handle: string | null;
+  isDemoPersona: boolean;
 };
 
 export type UiConversation = {
@@ -72,6 +73,8 @@ export type UiOrder = {
   totalCents: number;
   discountCents: number;
   source: "history" | "agent";
+  createdAt: string;
+  paidAt: string | null;
   items: { productId: string; name: string; qty: number }[];
   hasShortfall?: boolean;
 };
@@ -117,6 +120,7 @@ export type FrictionStats = {
 export type ConnectionMode = "mock" | "realtime" | "polling";
 
 export type StoreState = {
+  customers: UiCustomer[];
   conversations: UiConversation[];
   messages: UiMessage[];
   proposals: UiProposal[];

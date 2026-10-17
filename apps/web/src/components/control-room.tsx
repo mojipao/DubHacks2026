@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ConversationList } from "@/components/conversations/list";
 import { ConversationThread } from "@/components/conversations/thread";
 import { FrictionStrip } from "@/components/friction-strip";
-import { PassRail } from "@/components/pass/rail";
+import { PassRail, type DrawerTarget } from "@/components/pass/rail";
 import { PhoneSimulator } from "@/components/phone-simulator";
 import { EventTicker } from "@/components/ticker";
 import { PickupsBoard } from "@/components/today/pickups";
@@ -17,6 +17,7 @@ import { toast } from "sonner";
 
 export function ControlRoom() {
   const { state, focusProposal, approve, reject } = useStore();
+  const [drawer, setDrawer] = useState<DrawerTarget>(null);
   const [simOpen, setSimOpen] = useState(() => {
     if (typeof window === "undefined") return false;
     return new URLSearchParams(window.location.search).get("sim") === "1";
@@ -24,8 +25,11 @@ export function ControlRoom() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement | null)?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      const target = e.target as HTMLElement | null;
+      if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // Shortcuts act on the pass only; an open drawer or simulator owns the keyboard.
+      if (drawer || simOpen) return;
 
       const pending = state.proposals.filter((p) => p.status === "pending");
       const focused =
@@ -40,21 +44,26 @@ export function ControlRoom() {
         toast.message("A approve · E edit · R reject · J/K focus · S simulator");
       }
       if (!focused) return;
+      const hasChildren = pending.some((p) => p.parentProposalId === focused.id);
       if (e.key === "a" || e.key === "A") {
         e.preventDefault();
-        void approve(focused.id)
-          .then(() => toast.success("Approved"))
-          .catch((err) => toast.error(err.message));
+        void approve(focused.id, { includeLinked: hasChildren })
+          .then(() => toast.success(hasChildren ? "Approved both" : "Approved"))
+          .catch((err: Error) => toast.error(err.message));
       }
       if (e.key === "r" || e.key === "R") {
         e.preventDefault();
-        void reject(focused.id)
-          .then(() => toast.message("Rejected"))
-          .catch((err) => toast.error(err.message));
+        void reject(focused.id, { includeLinked: hasChildren })
+          .then(() => toast.message("86'd"))
+          .catch((err: Error) => toast.error(err.message));
       }
       if (e.key === "e" || e.key === "E") {
         e.preventDefault();
-        toast.message("Open the ticket drawer to edit (double-click a ticket)");
+        setDrawer({ id: focused.id, editing: focused.kind === "reply" });
+      }
+      if (e.key === "Enter") {
+        e.preventDefault();
+        setDrawer({ id: focused.id, editing: false });
       }
       if (e.key === "j" || e.key === "J") {
         e.preventDefault();
@@ -71,7 +80,7 @@ export function ControlRoom() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [state.proposals, state.focusedProposalId, approve, reject, focusProposal]);
+  }, [state.proposals, state.focusedProposalId, approve, reject, focusProposal, drawer, simOpen]);
 
   const dayLabel = new Intl.DateTimeFormat("en-US", {
     timeZone: BUSINESS.timezone,
@@ -94,7 +103,7 @@ export function ControlRoom() {
           </div>
         </aside>
 
-        <PassRail onOpenSim={() => setSimOpen(true)} />
+        <PassRail onOpenSim={() => setSimOpen(true)} drawer={drawer} onDrawer={setDrawer} />
 
         <aside className="w-[340px] shrink-0 overflow-y-auto bg-panel/30 px-4 py-3">
           <h2 className="mb-3 font-mono text-[12px] tracking-[0.2em] text-muted uppercase">

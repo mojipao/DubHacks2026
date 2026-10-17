@@ -1,6 +1,9 @@
 "use client";
 
+import { useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { Shield } from "lucide-react";
+import { isGuardFlag } from "@/lib/flags";
 import { useStore } from "@/lib/data/store";
 import { maskHandle, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -8,6 +11,15 @@ import { cn } from "@/lib/utils";
 export function ConversationList() {
   const { state, selectConversation } = useStore();
   const reduce = useReducedMotion();
+  const guarded = useMemo(
+    () =>
+      new Set(
+        state.proposals
+          .filter((p) => p.riskFlags.some(isGuardFlag))
+          .map((p) => p.conversationId),
+      ),
+    [state.proposals],
+  );
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -19,7 +31,7 @@ export function ConversationList() {
       <ul className="min-h-0 flex-1 overflow-y-auto">
         {state.conversations.map((c) => {
           const selected = state.selectedConversationId === c.id;
-          const name = c.customerName ?? maskHandle(c.handle);
+          const name = c.role === "owner" ? "Owner" : (c.customerName ?? maskHandle(c.handle));
           return (
             <motion.li
               key={c.id}
@@ -72,8 +84,15 @@ export function ConversationList() {
                     >
                       {c.platform === "imessage" ? "iMessage" : "simulated"}
                     </span>
-                    {!c.customerName && (
-                      <span className="text-[10px] text-tomato">flagged</span>
+                    {c.role === "owner" && (
+                      <span className="rounded bg-basil/20 px-1 py-px text-[10px] font-semibold uppercase tracking-wide text-basil">
+                        owner
+                      </span>
+                    )}
+                    {guarded.has(c.id) && (
+                      <span className="inline-flex items-center gap-0.5 text-[11px] font-semibold text-tomato">
+                        <Shield className="size-3" /> Guard
+                      </span>
                     )}
                   </span>
                 </span>

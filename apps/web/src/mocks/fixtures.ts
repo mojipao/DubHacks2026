@@ -1,8 +1,10 @@
 import { PAYMENT_LINK_TOKEN } from "@boh/shared";
+import ingredientsJson from "../../../../data/seed/ingredients.json";
+import { addDaysKey, localDateKey, localMidnight } from "@/lib/format";
 import type {
-  FrictionStats,
   TraceStep,
   UiConversation,
+  UiCustomer,
   UiEvent,
   UiIngredient,
   UiMessage,
@@ -14,23 +16,18 @@ const now = Date.now();
 const minutesAgo = (m: number) => new Date(now - m * 60_000).toISOString();
 const hoursAgo = (h: number) => minutesAgo(h * 60);
 
-/** Next Saturday / Sunday 9:00 PT-ish as ISO offsets for demo fixtures. */
+/** Shop-local pickup time `days` from today, as an ISO instant. */
+function localPickup(days: number, hour: number, minute = 0): string {
+  const key = addDaysKey(localDateKey(new Date(now)), days);
+  return new Date(localMidnight(key).getTime() + (hour * 60 + minute) * 60_000).toISOString();
+}
+
+/** Next Saturday / Sunday in the shop's timezone (a week out when today is that day). */
 function nextWeekendPickup(day: "sat" | "sun", hour = 9): string {
-  const d = new Date();
-  const target = day === "sat" ? 6 : 0;
-  const delta = (target + 7 - d.getDay()) % 7 || 7;
-  d.setDate(d.getDate() + delta);
-  d.setHours(hour, 0, 0, 0);
-  const offset = -d.getTimezoneOffset();
-  const sign = offset >= 0 ? "+" : "-";
-  const abs = Math.abs(offset);
-  const oh = String(Math.floor(abs / 60)).padStart(2, "0");
-  const om = String(abs % 60).padStart(2, "0");
-  const y = d.getFullYear();
-  const mo = String(d.getMonth() + 1).padStart(2, "0");
-  const da = String(d.getDate()).padStart(2, "0");
-  const h = String(d.getHours()).padStart(2, "0");
-  return `${y}-${mo}-${da}T${h}:00:00${sign}${oh}:${om}`;
+  const todayKey = localDateKey(new Date(now));
+  const weekday = new Date(`${todayKey}T12:00:00Z`).getUTCDay();
+  const satDelta = (6 + 7 - weekday) % 7 || 7;
+  return localPickup(day === "sat" ? satDelta : satDelta + 1, hour);
 }
 
 export const FIXTURE_CUSTOMERS = {
@@ -40,6 +37,13 @@ export const FIXTURE_CUSTOMERS = {
   judge: { id: "cust-judge", name: null, handle: "+12065550184" },
   elena: { id: "cust-elena", name: "Elena Ortiz", handle: "+12065550103" },
 };
+
+export const FIXTURE_CUSTOMER_LIST: UiCustomer[] = [
+  { ...FIXTURE_CUSTOMERS.maya, isDemoPersona: true },
+  { ...FIXTURE_CUSTOMERS.jun, isDemoPersona: true },
+  { ...FIXTURE_CUSTOMERS.priya, isDemoPersona: true },
+  { ...FIXTURE_CUSTOMERS.elena, isDemoPersona: false },
+];
 
 export const FIXTURE_CONVERSATIONS: UiConversation[] = [
   {
@@ -132,7 +136,8 @@ export const FIXTURE_MESSAGES: UiMessage[] = [
   },
 ];
 
-const satPickup = nextWeekendPickup("sat", 9);
+export const FIXTURE_SAT_PICKUP = nextWeekendPickup("sat", 9);
+const satPickup = FIXTURE_SAT_PICKUP;
 const sunPickup = nextWeekendPickup("sun", 9);
 
 export const FIXTURE_PROPOSALS: UiProposal[] = [
@@ -357,6 +362,8 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     totalCents: 1620,
     discountCents: 180,
     source: "agent",
+    createdAt: minutesAgo(18),
+    paidAt: minutesAgo(17),
     items: [
       { productId: "almond-croissant", name: "Almond croissant", qty: 2 },
       { productId: "oat-latte", name: "Oat latte", qty: 1 },
@@ -371,6 +378,8 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     totalCents: 5400,
     discountCents: 0,
     source: "history",
+    createdAt: hoursAgo(72),
+    paidAt: hoursAgo(72),
     items: [{ productId: "butter-croissant", name: "Butter croissant", qty: 12 }],
     hasShortfall: true,
   },
@@ -383,54 +392,62 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     totalCents: 2700,
     discountCents: 0,
     source: "history",
+    createdAt: hoursAgo(50),
+    paidAt: hoursAgo(50),
     items: [{ productId: "butter-croissant", name: "Butter croissant", qty: 6 }],
   },
-];
-
-export const FIXTURE_INGREDIENTS: UiIngredient[] = [
   {
-    id: "butter",
-    name: "Butter",
-    unit: "kg",
-    onHand: 4.2,
-    onOrder: 0,
-    reorderPoint: 3,
+    id: "order-today-1",
+    customerId: "cust-elena",
+    customerName: "Elena Ortiz",
+    status: "paid",
+    pickupAt: localPickup(0, 10),
+    totalCents: 1350,
+    discountCents: 0,
+    source: "agent",
+    createdAt: hoursAgo(3),
+    paidAt: hoursAgo(3),
+    items: [
+      { productId: "pain-au-chocolat", name: "Pain au chocolat", qty: 2 },
+      { productId: "oat-latte", name: "Oat latte", qty: 1 },
+    ],
   },
   {
-    id: "almond-flour",
-    name: "Almond flour",
-    unit: "kg",
-    onHand: 6.5,
-    onOrder: 0,
-    reorderPoint: 2,
-  },
-  {
-    id: "oat-milk",
-    name: "Oat milk",
-    unit: "L",
-    onHand: 8,
-    onOrder: 2,
-    reorderPoint: 4,
-  },
-  {
-    id: "bread-flour",
-    name: "Bread flour",
-    unit: "kg",
-    onHand: 18,
-    onOrder: 0,
-    reorderPoint: 8,
+    id: "order-today-2",
+    customerId: "cust-other-3",
+    customerName: "Dev R.",
+    status: "awaiting_payment",
+    pickupAt: localPickup(0, 11, 30),
+    totalCents: 2250,
+    discountCents: 0,
+    source: "agent",
+    createdAt: minutesAgo(40),
+    paidAt: null,
+    items: [{ productId: "butter-croissant", name: "Butter croissant", qty: 5 }],
   },
 ];
 
-export const FIXTURE_EVENTS: UiEvent[] = [
+/** Same stock as lane 3's seed, so mock bars match what `pnpm seed` loads. */
+export const FIXTURE_INGREDIENTS: UiIngredient[] = ingredientsJson.map((i) => ({
+  id: i.id,
+  name: i.name,
+  unit: i.unit,
+  onHand: i.onHand,
+  onOrder: i.id === "oat-milk" ? 6 : 0,
+  reorderPoint: i.reorderPoint,
+}));
+
+
+/** Newest first, the same order the live source returns. */
+export const FIXTURE_EVENTS: UiEvent[] = ([
   {
     id: "evt-1",
     at: minutesAgo(20),
-    actor: "photon",
+    actor: "customer",
     type: "message.received",
     subjectType: "message",
     subjectId: "msg-maya-1",
-    data: { handle: "Maya" },
+    data: { platform: "imessage" },
   },
   {
     id: "evt-2",
@@ -455,7 +472,34 @@ export const FIXTURE_EVENTS: UiEvent[] = [
     type: "proposal.approved",
     subjectType: "proposal",
     subjectId: "prop-maya-done",
-    data: { via: "ui" },
+    data: { via: "control_room", edited: false },
+  },
+  {
+    id: "evt-3b",
+    at: minutesAgo(18),
+    actor: "system",
+    type: "order.created",
+    subjectType: "order",
+    subjectId: "order-maya",
+    data: { proposalId: "prop-maya-done" },
+  },
+  {
+    id: "evt-3c",
+    at: minutesAgo(18),
+    actor: "system",
+    type: "message.sent",
+    subjectType: "message",
+    subjectId: "msg-maya-2",
+    data: { proposalId: "prop-maya-done", platform: "imessage" },
+  },
+  {
+    id: "evt-3d",
+    at: minutesAgo(18),
+    actor: "system",
+    type: "proposal.executed",
+    subjectType: "proposal",
+    subjectId: "prop-maya-done",
+    data: { kind: "reply" },
   },
   {
     id: "evt-4",
@@ -469,16 +513,16 @@ export const FIXTURE_EVENTS: UiEvent[] = [
   {
     id: "evt-5",
     at: minutesAgo(6),
-    actor: "photon",
+    actor: "customer",
     type: "message.received",
     subjectType: "message",
     subjectId: "msg-judge-1",
-    data: { handle: "judge" },
+    data: { platform: "imessage" },
   },
   {
     id: "evt-6",
     at: minutesAgo(5),
-    actor: "system",
+    actor: "agent:guard",
     type: "guard.flagged",
     subjectType: "proposal",
     subjectId: "prop-judge",
@@ -487,11 +531,11 @@ export const FIXTURE_EVENTS: UiEvent[] = [
   {
     id: "evt-7",
     at: minutesAgo(2),
-    actor: "system",
+    actor: "customer",
     type: "message.received",
     subjectType: "message",
     subjectId: "msg-jun-1",
-    data: { handle: "Jun" },
+    data: { platform: "simulated" },
   },
   {
     id: "evt-8",
@@ -512,7 +556,7 @@ export const FIXTURE_EVENTS: UiEvent[] = [
       flags: ["capacity_shortfall", "ingredient_shortfall"],
     },
   },
-];
+] satisfies UiEvent[]).sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
 
 export const FIXTURE_TRACE: Record<string, TraceStep[]> = {
   "msg-jun-1": [
@@ -630,12 +674,4 @@ export const FIXTURE_TRACE: Record<string, TraceStep[]> = {
       flags: ["allergy_mentioned"],
     },
   ],
-};
-
-export const FIXTURE_FRICTION: FrictionStats = {
-  messagesHandled: 7,
-  ordersCreated: 3,
-  reordersDrafted: 1,
-  guardCatches: 2,
-  ownerMinutesSaved: 41,
 };

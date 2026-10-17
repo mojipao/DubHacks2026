@@ -1,13 +1,17 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@boh/shared";
 
-let client: SupabaseClient | null = null;
+export type BrowserDb = SupabaseClient<Database>;
 
-export function getSupabase(): SupabaseClient | null {
+let client: BrowserDb | null = null;
+
+/** Read-only browser client on the publishable key. Every write goes through the server. */
+export function getSupabase(): BrowserDb | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) return null;
   if (!client) {
-    client = createClient(url, key, {
+    client = createClient<Database>(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
   }

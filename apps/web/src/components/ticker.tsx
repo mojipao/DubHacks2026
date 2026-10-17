@@ -22,7 +22,8 @@ export function EventTicker() {
       onMouseLeave={() => setPaused(false)}
       className="flex h-10 items-center gap-4 overflow-x-auto border-t border-line bg-[#100e0c] px-3 font-mono text-[12px] text-muted"
     >
-      {state.events.slice(0, 40).map((e) => (
+      {/* Events arrive newest first; the ticker reads left to right, so the newest sits at the right edge. */}
+      {state.events.slice(0, 40).reverse().map((e) => (
         <Link
           key={e.id}
           href={`/audit?subject=${encodeURIComponent(e.subjectId ?? "")}`}

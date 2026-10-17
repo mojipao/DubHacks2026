@@ -13,6 +13,11 @@ import { isGuardFlag } from "@/lib/flags";
 import { friendlyPickup, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+// Tickets are paper, so their buttons need paper colors rather than the dark shadcn defaults.
+const TICKET_APPROVE = "bg-[#2f7d47] font-semibold text-white hover:bg-[#276a3c]";
+const TICKET_SECONDARY = "border-ink/25 bg-transparent font-semibold text-ink hover:bg-ink/5 hover:text-ink";
+const TICKET_REJECT = "border-[#b8401f]/50 bg-transparent font-semibold text-[#9c2f12] hover:bg-tomato/10 hover:text-[#9c2f12]";
+
 function ConfidenceMeter({ value }: { value: number }) {
   const filled = Math.round(value * 5);
   return (
@@ -60,6 +65,7 @@ export function Ticket({
   onReject,
   onApproveBoth,
   onRejectBoth,
+  onRetry,
 }: {
   proposal: UiProposal;
   focused: boolean;
@@ -71,6 +77,7 @@ export function Ticket({
   onReject: () => void;
   onApproveBoth?: () => void;
   onRejectBoth?: () => void;
+  onRetry?: () => void;
 }) {
   const reduce = useReducedMotion();
   const isReply = proposal.kind === "reply";
@@ -92,7 +99,7 @@ export function Ticket({
       className={cn(
         "ticket-paper relative w-full overflow-hidden rounded-[6px] shadow-[0_10px_28px_rgba(0,0,0,0.35)]",
         focused && "ring-2 ring-amber",
-        proposal.status === "executing" && "animate-pulse",
+        proposal.status === "executing" && "ticket-executing",
         proposal.status === "failed" && "ring-2 ring-tomato",
         linked && "ring-1 ring-ink/10",
       )}
@@ -123,9 +130,12 @@ export function Ticket({
         <Stamp
           kind={proposal.approvedVia === "imessage" ? "text" : "sent"}
           viaText={proposal.approvedVia === "imessage"}
+          delay={proposal.parentProposalId ? 0.35 : 0}
         />
       )}
-      {proposal.status === "rejected" && <Stamp kind="rejected" />}
+      {proposal.status === "rejected" && (
+        <Stamp kind="rejected" delay={proposal.parentProposalId ? 0.35 : 0} />
+      )}
 
       <div className="space-y-2.5 px-3 py-3 text-ink">
         <div className="flex flex-wrap items-start gap-2">
@@ -246,8 +256,24 @@ export function Ticket({
           </div>
         )}
 
-        {proposal.error && (
-          <p className="text-[13px] font-semibold text-tomato">{proposal.error}</p>
+        {proposal.status === "executing" && (
+          <p className="font-mono text-[12px] font-semibold text-[#8a5a12]">Sending…</p>
+        )}
+
+        {proposal.status === "failed" && (
+          <div
+            className="flex flex-wrap items-center justify-between gap-2 rounded-[4px] border border-tomato/40 bg-tomato/10 px-2.5 py-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="min-w-0 flex-1 text-[13px] font-semibold text-[#9c2f12]">
+              {proposal.error ?? "Execution failed"}
+            </p>
+            {onRetry && (
+              <Button size="sm" className={TICKET_REJECT} variant="outline" onClick={onRetry}>
+                Retry
+              </Button>
+            )}
+          </div>
         )}
 
         {proposal.status === "pending" && (
@@ -257,35 +283,22 @@ export function Ticket({
           >
             {onApproveBoth ? (
               <>
-                <Button
-                  size="sm"
-                  className="bg-basil text-white hover:bg-basil/90"
-                  onClick={onApproveBoth}
-                >
+                <Button size="sm" className={TICKET_APPROVE} onClick={onApproveBoth}>
                   Approve both
                 </Button>
-                <Button size="sm" variant="outline" onClick={onRejectBoth}>
+                <Button size="sm" variant="outline" className={TICKET_REJECT} onClick={onRejectBoth}>
                   Reject both
                 </Button>
               </>
             ) : (
               <>
-                <Button
-                  size="sm"
-                  className="bg-basil text-white hover:bg-basil/90"
-                  onClick={onApprove}
-                >
+                <Button size="sm" className={TICKET_APPROVE} onClick={onApprove}>
                   Approve
                 </Button>
-                <Button size="sm" variant="outline" onClick={onOpen}>
+                <Button size="sm" variant="outline" className={TICKET_SECONDARY} onClick={onOpen}>
                   Edit
                 </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-tomato/40 text-tomato hover:bg-tomato/10"
-                  onClick={onReject}
-                >
+                <Button size="sm" variant="outline" className={TICKET_REJECT} onClick={onReject}>
                   Reject
                 </Button>
               </>

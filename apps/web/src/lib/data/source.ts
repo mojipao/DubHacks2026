@@ -4,6 +4,7 @@ import type {
   StoreState,
   TraceStep,
   UiConversation,
+  UiCustomer,
   UiEvent,
   UiIngredient,
   UiMessage,
@@ -12,6 +13,7 @@ import type {
 } from "@/lib/data/types";
 
 export type DataSnapshot = {
+  customers: UiCustomer[];
   conversations: UiConversation[];
   messages: UiMessage[];
   proposals: UiProposal[];
@@ -30,10 +32,15 @@ export type DataSource = {
   approve(id: string, opts?: { editedText?: string; includeLinked?: boolean }): Promise<void>;
   reject(id: string, opts?: { reason?: string; includeLinked?: boolean }): Promise<void>;
   simulateInbound(input: { handle: string; name?: string; text: string }): Promise<void>;
+  retry(id: string): Promise<void>;
+  markPaid(orderId: string): Promise<void>;
+  winbackScan(): Promise<number>;
+  receiveDelivery(): Promise<void>;
 };
 
 export function emptyState(connection: ConnectionMode): StoreState {
   return {
+    customers: [],
     conversations: [],
     messages: [],
     proposals: [],

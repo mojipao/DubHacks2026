@@ -1,32 +1,19 @@
 import { NextResponse } from "next/server";
+import { clientIpHeaders, forwardToServer, readJson } from "@/lib/server-proxy";
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => ({}));
-  const serverUrl = process.env.SERVER_URL ?? "http://localhost:8787";
-
-  try {
-    const res = await fetch(`${serverUrl}/join`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = await res.json().catch(() => ({ error: "Invalid server response" }));
-    if (res.ok) return NextResponse.json(data, { status: res.status });
-
-    // Fallback mock while lane 2 /join is not live
-    if (res.status === 404 || res.status >= 500) {
-      return NextResponse.json({
-        agentNumber: "+12065550111",
-        customerId: "mock-customer",
-        mock: true,
-      });
-    }
-    return NextResponse.json(data, { status: res.status });
-  } catch {
+  const body = await readJson(request);
+  // Mock mode never touches Photon; live mode passes the server's real errors through so a judge is never handed a fake number.
+  if (process.env.NEXT_PUBLIC_DATA_MODE !== "live") {
     return NextResponse.json({
       agentNumber: "+12065550111",
       customerId: "mock-customer",
       mock: true,
     });
   }
+  return forwardToServer("/join", {
+    body,
+    owner: false,
+    headers: clientIpHeaders(request),
+  });
 }
