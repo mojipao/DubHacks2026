@@ -29,6 +29,20 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:25 PT · lane 2 → lane 3 · Real phone: "Saturday at 9am" became 8am and was flagged outside hours
+**Status:** open
+**Where:** understand/resolve for pickup time (`packages/agents/src/understand.ts`, `intake.ts` resolve and flags)
+**What:** Live message from a new number: "Can I get 2 almond croissants and an oat latte for Saturday at 9am?" The draft's `pickupAt` was `2026-10-24T08:00:00-07:00`, the text said "pickup at 8am", and the flags included `outside_hours`, although Saturday opens at 08:00.
+**Why it matters:** The customer gets the wrong pickup time, and the payment link's line items carry it too.
+**Suggested fix:** Keep the stated time when it's inside opening hours, and only flag `outside_hours` when it falls outside `business.hours`. Add the phrasing "Saturday at 9am" to the evals.
+
+### 2026-10-17 15:25 PT · lane 2 → lane 3 · Real phone: "hi" gets "We can't take orders through this message"
+**Status:** open
+**Where:** the smalltalk / greeting draft path in `packages/agents/src/intake.ts`
+**What:** A first "hi" from a new number got: "Hi there! We can't take orders through this message, but you can see our full menu on our website. Larch & Rye".
+**Why it matters:** Ordering by text is the product. Judges' first message is often "hi".
+**Suggested fix:** Greet and invite an order ("Hi! What can we get started for you? We're open Sat 8–2…"). Never say orders aren't taken by text.
+
 ### 2026-10-17 15:10 PT · lane 2 → lane 1 · New route for a "customer pays" button
 **Status:** open
 **Where:** `apps/web` (phone simulator or the ticket/pickup row for an `awaiting_payment` order); server route `POST /dev/square-pay/:orderId`
