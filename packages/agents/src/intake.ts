@@ -27,7 +27,7 @@ import { planFulfillment, planReorder, type FulfillmentPlan } from "./ops.ts";
 import { checkInbound, checkReply } from "./guard.ts";
 import { Budget, generateStructured, isModelConfigured } from "./model.ts";
 import { DRAFT_SYSTEM, draftPrompt } from "./prompts/draft.ts";
-import { understand, type Understanding } from "./understand.ts";
+import { matchItems, understand, type Understanding } from "./understand.ts";
 import {
   allergyEvidence,
   capacityEvidence,
@@ -129,7 +129,7 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
 
     // 3. Resolve ------------------------------------------------------------
     const step3 = Date.now();
-    const resolved = resolveRequest(reading.value, usual, catalog, customer, business, now, todayLocal, flags);
+    const resolved = resolveRequest(reading.value, usual, catalog, customer, business, now, todayLocal, flags, text);
 
     ctx.trace("resolve", {
       agent: "intake",
@@ -191,6 +191,7 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
       perkApplies,
       business,
       reading: reading.value,
+      mentioned: resolved.mentioned,
     });
 
     const facts = factLines({ plan, catalog, business, reading: reading.value, perkApplies, resolved, usual });
@@ -359,6 +360,8 @@ interface Resolved {
   pickupLocal: string | null;
   isCatering: boolean;
   totalCents: number;
+  /** Products the message names, whether or not it is an order. Price questions need this. */
+  mentioned: OrderLine[];
 }
 
 function resolveRequest(
@@ -370,15 +373,27 @@ function resolveRequest(
   now: Date,
   todayLocal: string,
   flags: Set<RiskFlag>,
+  rawText: string,
 ): Resolved {
   const known = new Map(catalog.map((p) => [p.id, p]));
 
   let items: OrderLine[] = reading.items.filter((i) => known.has(i.productId));
   if (items.length !== reading.items.length) flags.add("needs_clarification");
 
-  if (reading.intent === "order_usual") {
-    if (usual) items = usual.items.filter((i) => known.has(i.productId));
-    else flags.add("needs_clarification");
+  // "the usual", and the ways people say it without saying it.
+  const wantsUsual =
+    reading.intent === "order_usual" || /\b(same as (last|before|always)|the usual|my usual)\b/i.test(rawText);
+
+  if (wantsUsual && items.length === 0) {
+    if (usual) {
+      // "same as last time but double" is a real order, not a clarification.
+      const multiplier = /\bdouble\b/i.test(rawText) ? 2 : /\btriple\b/i.test(rawText) ? 3 : 1;
+      items = usual.items
+        .filter((i) => known.has(i.productId))
+        .map((i) => ({ productId: i.productId, qty: i.qty * multiplier }));
+    } else {
+      flags.add("needs_clarification");
+    }
   }
 
   if (reading.needsClarification) flags.add("needs_clarification");
@@ -418,7 +433,7 @@ function resolveRequest(
 
   if (reading.intent === "complaint") flags.add("complaint");
 
-  return { items, pickupLocal, isCatering, totalCents };
+  return { items, pickupLocal, isCatering, totalCents, mentioned: matchItems(rawText, catalog) };
 }
 
 /** Does a product contain something the noted allergy mentions? */
@@ -559,6 +574,16 @@ function factLines(args: {
   if (reading.intent === "question_menu" || reading.intent === "question_hours") {
     lines.push(`Shop hours: Tue-Fri ${business.hours.tue?.open}-${business.hours.tue?.close}, Sat-Sun ${business.hours.sat?.open}-${business.hours.sat?.close}, closed Monday`);
   }
+
+  // A price question only gets answered if the price is in the facts; the model is not
+  // allowed to recall one. Only when nothing is being ordered, so a draft reply never
+  // states a line price next to an order the server is about to price itself.
+  if (!plan || plan.days.length === 0) {
+    for (const item of resolved.mentioned) {
+      const product = catalog.find((p) => p.id === item.productId);
+      if (product) lines.push(`Menu price: ${product.name} is $${(product.priceCents / 100).toFixed(2)} each`);
+    }
+  }
   if (reading.needsClarification && reading.clarifyingQuestion) {
     lines.push(`Needs clarification: ${reading.clarifyingQuestion}`);
   }
@@ -593,8 +618,9 @@ function buildEvidence(args: {
   perkApplies: boolean;
   business: AgentContext["business"];
   reading: Understanding;
+  mentioned: OrderLine[];
 }): Evidence[] {
-  const { customer, history, usual, catalog, plan, daysSince, perkApplies, business, reading } = args;
+  const { customer, history, usual, catalog, plan, daysSince, perkApplies, business, reading, mentioned } = args;
   const rows: Evidence[] = [];
 
   const oldest = history.length > 0 ? history[history.length - 1] : undefined;
@@ -625,7 +651,7 @@ function buildEvidence(args: {
 
   // A straight price question deserves the price it asked about, from the catalog.
   if (reading.intent === "question_menu") {
-    for (const item of reading.items) {
+    for (const item of mentioned) {
       const product = catalog.find((p) => p.id === item.productId);
       if (product) rows.push(priceEvidence(product));
     }
