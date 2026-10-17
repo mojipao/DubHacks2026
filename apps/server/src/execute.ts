@@ -17,11 +17,18 @@ export interface PricedOrder {
   orderId: string;
   pickupAt: string;
   lines: { name: string; qty: number; unitPriceCents: number }[];
+  discountCents?: number;
 }
 
 /** Sends a customer message. Real Photon implementation lands in Phase 4. */
 export interface Messenger {
-  send(input: { conversation: Conversation; text: string; proposalId: string }): Promise<{ photonMessageId: string | null }>;
+  send(input: {
+    conversation: Conversation;
+    text: string;
+    proposalId: string;
+    /** Defaults to `proposal:<id>`; owner notifications and confirmations pass their own. */
+    idempotencyKey?: string;
+  }): Promise<{ photonMessageId: string | null }>;
 }
 
 /** Creates one payment link covering every order of a reply. Real Square implementation lands in Phase 5. */
@@ -151,23 +158,18 @@ async function executeReply(p: Proposal, editedText: string | undefined) {
 
   let body = text;
   if (payload.orders.length) {
-    const priced = await createOrders(p, conversation.customer_id, payload.orders);
-    const link = await payments.createLink({ proposalId: p.id, customerId: conversation.customer_id, orders: priced });
-    const orderIds = priced.map((o) => o.orderId);
-    const { error: linkError } = await db()
-      .from("orders")
-      .update({ square_order_id: link.squareOrderId, square_payment_link_id: link.linkId, payment_url: link.url })
-      .in("id", orderIds);
-    if (linkError) throw new Error(`store payment link: ${linkError.message}`);
-    for (const orderId of orderIds) {
-      await logEvent("system", "payment_link.created", { type: "order", id: orderId }, { linkId: link.linkId });
-    }
-    body = body.includes(PAYMENT_LINK_TOKEN) ? body.replaceAll(PAYMENT_LINK_TOKEN, link.url) : `${body}\n${link.url}`;
+    const url = await ensureOrdersAndLink(p, conversation.customer_id, payload.orders);
+    body = body.includes(PAYMENT_LINK_TOKEN) ? body.replaceAll(PAYMENT_LINK_TOKEN, url) : `${body}\n${url}`;
   }
   body = body.replaceAll(PAYMENT_LINK_TOKEN, "").trimEnd() + `\n${business.poweredByFooter}`;
 
-  const sent = await messenger.send({ conversation, text: body, proposalId: p.id });
-  const { data: message, error: msgError } = await db()
+  await sendAndRecord(conversation, body, p.id);
+}
+
+/** Sends through the active Messenger (Photon for iMessage, nothing for simulated), then stores the outbound row and event. */
+export async function sendAndRecord(conversation: Conversation, body: string, proposalId: string, idempotencyKey?: string) {
+  const sent = await messenger.send({ conversation, text: body, proposalId, idempotencyKey });
+  const { data: message, error } = await db()
     .from("messages")
     .insert({
       conversation_id: conversation.id,
@@ -178,16 +180,84 @@ async function executeReply(p: Proposal, editedText: string | undefined) {
     })
     .select("id")
     .single();
-  if (msgError) throw new Error(`store outbound message: ${msgError.message}`);
+  if (error) throw new Error(`store outbound message: ${error.message}`);
   await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", conversation.id);
-  await logEvent("system", "message.sent", { type: "message", id: message.id }, {
-    proposalId: p.id,
-    platform: conversation.platform,
-  });
+  await logEvent("system", "message.sent", { type: "message", id: message.id }, { proposalId, platform: conversation.platform });
+  return message.id;
 }
 
-/** Prices every line from the products table. Agents never set a price. Perks arrive with Phase 6 eligibility checks. */
+/**
+ * Creates the reply's orders and its one payment link, or reuses them when a retry finds them
+ * already stored, so a retry after a Photon failure resends without charging twice.
+ */
+async function ensureOrdersAndLink(p: Proposal, customerId: string | null, drafts: OrderDraft[]): Promise<string> {
+  const { data: existing, error } = await db()
+    .from("orders")
+    .select("id, pickup_at, discount_cents, payment_url, order_items(product_id, qty, unit_price_cents, products(name))")
+    .eq("proposal_id", p.id);
+  if (error) throw new Error(`load existing orders: ${error.message}`);
+  const storedUrl = existing?.find((o) => o.payment_url)?.payment_url;
+  if (storedUrl) return storedUrl;
+
+  const priced: PricedOrder[] = existing?.length
+    ? existing.map((o) => ({
+        orderId: o.id,
+        pickupAt: o.pickup_at,
+        discountCents: o.discount_cents,
+        lines: o.order_items.map((i) => ({ name: i.products?.name ?? i.product_id, qty: i.qty, unitPriceCents: i.unit_price_cents })),
+      }))
+    : await createOrders(p, customerId, drafts);
+
+  const link = await payments.createLink({ proposalId: p.id, customerId, orders: priced });
+  const orderIds = priced.map((o) => o.orderId);
+  const { error: linkError } = await db()
+    .from("orders")
+    .update({ square_order_id: link.squareOrderId, square_payment_link_id: link.linkId, payment_url: link.url })
+    .in("id", orderIds);
+  if (linkError) throw new Error(`store payment link: ${linkError.message}`);
+  for (const orderId of orderIds) {
+    await logEvent("system", "payment_link.created", { type: "order", id: orderId }, { linkId: link.linkId });
+  }
+  return link.url;
+}
+
+/** Re-runs a failed proposal. Stored orders and payment links are reused. */
+export async function retry(id: string, opts: DecisionOptions = {}): Promise<Proposal[]> {
+  const { data, error } = await db()
+    .from("proposals")
+    .update({ status: "executing", error: null })
+    .eq("id", id)
+    .eq("status", "failed")
+    .select("*")
+    .maybeSingle();
+  if (error) throw new Error(`claim retry: ${error.message}`);
+  if (!data) throw new HttpError(409, "Proposal is not failed");
+  await logEvent(opts.actor ?? "owner", "proposal.approved", { type: "proposal", id }, { retry: true, via: opts.via ?? "control_room" });
+  await runExecution(data, undefined, true);
+  return [await fetchProposal(id)];
+}
+
+const WELCOME_BACK_RATE = 0.1;
+
+/** The server, not the agent, decides perk eligibility: a returning customer whose last past pickup is old enough. */
+async function perkEligible(customerId: string | null): Promise<boolean> {
+  if (!customerId) return false;
+  const { data } = await db()
+    .from("orders")
+    .select("pickup_at")
+    .eq("customer_id", customerId)
+    .in("status", ["paid", "fulfilled"])
+    .lte("pickup_at", new Date().toISOString())
+    .order("pickup_at", { ascending: false })
+    .limit(1);
+  const last = data?.[0];
+  if (!last) return false;
+  return Date.now() - Date.parse(last.pickup_at) >= business.welcomeBackAfterDays * 86_400_000;
+}
+
+/** Prices every line from the products table. Agents never set a price. The perk applies once per reply. */
 async function createOrders(p: Proposal, customerId: string | null, drafts: OrderDraft[]): Promise<PricedOrder[]> {
+  let perkAvailable = drafts.some((d) => d.perk === "welcome_back_10") && (await perkEligible(customerId));
   const productIds = [...new Set(drafts.flatMap((o) => o.items.map((i) => i.productId)))];
   const { data: products, error } = await db().from("products").select("id, name, price_cents").in("id", productIds);
   if (error) throw new Error(`load products: ${error.message}`);
@@ -201,6 +271,8 @@ async function createOrders(p: Proposal, customerId: string | null, drafts: Orde
       return { productId: product.id, name: product.name, qty: item.qty, unitPriceCents: product.price_cents };
     });
     const total = lines.reduce((sum, l) => sum + l.qty * l.unitPriceCents, 0);
+    const discount = perkAvailable && draft.perk === "welcome_back_10" ? Math.round(total * WELCOME_BACK_RATE) : 0;
+    if (discount) perkAvailable = false;
     const { data: order, error: orderError } = await db()
       .from("orders")
       .insert({
@@ -209,6 +281,7 @@ async function createOrders(p: Proposal, customerId: string | null, drafts: Orde
         status: "awaiting_payment",
         pickup_at: draft.pickupAt,
         total_cents: total,
+        discount_cents: discount,
         proposal_id: p.id,
       })
       .select("id")
@@ -221,9 +294,10 @@ async function createOrders(p: Proposal, customerId: string | null, drafts: Orde
     await logEvent("system", "order.created", { type: "order", id: order.id }, {
       proposalId: p.id,
       totalCents: total,
+      discountCents: discount,
       pickupAt: draft.pickupAt,
     } as Record<string, Json>);
-    priced.push({ orderId: order.id, pickupAt: draft.pickupAt, lines });
+    priced.push({ orderId: order.id, pickupAt: draft.pickupAt, lines, discountCents: discount });
   }
   return priced;
 }
@@ -232,8 +306,9 @@ async function createOrders(p: Proposal, customerId: string | null, drafts: Orde
 async function executeReorder(p: Proposal) {
   const payload = ReorderPayload.parse(p.payload);
   for (const line of payload.lines) {
-    const { data: ingredient, error } = await db().from("ingredients").select("id, on_order").eq("id", line.ingredientId).single();
+    const { data: ingredient, error } = await db().from("ingredients").select("id, on_order").eq("id", line.ingredientId).maybeSingle();
     if (error) throw new Error(`load ingredient ${line.ingredientId}: ${error.message}`);
+    if (!ingredient) throw new Error(`Unknown ingredient ${line.ingredientId}`);
     const onOrder = Number(ingredient.on_order) + line.qty;
     const { error: updateError } = await db().from("ingredients").update({ on_order: onOrder }).eq("id", ingredient.id);
     if (updateError) throw new Error(`update ingredient ${line.ingredientId}: ${updateError.message}`);

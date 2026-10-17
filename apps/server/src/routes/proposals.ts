@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { approve, reject } from "../execute.ts";
+import { approve, reject, retry } from "../execute.ts";
 import { requireOwner } from "./owner-auth.ts";
 
 const ApproveBody = z.object({ editedText: z.string().optional(), includeLinked: z.boolean().optional() });
@@ -20,3 +20,5 @@ proposals.post("/:id/reject", async (c) => {
   if (!body.success) return c.json({ error: z.prettifyError(body.error) }, 400);
   return c.json({ proposals: await reject(c.req.param("id"), body.data) });
 });
+
+proposals.post("/:id/retry", async (c) => c.json({ proposals: await retry(c.req.param("id")) }));

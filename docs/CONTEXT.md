@@ -11,9 +11,10 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 - **Sponsored tracks:** Photon, VEYZL, SideShift
 - **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
 - **Plan:** `planning/README.md`, then your lane file in `planning/`.
-- **Assumed deadline:** Sunday 2026-10-18, 10:00 AM PT. Unconfirmed; a human must verify with organizers.
+- **Deadline:** Sunday 2026-10-18, 10:00 AM PT. Confirmed by Yousuf (2026-10-17).
+- **Product name:** stays **Back of House** (confirmed).
 
-Open human decisions: confirm the deadline, confirm multi-track entry rules, and decide whether to keep the name "Back of House."
+Open human decisions: confirm multi-track entry rules with organizers (one title track plus several sponsored). Who texts as **Maya** in the live demo is still TBD; Maya is a synthetic customer persona, not the shop line.
 
 ## Team
 
@@ -21,21 +22,37 @@ Open human decisions: confirm the deadline, confirm multi-track entry rules, and
 | --- | --- | --- |
 | 1 | Frontend | aahil1218 |
 | 2 | Backend | mojipao |
-| 3 | Agents | unassigned |
+| 3 | Agents | ybassyiouni (Yousuf Al-Bassyiouni) |
 
 Claims and handoffs live in `docs/STATUS.md`.
+
+## Demo phones and personas
+
+Roles only. Every real number lives in the private `.env`, never in git, because this repo becomes public at submission.
+
+| Role | Env var | Who |
+| --- | --- | --- |
+| Shop Photon line (inbound) | `PHOTON_AGENT_HANDLE` | The Photon-assigned business iMessage number customers text. Not Maya. |
+| Owner (approver) | `OWNER_HANDLE` | Yousuf. Approves in the control room or by iMessage (`Y` / `N` / `?`). |
+| Maya | `DEMO_PERSONAS` | Synthetic customer persona. A teammate texts *as Maya* into the shop line; which phone is TBD. |
+| Jun, Priya, judges | `DEMO_PERSONAS`, `/join` | Phone simulator or `/join`, as planned. |
+
+Lane 3 holds the filled `.env`; ask in team chat for the numbers.
 
 ## Constraints that already apply
 
 - Hackathon: DubHacks 2026. Side-track rules: `docs/TRACKS.md` and the [organizer page](https://dubhacks.notion.site/26-Sponsored-Side-Tracks-5e3ff32c1d7e834d9844812256c9fa06).
-- Synthetic data only. Real phone numbers live only in the private `.env` (`DEMO_PERSONAS`), never in git.
-- No secrets in git. Env var names are listed in `planning/ARCHITECTURE.md`.
+- Synthetic data only. Every real phone number, the owner's and the shop line included, lives only in the private `.env`, never in git or docs.
+- No secrets in git. API keys never appear in docs, only env var **names**. The names are listed in `planning/ARCHITECTURE.md`.
 - Photon: use only the **beta** docs (`https://photon.codes/docs/beta/`) and `@photon-ai/api`. Not `spectrum-ts`.
 - Only the demo host runs `PHOTON_INBOUND=on`.
+- When an agent's own session notes disagree with repo `planning/*` or this file, **the repo wins**. An agent may still make a small judgment call and append a `docs/DECISIONS.md` row when a note is clearly better (a seed-data bugfix, for example).
 
 ## Env vars
 
-The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env`.
+The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env` (gitignored).
+
+**Secrets status (2026-10-17):** `PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, and `OWNER_HANDLE` are set in lane 3's private `.env`. **Square**, **AI Gateway / `AGENT_MODEL`**, `PHOTON_TEST_SENDER`, and `DEMO_PERSONAS` are not filled yet. Do not invent values.
 
 ## Workspace (live on `main`)
 
@@ -56,16 +73,55 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Typed rows: `import type { Database, Tables } from "@boh/shared"` (generated into `packages/shared/src/db.ts`; regenerate after each migration). Server client: `db()` in `apps/server/src/db.ts`.
 - Lane 2 applies migrations through the `supabase-boh` MCP entry (pinned to this project). Others: never apply schema changes; ask lane 2.
 
+## Seed data (lane 3, live on `main`)
+
+- `data/seed/*.json` is complete: `business.json` (a `BusinessProfile`), `products.json`, `ingredients.json`, `recipes.json`, `customers.json`, `orders.json`.
+- `scripts/generate-history.ts` rewrites `orders.json` from a fixed PRNG seed, so reruns are byte-identical. `scripts/check-seed.ts` asserts the demo arithmetic and exits non-zero when it breaks; run it after touching any seed file.
+- `SeedOrder` carries no status, as specced. Seed `kind: "history"` as `fulfilled` and `kind: "upcoming"` as `paid`; the committed load the counteroffer reads comes from the upcoming orders.
+- `daysAgo` and `pickupDay` resolve at **seed time**, in the business timezone. `next_sun` is **`next_sat` + 1 day**, not the first Sunday after the seed date, which for a Saturday seed would be demo day itself.
+- History orders are placed by offset from the seed day assuming a **Saturday seed**, so no pickup lands on a closed Monday. Seeding on another day rotates the pattern harmlessly.
+- The numbers the demo depends on: butter croissant capacity 36/day, 12 committed Saturday and 6 Sunday, butter on hand covering about 30 more croissants. So 4 dozen for Saturday splits into 24 Saturday + 24 Sunday with a 3 kg butter reorder from Rainier Dairy ($38.40). Maya's usual totals $18.50 and 48 butter croissants total $216.00, which is where `planning/ARCHITECTURE.md`'s example numbers come from.
+- Phone numbers never appear in `data/`; demo personas are matched by `personaKey` against `DEMO_PERSONAS` at seed time. `check-seed.ts` fails if a number or email ever lands there.
+
 ## Interfaces other agents must not break
 
 - `packages/shared` (`@boh/shared`): the contract. Additive changes only, each with a `docs/DECISIONS.md` row.
 - `supabase/migrations/0001_init.sql`: never edited after it is applied; add new migrations.
 - Server HTTP API in `planning/ARCHITECTURE.md`.
 
+## Server (lane 2, live on `main`)
+
+- Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
+- Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
+- `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
+- `/dev/winback-scan` returns `501` until `@boh/agents` exports `runWinbackScan`. **Lane 3:** each win-back draft must list the customer in `reads` (`{ table: "customers", id }`); the server uses the first one to pick the conversation.
+- Seed: `pnpm seed` (idempotent) and `pnpm reset --yes` (wipes proposals, messages, conversations, events, agent orders, and non-seed customers, then reseeds in ~6 s). `next_sun` resolves to the Sunday after `next_sat`.
+- Ingredient need = that day's committed units plus the requested items, against `on_hand + on_order`. This matches lane 3's `scripts/check-seed.ts`.
+- `inventory.received` is a new event type (simulated supplier delivery).
+
+## Photon project (lane 3)
+
+- **Project ID:** `pho_prj_01m55nwa3zesk81kyc2gb9krkj`. Shareable team config, also in the private `.env` as `PHOTON_PROJECT_ID`; point every script at this project.
+- **API key:** private `.env` only, as `PHOTON_API_KEY`. Never commit it or paste it into docs.
+- Shop line and owner handle: see "Demo phones and personas" above.
+- Photon 2.0 beta only: dashboard `app.beta.photon.codes`, API `https://api.photon.codes/v1`, package `@photon-ai/api`. The `photon.co/beta` URL in `planning/LANE-3-AGENTS.md` step 1 is wrong.
+
 ## Photon facts verified
 
-None yet. Lane 3 records the ping round trip result here.
+From the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2026-10-17). The live round trip is still pending; `scripts/photon-ping.ts` records latency and field names here once it runs.
+
+- **Send:** `POST /v1/projects/{id}/messages` with an `idempotency-key` **header that is required, not optional**. Body needs `spaceId`, `senderId`, `content: { type: "text", format: "plain", text }`; `parentMessageId` is optional. Success is `202`, which means accepted, not delivered.
+- **Agent identity:** `receivedBy` is **optional** on a received message, and `addressedTo` is also defined. Reply from whichever is present, never from one global agent id, because agent numbers differ per sender. The ping script reports which field Photon actually populates.
+- **Received iMessage fields:** `id`, `projectId`, `platform: "imessage"`, `status: "received"`, `space { id, kind, participantIds }`, `sentBy { id, handle, kind, details { type, resourceId } }`, `content { type, format, text }`, `timestamps { receivedAt }`, `createdAt`, `updatedAt`.
+- **Poll shape:** `GET /v1/projects/{id}/messages` takes `createdSince`, `direction`, `platform`, `order`, `pageSize`, `spaceId`, `pageToken`. A page is `{ items: [...] }`.
+- **Reactions and polls are not available on iMessage.** `ImessageMessageContent` is only `text`, `attachment`, `message.read`, `space.typing.update`, and `group`. The `reaction`/`poll` content types exist in the cross-platform union but not iMessage's, so tapback acknowledgements and native polls are off the table. **Typing indicators** (`POST /v1/projects/{id}/spaces/{spaceId}/typing`) and **read receipts** (`POST /v1/projects/{id}/messages/{messageId}/read`) are real.
+- **Assignments can be released:** `DELETE /v1/projects/{id}/platforms/imessage/assignments/{assignmentId}`, and `releasedAt` is a field. The free plan's 25-assignment cap is recyclable, so `/join` can reclaim slots instead of hard-failing.
+- **Rate limits** come back as `429` with `Retry-After`, plus `RateLimit` and `RateLimit-Policy` headers.
 
 ## Photon events
 
-None yet. Lane 2 records the received-message event type and field paths here.
+- Socket.IO `delivery(event, { seq, replyExpected })`. `event` is the same JSON as the webhook event (`{ id, type, ... }`). The received-message type is **`message.received`** (from Photon's OpenAPI example).
+- Its full schema is only served to authenticated keys (`GET /v1/projects/{id}/webhooks/event-types/message.received/schema`), so the server reads the message from `event.data.message`, `event.data.object`, `event.data`, or `event.message`, whichever exists. Lane 3: after the ping, paste one real `message.received` event (handles redacted) here so lane 2 can pin the path.
+- Message fields used (typed in `@photon-ai/api` as `ReceivedImessageMessage`): `id`, `platform: "imessage"`, `status: "received"`, `sentBy.handle`, `sentBy.kind`, `receivedBy.id` (our agent user, used as `senderId` when replying), `space.id`, `space.kind`, `content.type: "text"`, `content.text`.
+- Send: `photon.projects.sendMessage({ path: { id }, headers: { "idempotency-key" }, body: { spaceId, senderId, content: { type: "text", format: "plain", text } } })`. Assign: `photon.projects.platforms.imessage.assignments.create({ path: { id }, headers: { idempotencyKey }, body: { handle } })` → `assignedPhoneNumber`.
+- `subscribe({ startSeq: 0 })` starts live with no replay; a positive cursor resumes after that seq. `pnpm reset` sets the cursor to 0.

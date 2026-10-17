@@ -1,4 +1,4 @@
-import type { HandleInbound } from "@boh/shared";
+import type { HandleInbound, RunWinbackScan } from "@boh/shared";
 import { env } from "./env.ts";
 
 /** Canned agent for AGENT_MODE=stub and until @boh/agents lands. Emits trace steps so lane 1 can build the trace UI against real events. */
@@ -49,4 +49,15 @@ export async function loadHandleInbound(): Promise<HandleInbound> {
     }
   }
   return stubHandleInbound;
+}
+
+/** Lane 3's optional proactive scan. Null until @boh/agents exports it. */
+export async function loadRunWinbackScan(): Promise<RunWinbackScan | null> {
+  try {
+    const pkg = "@boh/agents";
+    const mod = (await import(pkg)) as { runWinbackScan?: RunWinbackScan };
+    return mod.runWinbackScan ?? null;
+  } catch {
+    return null;
+  }
 }

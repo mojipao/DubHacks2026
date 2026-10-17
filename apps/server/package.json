@@ -11,9 +11,12 @@
   "dependencies": {
     "@boh/shared": "workspace:*",
     "@hono/node-server": "^1.14.0",
+    "@photon-ai/api": "^0.5.0",
     "@supabase/supabase-js": "^2.118.0",
     "dotenv": "^17.2.0",
     "hono": "^4.9.0",
+    "socket.io-client": "^4.8.4",
+    "square": "^46.0.0",
     "zod": "^4.1.0"
   }
 }
