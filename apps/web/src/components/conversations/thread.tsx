@@ -22,7 +22,7 @@ export function ConversationThread() {
 
   if (!conv) {
     return (
-      <div className="flex h-40 items-center justify-center border-t border-line px-3 text-[13px] text-muted">
+      <div className="flex h-40 items-center justify-center border-t border-line px-4 text-[13px] text-muted">
         Select a conversation
       </div>
     );
@@ -30,25 +30,25 @@ export function ConversationThread() {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col border-t border-line">
-      <div className="px-3 py-2">
-        <div className="text-[14px] font-semibold text-fg">
+      <div className="px-4 pt-3 pb-2">
+        <div className="text-[14px] font-medium text-fg">
           {conv.customerName ?? maskHandle(conv.handle)}
         </div>
         <div className="font-mono text-[11px] text-muted">
           {maskHandle(conv.handle)} · {conv.platform}
         </div>
       </div>
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-3">
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3">
         {messages.map((m) => (
           <motion.div
             key={m.id}
             initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-              "max-w-[92%] rounded-[14px] px-3 py-2 text-[14px] leading-snug",
+              "max-w-[90%] rounded-2xl px-3 py-2 text-[13.5px] leading-snug",
               m.direction === "inbound"
-                ? "bg-[color-mix(in_srgb,var(--sky)_22%,var(--panel))] text-fg"
-                : "ml-auto bg-panel border border-line text-fg",
+                ? "rounded-bl-md bg-[#1d2836] text-[#e6efff]"
+                : "ml-auto rounded-br-md border border-line-strong bg-surface-2 text-fg",
             )}
           >
             <p className="whitespace-pre-wrap">{m.body}</p>

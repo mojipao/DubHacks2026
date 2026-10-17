@@ -33,12 +33,12 @@ export function StockBars() {
     : sorted.filter((ing, i) => i < COLLAPSED || changed.has(ing.id) || ing.onOrder > 0);
 
   return (
-    <div className="mt-5">
+    <div className="mt-6">
       <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="font-mono text-[12px] tracking-[0.16em] text-muted uppercase">Stock</h3>
+        <h3 className="eyebrow">Stock</h3>
         <span className="flex items-center gap-2 font-mono text-[10px] text-muted">
-          <span className="inline-block h-2 w-3 rounded-[1px] bg-basil" /> on hand
-          <span className="stock-hatch inline-block h-2 w-3 rounded-[1px]" /> on order
+          <span className="inline-block h-2 w-3 rounded-full bg-[#8f877e]" /> on hand
+          <span className="stock-hatch inline-block h-2 w-3 rounded-full" /> on order
         </span>
       </div>
       <ul className="space-y-2.5">
@@ -67,9 +67,9 @@ export function StockBars() {
                   {ing.onOrder > 0 && <span className="text-amber"> +{fmt(ing.onOrder)}</span>} {ing.unit}
                 </span>
               </div>
-              <div className="relative flex h-2.5 overflow-hidden rounded-sm bg-line/80">
+              <div className="relative flex h-2 overflow-hidden rounded-full bg-bg ring-1 ring-line">
                 <motion.div
-                  className={cn("h-full", low ? "bg-tomato" : "bg-basil")}
+                  className={cn("h-full rounded-full", low ? "bg-tomato" : "bg-[#8f877e]")}
                   initial={false}
                   animate={{ width: `${handPct}%` }}
                   transition={{ type: "spring", stiffness: 160, damping: 22 }}

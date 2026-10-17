@@ -31,12 +31,19 @@ export function AgentStatus() {
   }, [state.events, state.now]);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="hidden items-center gap-0.5 rounded-full border border-line bg-bg/60 p-0.5 md:flex">
       {statuses.map((s) => (
-        <div key={s.key} className="flex items-center gap-1.5 text-[13px] text-fg/90">
+        <div
+          key={s.key}
+          className={cn(
+            "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] text-fg/80 transition-colors",
+            s.pulse && "bg-amber/10 text-amber",
+          )}
+          title={s.tone === "amber" ? `${s.label} is working` : s.tone === "tomato" ? `${s.label} hit an error` : `${s.label} idle`}
+        >
           <span
             className={cn(
-              "size-2 rounded-full",
+              "size-1.5 rounded-full",
               s.tone === "basil" && "bg-basil",
               s.tone === "amber" && "bg-amber",
               s.tone === "tomato" && "bg-tomato",

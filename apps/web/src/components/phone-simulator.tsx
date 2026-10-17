@@ -129,7 +129,7 @@ export function PhoneSimulator({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full overflow-y-auto border-line bg-[#0b0a09] text-fg sm:max-w-md">
+      <SheetContent side="right" className="w-full overflow-y-auto border-line bg-surface text-fg sm:max-w-md">
         <SheetHeader>
           <SheetTitle className="text-fg">Phone simulator</SheetTitle>
           <SheetDescription className="text-muted">

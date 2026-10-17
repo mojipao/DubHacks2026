@@ -16,7 +16,7 @@ export default function JoinQrPage() {
     <main className="flex min-h-dvh flex-col items-center justify-center gap-10 px-6 py-10 text-center">
       <div>
         <p className="font-mono text-[14px] tracking-[0.22em] text-amber uppercase">{BUSINESS.name} · Back of House</p>
-        <h1 className="mt-3 text-5xl font-semibold tracking-tight text-fg">Text the bakery.</h1>
+        <h1 className="mt-3 font-serif text-7xl tracking-tight text-fg">Text the bakery.</h1>
         <p className="mx-auto mt-3 max-w-xl text-[19px] leading-relaxed text-muted">
           Scan, get the shop&apos;s number, and text it like a regular. Try to trick it, too: every reply waits for the
           owner.

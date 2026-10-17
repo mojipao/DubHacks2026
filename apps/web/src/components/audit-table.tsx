@@ -72,7 +72,7 @@ export function AuditTable() {
             <p className="font-mono text-[12px] tracking-[0.18em] text-amber uppercase">
               Audit {mode === "mock" ? "· fixtures" : ""}
             </p>
-            <h1 className="text-3xl font-semibold text-fg">Every action, on the record</h1>
+            <h1 className="font-serif text-4xl text-fg">Every action, on the record</h1>
           </div>
           <Link href="/" className="text-[13px] text-amber hover:underline">
             ← Control room
@@ -81,7 +81,7 @@ export function AuditTable() {
 
         <section
           aria-label="Trust summary"
-          className="mb-6 grid gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-4"
+          className="mb-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4"
         >
           {[
             { n: trust.executed, label: "actions executed" },
@@ -165,7 +165,7 @@ export function AuditTable() {
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-md border border-line">
+        <div className="surface overflow-x-auto rounded-xl">
           <table className="w-full text-left text-[13px]">
             <thead className="bg-panel font-mono text-[11px] tracking-wider text-muted uppercase">
               <tr>

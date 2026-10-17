@@ -15,45 +15,36 @@ export function FrictionStrip() {
   const f = state.friction;
   const m = BUSINESS.minutesSaved;
 
+  const stats = [
+    { n: f.messagesHandled, label: f.messagesHandled === 1 ? "message" : "messages" },
+    { n: f.ordersCreated, label: f.ordersCreated === 1 ? "order" : "orders" },
+    { n: f.reordersDrafted, label: f.reordersDrafted === 1 ? "reorder" : "reorders" },
+    { n: f.guardCatches, label: f.guardCatches === 1 ? "guard catch" : "guard catches" },
+  ];
+
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-line bg-bg/70 px-4 py-2 text-[13px] text-muted">
-      <span className="font-mono text-[11px] tracking-[0.18em] text-amber uppercase">
-        Friction saved
-      </span>
-      <span>
-        <CountUp value={f.messagesHandled} className="font-mono text-[15px] font-semibold text-fg" />{" "}
-        messages
-      </span>
-      <span>
-        <CountUp value={f.ordersCreated} className="font-mono text-[15px] font-semibold text-fg" />{" "}
-        orders
-      </span>
-      <span>
-        <CountUp value={f.reordersDrafted} className="font-mono text-[15px] font-semibold text-fg" />{" "}
-        reorder{f.reordersDrafted === 1 ? "" : "s"}
-      </span>
-      <span>
-        <CountUp value={f.guardCatches} className="font-mono text-[15px] font-semibold text-fg" />{" "}
-        guard catch{f.guardCatches === 1 ? "" : "es"}
-      </span>
-      <span className="inline-flex items-center gap-1">
+    <div className="flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-line px-4 py-2 text-[13px] text-muted">
+      <span className="eyebrow mr-2 !text-amber">Friction saved</span>
+      {stats.map((s, i) => (
+        <span key={s.label} className="inline-flex items-baseline gap-1.5 px-2">
+          {i > 0 && <span className="mr-2 h-3 w-px self-center bg-line-strong" aria-hidden />}
+          <CountUp value={s.n} className="font-mono text-[15px] font-semibold text-fg" />
+          {s.label}
+        </span>
+      ))}
+      <span className="ml-auto inline-flex items-baseline gap-1.5 rounded-full bg-basil/10 px-3 py-0.5 text-basil">
         ≈
-        <CountUp value={f.ownerMinutesSaved} className="font-mono text-[15px] font-semibold text-fg" />{" "}
-        owner min
+        <CountUp value={f.ownerMinutesSaved} className="font-mono text-[15px] font-semibold" />
+        owner minutes saved
         <Tooltip>
           <TooltipTrigger asChild>
-            <button
-              type="button"
-              className="text-muted hover:text-fg"
-              aria-label="Minutes saved assumptions"
-            >
+            <button type="button" className="self-center text-basil/70 hover:text-basil" aria-label="Minutes saved assumptions">
               <Info className="size-3.5" />
             </button>
           </TooltipTrigger>
           <TooltipContent className="max-w-xs text-[12px]">
-            Assumes ≈{m.reply} min per reply, ≈{m.order} min per order, ≈
-            {m.counteroffer} min per counteroffer, ≈{m.reorder} min per reorder, ≈
-            {m.guardCatch} min per Guard catch — from BusinessProfile.minutesSaved.
+            Assumes ≈{m.reply} min per reply, ≈{m.order} min per order, ≈{m.counteroffer} min per counteroffer, ≈
+            {m.reorder} min per reorder, ≈{m.guardCatch} min per Guard catch, from the shop&apos;s profile.
           </TooltipContent>
         </Tooltip>
       </span>

@@ -296,7 +296,7 @@ export function TicketDrawer({
             {pending && (
               <>
                 <Button
-                  className="bg-[#2f7d47] font-semibold text-white hover:bg-[#276a3c]"
+                  className="rounded-full bg-amber px-4 font-semibold text-ink hover:bg-amber/90"
                   disabled={canEdit && editing && (empty || tooLong)}
                   onClick={() =>
                     run(
@@ -312,7 +312,7 @@ export function TicketDrawer({
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-tomato/40 bg-transparent text-tomato hover:bg-tomato/10 hover:text-tomato"
+                  className="rounded-full border-transparent bg-transparent text-tomato hover:bg-tomato/10 hover:text-tomato"
                   onClick={() => run(reject(proposal.id, { includeLinked: children.length > 0 }), "86'd")}
                 >
                   {children.length > 0 ? "Reject both" : "Reject"}
@@ -324,7 +324,7 @@ export function TicketDrawer({
             )}
             {proposal.status === "failed" && (
               <Button
-                className="bg-amber font-semibold text-ink hover:bg-amber/90"
+                className="rounded-full bg-amber px-4 font-semibold text-ink hover:bg-amber/90"
                 onClick={() => run(retry(proposal.id), "Retried")}
               >
                 Retry

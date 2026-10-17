@@ -39,19 +39,17 @@ export function PickupsBoard() {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="font-mono text-[12px] tracking-[0.16em] text-muted uppercase">
-          Pickups
-        </h3>
+        <h3 className="eyebrow">Pickups</h3>
       </div>
       <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="mb-3 h-8 bg-bg">
-          <TabsTrigger value="today" className="text-[12px]">
+        <TabsList className="mb-3 h-8 w-full rounded-full border border-line bg-bg/60 p-0.5">
+          <TabsTrigger value="today" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-surface-2 data-[state=active]:text-fg">
             Today
           </TabsTrigger>
-          <TabsTrigger value="tomorrow" className="text-[12px]">
+          <TabsTrigger value="tomorrow" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-surface-2 data-[state=active]:text-fg">
             Tomorrow
           </TabsTrigger>
-          <TabsTrigger value="saturday" className="text-[12px]">
+          <TabsTrigger value="saturday" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-surface-2 data-[state=active]:text-fg">
             Saturday
           </TabsTrigger>
         </TabsList>
@@ -70,12 +68,13 @@ export function PickupsBoard() {
           return (
             <li
               key={o.id}
-              className="group flex items-center justify-between gap-2 rounded-md border border-line bg-bg/50 px-2.5 py-2"
+              className="group flex items-center justify-between gap-2 rounded-lg border border-line bg-bg/40 px-3 py-2 transition-colors hover:border-line-strong"
             >
               <div className="min-w-0">
                 <div className="truncate text-[13px] text-fg">
-                  <span className="font-mono text-muted">{time}</span>{" "}
-                  {o.customerName ?? "Guest"} ×{qty}
+                  <span className="font-mono text-[12px] text-muted tabular-nums">{time}</span>{" "}
+                  <span className="font-medium">{o.customerName ?? "Guest"}</span>{" "}
+                  <span className="font-mono text-[12px] text-muted">×{qty}</span>
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
@@ -98,10 +97,10 @@ export function PickupsBoard() {
                 )}
                 <span
                   className={cn(
-                    "rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase",
+                    "rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase",
                     o.status === "paid"
-                      ? "bg-basil/20 text-basil"
-                      : "bg-amber/20 text-amber",
+                      ? "bg-basil/15 text-basil"
+                      : "bg-amber/15 text-amber",
                   )}
                 >
                   {o.status === "paid" ? "paid" : "awaiting"}

@@ -26,52 +26,55 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
     .reduce((sum, o) => sum + o.totalCents - o.discountCents, 0);
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-panel/80 px-4 py-2.5 backdrop-blur">
-      <div className="flex min-w-0 items-center gap-4">
-        <div>
-          <div className="truncate text-[15px] font-semibold tracking-wide text-fg">
-            {BUSINESS.name}{" "}
-            <span className="font-normal text-muted">· Back of House</span>
-          </div>
+    <header className="flex flex-wrap items-center justify-between gap-3 px-4 pt-3 pb-2.5">
+      <div className="flex min-w-0 items-center gap-5">
+        <div className="flex items-baseline gap-2.5">
+          <span className="font-serif text-[26px] leading-none tracking-tight text-fg">
+            {BUSINESS.name.split("&").map((part, i) => (
+              <span key={i}>
+                {i > 0 && <span className="text-amber italic">&amp;</span>}
+                {part}
+              </span>
+            ))}
+          </span>
+          <span className="rounded-full border border-line-strong px-2 py-0.5 font-mono text-[10px] tracking-[0.16em] text-muted uppercase">
+            Back of House
+          </span>
         </div>
         <AgentStatus />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 text-[13px]">
-        <span className="rounded bg-amber/15 px-2 py-0.5 font-mono text-amber">
-          {pending} pending
+      <div className="flex flex-wrap items-center gap-2 text-[13px]">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber px-2.5 py-1 font-mono text-[12px] font-semibold text-ink">
+          <span className="tabular-nums">{pending}</span> pending
         </span>
-        <span className="font-mono text-fg">{money(paidToday)} today</span>
+        <span className="rounded-full border border-line px-2.5 py-1 font-mono text-[12px] text-fg">
+          <span className="tabular-nums">{money(paidToday)}</span> <span className="text-muted">paid today</span>
+        </span>
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 font-mono text-[12px]",
-            state.connection === "realtime" || state.connection === "mock"
-              ? "text-basil"
-              : "text-amber",
+            "inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 font-mono text-[12px]",
+            state.connection === "polling" ? "text-amber" : "text-basil",
           )}
+          title={mode === "live" ? "Supabase realtime" : "Scripted demo data"}
         >
-          <span
-            className={cn(
-              "size-1.5 rounded-full",
-              state.connection === "polling" ? "bg-amber" : "bg-basil",
+          <span className="relative flex size-1.5">
+            {state.connection !== "polling" && (
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-current opacity-60" />
             )}
-          />
-          {state.connection === "mock"
-            ? "mock"
-            : state.connection === "realtime"
-              ? "live"
-              : "polling"}
-          {mode === "live" ? "" : " · fixtures"}
+            <span className="relative inline-flex size-1.5 rounded-full bg-current" />
+          </span>
+          {state.connection === "mock" ? "demo data" : state.connection === "realtime" ? "live" : "polling"}
         </span>
-        <span className="font-mono text-muted">{localClock(new Date(state.now))}</span>
+        <span className="px-1 font-mono text-[12px] text-muted tabular-nums">{localClock(new Date(state.now))}</span>
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="icon-sm" variant="ghost" aria-label="More">
+            <Button size="icon-sm" variant="ghost" aria-label="More" className="rounded-full text-muted hover:bg-surface-2 hover:text-fg">
               <MoreHorizontal className="size-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-line bg-panel text-fg">
+          <DialogContent className="border-line bg-surface text-fg">
             <DialogHeader>
               <DialogTitle>Control room</DialogTitle>
             </DialogHeader>
