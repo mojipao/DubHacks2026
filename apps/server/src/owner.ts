@@ -96,7 +96,8 @@ export async function notifyOwner(proposalId: string) {
   ]);
   const asked = trigger?.body ? `"${trigger.body.slice(0, 120)}"` : "a message";
   const plans = [await describe(p), ...(await Promise.all((children ?? []).map(describe)))];
-  const text = `${customerName} asked ${asked}. ${p.rationale ? `${p.rationale} ` : ""}I drafted ${plans.join(" and ")}. Reply Y ${code} to approve all, N ${code} to skip.`;
+  const why = p.rationale.trim().replace(/([^.!?])$/, "$1.");
+  const text = `${customerName} asked ${asked}. ${why ? `${why} ` : ""}I drafted ${plans.join(" and ")}. Reply Y ${code} to approve all, N ${code} to skip.`;
 
   await sendAndRecord(conv, text, p.id, `notify:${p.id}`);
   await db().from("proposals").update({ owner_notified_at: new Date().toISOString() }).eq("id", p.id);

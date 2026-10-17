@@ -1,3 +1,4 @@
+import { handleInbound, runWinbackScan } from "@boh/agents";
 import type { HandleInbound, RunWinbackScan } from "@boh/shared";
 import { env } from "./env.ts";
 
@@ -37,27 +38,11 @@ export const stubHandleInbound: HandleInbound = async ({ conversationId, message
   ];
 };
 
-/** Lane 3's package replaces the stub when AGENT_MODE=live. */
+/** Lane 3's pipeline runs when AGENT_MODE=live. It falls back to deterministic steps when no model key is set. */
 export async function loadHandleInbound(): Promise<HandleInbound> {
-  if (env.AGENT_MODE === "live") {
-    try {
-      const pkg = "@boh/agents";
-      const mod = (await import(pkg)) as { handleInbound?: HandleInbound };
-      if (mod.handleInbound) return mod.handleInbound;
-    } catch {
-      console.warn("AGENT_MODE=live but @boh/agents is not installed; using the stub agent");
-    }
-  }
-  return stubHandleInbound;
+  return env.AGENT_MODE === "live" ? handleInbound : stubHandleInbound;
 }
 
-/** Lane 3's optional proactive scan. Null until @boh/agents exports it. */
 export async function loadRunWinbackScan(): Promise<RunWinbackScan | null> {
-  try {
-    const pkg = "@boh/agents";
-    const mod = (await import(pkg)) as { runWinbackScan?: RunWinbackScan };
-    return mod.runWinbackScan ?? null;
-  } catch {
-    return null;
-  }
+  return runWinbackScan;
 }

@@ -121,7 +121,7 @@ From the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2
 ## Photon events
 
 - Socket.IO `delivery(event, { seq, replyExpected })`. `event` is the same JSON as the webhook event (`{ id, type, ... }`). The received-message type is **`message.received`** (from Photon's OpenAPI example).
-- Its full schema is only served to authenticated keys (`GET /v1/projects/{id}/webhooks/event-types/message.received/schema`), so the server reads the message from `event.data.message`, `event.data.object`, `event.data`, or `event.message`, whichever exists. Lane 3: after the ping, paste one real `message.received` event (handles redacted) here so lane 2 can pin the path.
+- **Confirmed on a live delivery (2026-10-17, API version `2026-07-01`):** the message is at `event.data.object`. The envelope is `{ id, apiVersion, type, source, timestamp, data: { object, projectId } }`. Deliveries carry large `seq` values (the first was 6196), so never compare against a hard-coded cursor.
 - Message fields used (typed in `@photon-ai/api` as `ReceivedImessageMessage`): `id`, `platform: "imessage"`, `status: "received"`, `sentBy.handle`, `sentBy.kind`, `receivedBy.id` (our agent user, used as `senderId` when replying), `space.id`, `space.kind`, `content.type: "text"`, `content.text`.
 - Send: `photon.projects.sendMessage({ path: { id }, headers: { "idempotency-key" }, body: { spaceId, senderId, content: { type: "text", format: "plain", text } } })`. Assign: `photon.projects.platforms.imessage.assignments.create({ path: { id }, headers: { idempotencyKey }, body: { handle } })` → `assignedPhoneNumber`.
 - `subscribe({ startSeq: 0 })` starts live with no replay; a positive cursor resumes after that seq. `pnpm reset` sets the cursor to 0.

@@ -13,7 +13,10 @@ At the start of every session, `git fetch origin` and read `origin/main`, in ord
 2. `docs/CONTEXT.md`
 3. `docs/STATUS.md`
 4. `docs/DECISIONS.md`
+5. `docs/NOTES.md`: open notes between lanes; act on the ones addressed to your lane
 
 If `docs/CONTEXT.md` lists the track as undecided, do not add application code or dependencies.
 
 When you learn a fact another agent needs (track, product, stack, schema, env var names), update `docs/CONTEXT.md` and append `docs/DECISIONS.md` through a docs-only `ctx/...` PR (see `docs/COORDINATION.md`) before continuing feature work.
+
+When another lane needs to act on something you found (a mismatch with your API, a bug in their files), add a note to `docs/NOTES.md` instead of editing their files.

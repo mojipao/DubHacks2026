@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@boh/agents": "workspace:*",
     "@boh/shared": "workspace:*",
     "@hono/node-server": "^1.14.0",
     "@photon-ai/api": "^0.5.0",

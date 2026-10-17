@@ -135,7 +135,7 @@ export const supabaseDataPort: AgentDataPort = {
 
     const { data: lines, error } = await db()
       .from("recipe_lines")
-      .select("product_id, qty_per_unit, ingredients(id, name, unit, on_hand, on_order, supplier)")
+      .select("product_id, qty_per_unit, ingredients(id, name, unit, on_hand, on_order, supplier, reorder_point, unit_cost_cents)")
       .in("product_id", [...units.keys()]);
     if (error) throw new Error(`getIngredientNeeds: ${error.message}`);
 
@@ -152,6 +152,8 @@ export const supabaseDataPort: AgentDataPort = {
         onOrder: Number(ing.on_order),
         shortfall: 0,
         supplier: ing.supplier,
+        reorderPoint: Number(ing.reorder_point),
+        unitCostCents: ing.unit_cost_cents,
       };
       need.need += (units.get(line.product_id) ?? 0) * Number(line.qty_per_unit);
       needs.set(ing.id, need);
