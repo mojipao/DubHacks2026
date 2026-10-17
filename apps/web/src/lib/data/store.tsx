@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { createLiveSource } from "@/lib/data/live";
-import { createMockSource } from "@/lib/data/mock";
+import { createMockSource, getMockSnapshot } from "@/lib/data/mock";
 import { emptyState, type DataSource } from "@/lib/data/source";
 import type { StoreState, TraceStep } from "@/lib/data/types";
 import { FIXTURE_TRACE } from "@/mocks/fixtures";
@@ -58,30 +58,48 @@ function createSource(): { mode: "mock" | "live"; source: DataSource } {
   return { mode: "mock", source: createMockSource() };
 }
 
+function withSelection(snap: Partial<StoreState>): Partial<StoreState> {
+  const proposals = snap.proposals ?? [];
+  const conversations = snap.conversations ?? [];
+  const pending = proposals.find((p) => p.status === "pending");
+  return {
+    ...snap,
+    selectedConversationId:
+      pending?.conversationId ?? conversations[0]?.id ?? null,
+    focusedProposalId: pending?.id ?? null,
+  };
+}
+
+function initialState(mode: "mock" | "live"): StoreState {
+  if (mode === "mock") {
+    return {
+      ...emptyState("mock"),
+      ...withSelection(getMockSnapshot()),
+    } as StoreState;
+  }
+  return emptyState("polling");
+}
+
 export function DataProvider({ children }: { children: ReactNode }) {
   const boot = useMemo(() => createSource(), []);
-  const [state, dispatch] = useReducer(
-    reducer,
-    emptyState(boot.mode === "mock" ? "mock" : "polling"),
-  );
+  const [state, dispatch] = useReducer(reducer, boot.mode, initialState);
 
   useEffect(() => {
     let cancelled = false;
     const source = boot.source;
 
-    void source.load().then((snap) => {
-      if (cancelled) return;
-      const pending = snap.proposals.find((p) => p.status === "pending");
-      dispatch({
-        type: "hydrate",
-        state: {
-          ...snap,
-          selectedConversationId:
-            pending?.conversationId ?? snap.conversations[0]?.id ?? null,
-          focusedProposalId: pending?.id ?? null,
-        },
-      });
-    });
+    // Live mode needs the async fetch; mock already has sync fixtures above.
+    if (boot.mode === "live") {
+      void source
+        .load()
+        .then((snap) => {
+          if (cancelled) return;
+          dispatch({ type: "hydrate", state: withSelection(snap) });
+        })
+        .catch((err) => {
+          console.error("Failed to load control-room data", err);
+        });
+    }
 
     const unsub = source.subscribe((patch) => {
       dispatch({ type: "hydrate", state: patch });
@@ -96,7 +114,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       unsub();
       clearInterval(clock);
     };
-  }, [boot.source]);
+  }, [boot.mode, boot.source]);
 
   const selectConversation = useCallback((id: string | null) => {
     dispatch({ type: "selectConversation", id });

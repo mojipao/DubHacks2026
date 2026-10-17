@@ -39,6 +39,11 @@ function pushEvent(
   ].slice(0, 80);
 }
 
+/** Synchronous snapshot for first paint (avoids empty control room flash). */
+export function getMockSnapshot(): DataSnapshot {
+  return cloneSnapshot();
+}
+
 export function createMockSource(): DataSource {
   let snap = cloneSnapshot();
   const listeners = new Set<(patch: Partial<DataSnapshot>) => void>();
