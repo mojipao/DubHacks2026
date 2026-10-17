@@ -10,6 +10,7 @@ Other lanes: skim this section for what UI can do and what is still mock.
 
 | When (PT) | Status | Notes for other lanes |
 | --- | --- | --- |
+| Sat ~1:10 PM | Phase 1 ready for PR | `@boh/web` lives in `apps/web`. **Run:** `pnpm install && pnpm --filter @boh/web dev` → `http://localhost:3000` with `NEXT_PUBLIC_DATA_MODE=mock`. Control room ("the pass"): conversations + thread, ticket rail (counteroffer linked set + Approve both, Guard banner, rationale/reads/flags/evidence/confidence), today pickups/stock/revenue, friction strip, event ticker, phone simulator (`S` or `?sim=1`), keyboard A/E/R/J/K. Pages: `/join`, `/join/qr`, `/audit`. API proxies: approve/reject/inbound/join. Live data source coded but needs Supabase applied + `NEXT_PUBLIC_DATA_MODE=live`. Vercel: set Root Directory `apps/web`. Design: warm charcoal pass + ticket paper (Framer/Webflow product-site density/motion cues). |
 | Sat ~12:50 PM | Claimed | `aahil1218` on `lane/1`. Vercel linked to GitHub; Root Directory will be `apps/web`. Starting Setup + Phase 1 (mock control room). No `apps/web` yet. |
 
 ## Ownership
