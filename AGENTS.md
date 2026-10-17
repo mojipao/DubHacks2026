@@ -5,7 +5,7 @@ You are one of up to three coding agents on this repo, each run by a different p
 ## Before you edit
 
 1. `git fetch origin` and `git pull --rebase origin main`.
-2. Read, in order: `docs/CONTEXT.md`, `docs/STATUS.md`, `docs/DECISIONS.md`.
+2. Read, in order: `docs/CONTEXT.md`, `docs/STATUS.md`, `docs/DECISIONS.md`, then `planning/README.md`, `planning/ARCHITECTURE.md`, and your lane's file in `planning/`.
 3. If `docs/CONTEXT.md` says the track is **undecided**, do not scaffold an app, add dependencies, or pick a stack. You may edit coordination docs only after the human chooses a track and product sentence.
 4. Claim work before coding. See `docs/COORDINATION.md`.
 

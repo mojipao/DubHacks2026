@@ -23,7 +23,7 @@ git push -u origin HEAD
 3. On `main`, fill your lane row: task, files you will touch, status `active`, and a one-line summary.
 4. Commit only `docs/STATUS.md` with message `claim: lane/N short-task-name` and push.
 5. If the push is rejected, `git pull --rebase origin main`, re-read `STATUS.md`, and claim again only if the overlap is gone.
-6. Check out your lane, merge or rebase `origin/main`, then edit the claimed files.
+6. Check out your lane, merge `origin/main` into it, then edit the claimed files.
 
 Release the claim the same way when you stop: set status to `idle` or `blocked`, say what the next agent needs, commit, push.
 
@@ -38,6 +38,6 @@ Release the claim the same way when you stop: set status to `idle` or `blocked`,
 
 ## Conflicts
 
-Prefer rebasing your lane onto `origin/main`. If a context file conflicts, keep both decision bullets and both claim notes, then leave the lane row accurate.
+Bring `main` into your lane with `git fetch origin && git merge origin/main`. Do not rebase a lane branch that is already pushed. Merge lane PRs into `main` with a merge commit, not a squash. If a context file conflicts, keep both decision bullets and both claim notes, then leave the lane row accurate.
 
 Do not force-push. A rejected push means someone else wrote context you have not read yet.

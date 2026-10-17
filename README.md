@@ -6,7 +6,9 @@ Sponsored side tracks (source of truth for prizes and eligibility): [’26 Spons
 
 ## Current project
 
-No track or product is chosen yet. That state is recorded in [`docs/CONTEXT.md`](docs/CONTEXT.md). Do not start application code until a human sets the track and the one-sentence product there.
+**Back of House**: customers text a small bakery on iMessage, agents draft replies, Square payment links, and supplier reorders from the shop's data, and the owner approves each one in a live control room. Title track Cook Smarter; sponsored tracks Photon, VEYZL, and SideShift.
+
+The build plan is in [`planning/`](planning/README.md): shared architecture and contracts, one file per lane, and the demo and submission plan. The current facts are in [`docs/CONTEXT.md`](docs/CONTEXT.md).
 
 ## Read this order
 
@@ -16,15 +18,16 @@ Every person, and every agent at the start of a session:
 2. [`docs/CONTEXT.md`](docs/CONTEXT.md) — what we are building
 3. [`docs/STATUS.md`](docs/STATUS.md) — who owns which lane and files
 4. [`docs/DECISIONS.md`](docs/DECISIONS.md) — choices that are already made
-5. [`docs/TRACKS.md`](docs/TRACKS.md) — prize constraints, only when choosing or checking eligibility
+5. [`planning/README.md`](planning/README.md), [`planning/ARCHITECTURE.md`](planning/ARCHITECTURE.md), then your lane file
+6. [`docs/TRACKS.md`](docs/TRACKS.md) — prize constraints, only when checking eligibility
 
 ## Three lanes
 
 | Lane | Branch | Who |
 | --- | --- | --- |
-| 1 | `lane/1` | First teammate to claim it in `docs/STATUS.md` |
-| 2 | `lane/2` | Second |
-| 3 | `lane/3` | Third |
+| 1 | `lane/1` | Frontend, mojipao. Plan: [`planning/LANE-1-FRONTEND.md`](planning/LANE-1-FRONTEND.md) |
+| 2 | `lane/2` | Backend, unclaimed. Plan: [`planning/LANE-2-BACKEND.md`](planning/LANE-2-BACKEND.md) |
+| 3 | `lane/3` | Agents, unclaimed. Plan: [`planning/LANE-3-AGENTS.md`](planning/LANE-3-AGENTS.md) |
 
 One person, one clone, one lane. Two agents must not share a working tree.
 

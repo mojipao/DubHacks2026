@@ -6,9 +6,9 @@ Status values: `idle`, `active`, `blocked`.
 
 | Lane | GitHub user | Branch | Status | Task | Files | Handoff |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | mojipao | `lane/1` | idle | — | — | Lane claimed. No task yet. |
-| 2 | unassigned | `lane/2` | idle | — | — | Claim this lane by putting your GitHub login here, then push. |
-| 3 | unassigned | `lane/3` | idle | — | — | Claim this lane by putting your GitHub login here, then push. |
+| 1 | mojipao | `lane/1` | idle | Frontend | — | Plan ready: `planning/LANE-1-FRONTEND.md`. Start at Setup. |
+| 2 | unassigned | `lane/2` | idle | Backend | — | Claim this lane, then start `planning/LANE-2-BACKEND.md` Phase 0. Everyone waits on the scaffold. |
+| 3 | unassigned | `lane/3` | idle | Agents | — | Claim this lane, then start `planning/LANE-3-AGENTS.md` Phase 0 (Photon ping). |
 
 ## How to read this
 

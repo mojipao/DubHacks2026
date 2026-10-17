@@ -4,27 +4,48 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 
 ## Status
 
-- **Track:** undecided
-- **Product:** undecided
-- **Stack:** undecided
-- **Demo:** undecided
+- **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders; nothing goes out until the owner approves it in a live control room.
+- **Demo business:** Larch & Rye, a fictional Seattle bakery. All data synthetic.
+- **Title track:** Cook Smarter
+- **Sponsored tracks:** Photon, VEYZL, SideShift
+- **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
+- **Plan:** `planning/README.md`, then your lane file in `planning/`.
+- **Assumed deadline:** Sunday 2026-10-18, 10:00 AM PT. Unconfirmed; a human must verify with organizers.
 
-A human sets track and product by editing this file. Until both are concrete sentences, agents do not create application code.
+Open human decisions: confirm the deadline, confirm multi-track entry rules, and decide whether to keep the name "Back of House."
 
 ## Team
 
-Three concurrent agents, one lane each. Names and GitHub logins live in `docs/STATUS.md`.
+| Lane | Role | GitHub user |
+| --- | --- | --- |
+| 1 | Frontend | mojipao |
+| 2 | Backend | unassigned |
+| 3 | Agents | unassigned |
+
+Claims and handoffs live in `docs/STATUS.md`.
 
 ## Constraints that already apply
 
 - Hackathon: DubHacks 2026. Side-track rules: `docs/TRACKS.md` and the [organizer page](https://dubhacks.notion.site/26-Sponsored-Side-Tracks-5e3ff32c1d7e834d9844812256c9fa06).
-- Student projects that use sponsor data must follow that sponsor’s data rule. T-Mobile’s track is synthetic data only.
-- No secrets in git. List required env var names here once a stack exists.
+- Synthetic data only. Real phone numbers live only in the private `.env` (`DEMO_PERSONAS`), never in git.
+- No secrets in git. Env var names are listed in `planning/ARCHITECTURE.md`.
+- Photon: use only the **beta** docs (`https://photon.codes/docs/beta/`) and `@photon-ai/api`. Not `spectrum-ts`.
+- Only the demo host runs `PHOTON_INBOUND=on`.
 
 ## Env vars
 
-None yet.
+The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env`.
 
 ## Interfaces other agents must not break
 
-None yet. When a route, schema, or public function becomes shared, name it here with the file that owns it.
+- `packages/shared` (`@boh/shared`): the contract. Additive changes only, each with a `docs/DECISIONS.md` row.
+- `supabase/migrations/0001_init.sql`: never edited after it lands; add new migrations.
+- Server HTTP API in `planning/ARCHITECTURE.md`.
+
+## Photon facts verified
+
+None yet. Lane 3 records the ping round trip result here.
+
+## Photon events
+
+None yet. Lane 2 records the received-message event type and field paths here.
