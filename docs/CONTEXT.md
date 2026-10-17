@@ -73,6 +73,16 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Typed rows: `import type { Database, Tables } from "@boh/shared"` (generated into `packages/shared/src/db.ts`; regenerate after each migration). Server client: `db()` in `apps/server/src/db.ts`.
 - Lane 2 applies migrations through the `supabase-boh` MCP entry (pinned to this project). Others: never apply schema changes; ask lane 2.
 
+## Seed data (lane 3, live on `main`)
+
+- `data/seed/*.json` is complete: `business.json` (a `BusinessProfile`), `products.json`, `ingredients.json`, `recipes.json`, `customers.json`, `orders.json`.
+- `scripts/generate-history.ts` rewrites `orders.json` from a fixed PRNG seed, so reruns are byte-identical. `scripts/check-seed.ts` asserts the demo arithmetic and exits non-zero when it breaks; run it after touching any seed file.
+- `SeedOrder` carries no status, as specced. Seed `kind: "history"` as `fulfilled` and `kind: "upcoming"` as `paid`; the committed load the counteroffer reads comes from the upcoming orders.
+- `daysAgo` and `pickupDay` resolve at **seed time**, in the business timezone. `next_sun` is **`next_sat` + 1 day**, not the first Sunday after the seed date, which for a Saturday seed would be demo day itself.
+- History orders are placed by offset from the seed day assuming a **Saturday seed**, so no pickup lands on a closed Monday. Seeding on another day rotates the pattern harmlessly.
+- The numbers the demo depends on: butter croissant capacity 36/day, 12 committed Saturday and 6 Sunday, butter on hand covering about 30 more croissants. So 4 dozen for Saturday splits into 24 Saturday + 24 Sunday with a 3 kg butter reorder from Rainier Dairy ($38.40). Maya's usual totals $18.50 and 48 butter croissants total $216.00, which is where `planning/ARCHITECTURE.md`'s example numbers come from.
+- Phone numbers never appear in `data/`; demo personas are matched by `personaKey` against `DEMO_PERSONAS` at seed time. `check-seed.ts` fails if a number or email ever lands there.
+
 ## Interfaces other agents must not break
 
 - `packages/shared` (`@boh/shared`): the contract. Additive changes only, each with a `docs/DECISIONS.md` row.
@@ -98,7 +108,15 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 
 ## Photon facts verified
 
-None yet. Lane 3 records the ping round trip result here after `scripts/photon-ping.ts`.
+From the published OpenAPI spec (`https://api.photon.codes/openapi.json`, read 2026-10-17). The live round trip is still pending; `scripts/photon-ping.ts` records latency and field names here once it runs.
+
+- **Send:** `POST /v1/projects/{id}/messages` with an `idempotency-key` **header that is required, not optional**. Body needs `spaceId`, `senderId`, `content: { type: "text", format: "plain", text }`; `parentMessageId` is optional. Success is `202`, which means accepted, not delivered.
+- **Agent identity:** `receivedBy` is **optional** on a received message, and `addressedTo` is also defined. Reply from whichever is present, never from one global agent id, because agent numbers differ per sender. The ping script reports which field Photon actually populates.
+- **Received iMessage fields:** `id`, `projectId`, `platform: "imessage"`, `status: "received"`, `space { id, kind, participantIds }`, `sentBy { id, handle, kind, details { type, resourceId } }`, `content { type, format, text }`, `timestamps { receivedAt }`, `createdAt`, `updatedAt`.
+- **Poll shape:** `GET /v1/projects/{id}/messages` takes `createdSince`, `direction`, `platform`, `order`, `pageSize`, `spaceId`, `pageToken`. A page is `{ items: [...] }`.
+- **Reactions and polls are not available on iMessage.** `ImessageMessageContent` is only `text`, `attachment`, `message.read`, `space.typing.update`, and `group`. The `reaction`/`poll` content types exist in the cross-platform union but not iMessage's, so tapback acknowledgements and native polls are off the table. **Typing indicators** (`POST /v1/projects/{id}/spaces/{spaceId}/typing`) and **read receipts** (`POST /v1/projects/{id}/messages/{messageId}/read`) are real.
+- **Assignments can be released:** `DELETE /v1/projects/{id}/platforms/imessage/assignments/{assignmentId}`, and `releasedAt` is a field. The free plan's 25-assignment cap is recyclable, so `/join` can reclaim slots instead of hard-failing.
+- **Rate limits** come back as `429` with `Retry-After`, plus `RateLimit` and `RateLimit-Policy` headers.
 
 ## Photon events
 
