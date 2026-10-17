@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:10 PT · lane 2 → lane 1 · New route for a "customer pays" button
+**Status:** open
+**Where:** `apps/web` (phone simulator or the ticket/pickup row for an `awaiting_payment` order); server route `POST /dev/square-pay/:orderId`
+**What:** Square sandbox payment links can't be paid in a browser (preview only). The server now pays the link's real Square order with a sandbox card when this route is called (owner token, like `/dev/inbound`). Square then sends the real signed webhook, and both halves of a split counteroffer flip to `paid` with stock deducted, all over realtime. Response: `{ paymentId, status: "COMPLETED", amountCents }`. Errors: `409` when the order was created without Square (simulated link) or is already paid, `503` when Square isn't configured.
+**Why it matters:** It's the demo's "Jun pays" beat with a real Square payment and webhook. Without a button, someone has to curl it.
+**Suggested fix:** A "Customer pays (sandbox)" action on the simulator or on any `awaiting_payment` order, through a Next.js route handler that adds `x-owner-token` server side. Keep `/dev/mark-paid/:orderId` as the fallback when the tunnel is down; same body, same effect, no Square.
+
 ### 2026-10-17 16:40 PT · lane 2 → lane 3 · With the model on, Maya's usual asks "what is your usual order?"
 **Status:** open
 **Where:** the model draft step for `order_usual` (`packages/agents/src/intake.ts` draft prompt; `prompts/draft.ts`)

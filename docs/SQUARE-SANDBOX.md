@@ -110,6 +110,14 @@ What the server does with an event: reads the raw body as text, calls `WebhooksH
 
 ### 8. The sandbox payment-link limitation — read this before the demo
 
+**Verified live, 2026-10-17 (lane 2):** the server's real path works end to end in the sandbox. Use **`POST /dev/square-pay/:orderId`** (header `x-owner-token`, sandbox only), not the curl below. Two things the curl gets wrong:
+
+- Payment-link orders are **`DRAFT`**, and `CreatePayment` answers `400 "The order must be OPEN to be paid."` (it still authorizes and then voids the card). The route updates the order to `OPEN` first.
+- After a failed attempt, reusing the payment's idempotency key replays the voided payment (`"Payment … is in state CANCELED"`). The route's key includes the order version.
+
+Run: Jun's 48-croissant counteroffer → one `sandbox.square.link` link, one Square order, two pickup-day lines, $216.00 → `/dev/square-pay` → payment `COMPLETED` → Square's signed `payment.updated` came in through ngrok → both orders `paid` at the same instant, stock deducted. Payment links still can't be paid in a browser; the route is the demo's "customer pays" step.
+
+
 **Confidence note (checked 2026-10-17):** Square's official sandbox pages say *nothing at all* about payment links — neither `/docs/devtools/sandbox/testing` nor `/docs/devtools/sandbox/payments` mentions them, and `cnon:card-nonce-ok` is confirmed there only for the Payments and Cards APIs. So treat the paragraph below as likely but undocumented: it rests on Square staff forum answers. Plan around it, because being wrong the other way costs a demo beat at 3 AM, and settle it with one real link the moment a sandbox token exists.
 
 Square's sandbox hosted checkout page is **preview only**. The card fields and the Pay button are disabled; sandbox payment link URLs are on `sandbox.square.link/u/...` and land on a sandbox testing panel that states card entry is not allowed. Square staff: "This is the expected behavior in sandbox. Payment links created with the Checkout API only allow for a preview in sandbox." A developer asking for a workaround in September 2026 is still unanswered.
