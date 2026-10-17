@@ -37,10 +37,23 @@ Claims and handoffs live in `docs/STATUS.md`.
 
 The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env`.
 
+## Workspace (live on `main`)
+
+- pnpm workspace with `apps/*` and `packages/*`. Install pnpm 10 (`npm i -g pnpm@10`; old corepack versions fail pnpm's signature check), then `pnpm install` at the root.
+- `@boh/shared` is live. Depend on it with `"@boh/shared": "workspace:*"`. Next.js needs `transpilePackages: ["@boh/shared"]`.
+- `@boh/server`: `pnpm --filter @boh/server dev`, then `curl localhost:8787/health`. Runs with no keys; missing integrations show as `unconfigured`.
+- New packages add a `typecheck` script (and `build`/`lint`/`test` if they have them) so CI covers them.
+- CI runs on Node 24. Local Node 22 works for the server today; Photon's examples ask for 24, so the demo host should use 24.
+
+## Supabase
+
+- A new dedicated project is being created. **Do not use project `ykvvrkvihmfvcesbnker`**; it belongs to an unrelated project.
+- `supabase/migrations/0001_init.sql` is written but not applied yet. Lane 2 applies it to the new project and records the project URL here.
+
 ## Interfaces other agents must not break
 
 - `packages/shared` (`@boh/shared`): the contract. Additive changes only, each with a `docs/DECISIONS.md` row.
-- `supabase/migrations/0001_init.sql`: never edited after it lands; add new migrations.
+- `supabase/migrations/0001_init.sql`: never edited after it is applied; add new migrations.
 - Server HTTP API in `planning/ARCHITECTURE.md`.
 
 ## Photon facts verified

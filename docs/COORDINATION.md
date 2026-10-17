@@ -36,6 +36,22 @@ Release the claim the same way when you stop: set status to `idle` or `blocked`,
 | Product code | Your `lane/N` | After the claim is on `origin/main` |
 | Finished slice | PR from `lane/N` into `main` | When it runs and does not rewrite other lanes |
 
+## CI and merging
+
+`.github/workflows/ci.yml` runs on every PR and every push to `main`: `pnpm install --frozen-lockfile`, typecheck, lint, test, and build (each where a package defines it), then boots the server and checks `/health`. The check is named `build`.
+
+Never merge a PR whose `build` check is not green:
+
+```bash
+gh pr create --base main --head lane/N --title "..." --body "..."
+gh pr checks --watch            # wait for build: pass
+gh pr merge --merge             # merge commit, not squash
+```
+
+If CI fails, fix it on your lane and push again. Do not merge with a red or pending check, and do not disable the workflow. Before pushing, run `pnpm install` (commit `pnpm-lock.yaml` if it changed) and `pnpm -r typecheck` locally, because CI uses the frozen lockfile.
+
+Required-check enforcement on `main` needs a repo admin (aahil1218), and GitHub only allows branch protection on private repos with a paid plan or a public repo. Until it is enabled, this rule is the enforcement.
+
 ## Conflicts
 
 Bring `main` into your lane with `git fetch origin && git merge origin/main`. Do not rebase a lane branch that is already pushed. Merge lane PRs into `main` with a merge commit, not a squash. If a context file conflicts, keep both decision bullets and both claim notes, then leave the lane row accurate.
