@@ -1,0 +1,6620 @@
+[
+  {
+    "id": "0cc53d01-225e-4ae7-93c3-e40058f5fc58",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 133,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ee923e4b-b51e-4ec0-8100-5bf2a790a96f",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 126,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ebea86ea-ba9e-46f4-9fd4-ed2cceed2912",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 126,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d06d3515-1d34-4c51-a5b7-5d5a8f697b61",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 120,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "2e713776-0fe6-47a9-ac17-f841d2b449c8",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 120,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "2fbcea98-f985-4a58-bff5-f7ce5771f777",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 120,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "fec1f022-c79d-4c74-bc3b-4c44ffcbdbdb",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 120,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "9281191b-af53-46f5-9a6a-c0aa2bb3ea66",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "7b505751-d30f-4c62-b7e1-ffbe7ce0d483",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5d97aa44-1172-4ef5-afe5-ab066639e404",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d0a90a59-448c-4d26-84a4-e3ecf62650f0",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "683e7759-c0d1-420a-90d1-dd5a284959a3",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "dcad0e6c-4db7-417e-a4fd-c4fbf65b30b3",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "fe2cd033-edff-4b2f-ad46-57293a88ce2a",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d43891c2-db8b-41a8-ae25-c8250ff8ca7a",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "2ce81701-0c2e-4863-ad9f-95f917c3fcee",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 119,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "b5b8e9c6-cd6c-4dbe-b549-0896ffd858be",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "53c26974-57ab-49ca-bbde-01ffbaf62f0c",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "36a23b43-20ad-4d9e-9eb0-60926e8e5386",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "bd98c0a9-0aa3-4009-bbf5-9312a69d2852",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c027c5de-7fc7-4ff9-97b1-7efc397a016a",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1d6f8d39-06bf-4d9b-8ff3-1688c865d71d",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "4217409d-7912-4210-a2ed-185fc1b06eec",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "09cb5150-97c2-463d-8b24-2309a4fdbfcd",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "574685af-c957-40c8-b8db-b2220253764b",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 118,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c558d746-73be-4c4c-a668-ec0e942ab086",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 116,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "fcaca629-3e61-4bc0-8d2b-affd1108289d",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 116,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "5e284e2a-9a98-4ece-bc08-d919d28569f1",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 116,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "a1cf1b58-9162-47dc-b450-d55d43c2761a",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 116,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "160554ee-a229-47c9-a9c6-988de4014ef7",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 115,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "fe393821-fc26-44fe-81f8-8cb75786cf2e",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 115,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d7a65296-789b-4dde-a0d6-9410fa01a78f",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 114,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "f037d570-3a32-4139-906c-efb4cb2d9763",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 114,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "b22defef-4094-40a8-911b-4f8aefe65835",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 113,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "ee065daf-7e0f-4fed-ac7f-2dff7b83af53",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 113,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "7794ce31-a95e-44e1-8e9d-17c4031091e4",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 113,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "fa3163c4-173f-4399-ad0f-a1ecf20d23d8",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "46c22203-323c-4d91-8419-7b2972c897a3",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "eefd63fe-87c2-4308-8499-f3666ecfc6d8",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "4ead08c4-2b8d-4549-9c2d-c733cef1c989",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "52cbe79c-7009-4963-8282-877211db74f0",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "45bd163c-1a67-4b89-b8f6-d87594a6904f",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "0248b21c-61bc-4d91-915a-cc606301f8c6",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "639435eb-d1ac-4b13-a012-869d42254e77",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 112,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "6bb6362c-278d-4ab7-9ee9-cbecd1544483",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 111,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3f5d0dcd-fda2-4b42-bf6e-6301546bda09",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 111,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "a3496ec4-3af2-4391-acb2-a2a1424d9a39",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 111,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "ba9a3f70-5c06-4d2c-99c5-562811fc79d2",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 111,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d9cca4c3-f1c7-4a4e-8c29-ca49d70d30ed",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "a95d0446-b07a-4705-a997-5129a85b2ec1",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "a36ab7dd-4644-4aaa-ac39-fde17d3cef70",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      },
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "e78a1f45-aeac-4e4c-ae3d-47c873bdd3b7",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "cada6542-522d-4859-9a06-9996bf2d72ae",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "f89d3f29-8b88-4b21-8b80-119c7c3886dc",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "67f2f838-fc2c-4431-a3c9-db7cc18e1b00",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 109,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "4af7975c-e9ae-4d08-8b87-cafcb8d2ed43",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 108,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "f122319f-afbf-48ef-a276-342c25637455",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 107,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1224091e-e0b3-4b03-b3fa-e0ffaa98eb12",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 107,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "7c2a36d8-426c-4018-af76-7eaf69a09e9d",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 107,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "601c70a8-d35d-4047-b0f9-22f51ca2e44e",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 107,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5fce5e2e-147e-4f54-9c44-ab5a7b5727fb",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 105,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "0f28d2bd-2cac-4126-a55b-3d67d61536c7",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 105,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "a3eec98c-078c-47d7-8045-bdb373269ad4",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 105,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1bc11b3d-e342-4507-9311-f83526b7f25c",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 105,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "32b9292e-d64c-4e6c-ab67-f0a99e7f0008",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 105,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "f91e6fe3-d0ea-4c53-a25d-9caf7a209838",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 105,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "4cd06d4f-fc33-4f81-b687-0311cac8df33",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 104,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9d87b99a-34a1-44fc-a171-cff70cecf846",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 104,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "410418b1-0d45-4e31-8024-dc475595cd0c",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 102,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5115bfc9-dd57-44fc-9591-d0994b3e6ad5",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 102,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "b7f2de08-481b-4ea5-a665-780ee174c862",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 101,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "73de5f5d-4578-4383-beae-827a95f9c3bb",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 101,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "df843673-5f3c-4d0c-a643-de69b428bca9",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 101,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "dc577c3b-e42c-4b7a-b685-b0888b9e2bd2",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 100,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5ace70a9-fd8f-44fa-960a-a08740a730b3",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 100,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9bbff304-93e7-4b12-99a1-c2d05c0d099a",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 100,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "cb4a5d9e-aae3-4b0e-b81f-6b9e527a91d1",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 99,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "37cce34d-dcf9-4124-8778-92e0c6d635ee",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 99,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "6f1c37aa-d163-488d-80a5-fc6dc4154a5f",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 99,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "e9aba2a4-5458-4865-95a8-799de70ed5fb",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 99,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 3
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "635b3824-ea09-4a1b-bac6-7618c62ea1d6",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 99,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "fc94a006-f34f-4e7d-ae26-889b53f4be73",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 99,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "42ed2c00-0060-45fa-b306-8dc925a42bb7",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "269eedf7-74f0-4a01-98b3-a8fb4ea9d7d2",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "18abb0c9-3078-46a9-9272-698260fbd6e8",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "61cc8046-ce9b-4b20-9605-c02fa93c5286",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "4d3016ca-b197-42b0-9644-d437dd320649",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "dd988886-611a-4754-80b2-fb05fda49a77",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "8eeefd41-078a-45b4-86a8-2c7136be6e10",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "bd1b1614-8203-47c3-ae07-4936cfceed0e",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "9eeadf21-1b2c-45a2-ad22-d4acb1bf2b4d",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 98,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "c847f2af-43c8-4524-965a-4bc284c5c765",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 97,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "29dab9e0-c14c-4e8e-9040-23ec0526edbb",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 95,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3cd89a21-44c7-4ac8-b1df-018205806748",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 95,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "602c5f5f-d022-48a4-b7b8-2d2366cac134",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 94,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "064c23b8-0993-4caf-9c66-5df9200cf07e",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 93,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "8d9f71a0-d3bd-4878-971b-b38424523dcb",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 93,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "ee9be109-a301-46b5-87bf-1df447811bb5",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 92,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "fc829d8b-b797-4408-82d4-27c31067c0b0",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 92,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "2b7f5309-c59e-4a46-99fe-97fe0bedf0d8",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 92,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "2d874e2b-2c94-4831-89a9-40b3b5e4ddcc",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 92,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "2ecba0c4-eb13-434a-af19-a712645fa84a",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 92,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "13cd1ffa-c7e5-45b6-8763-1bca9402b730",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 92,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "7b8d3e31-e607-4c1c-b193-583ecd59d534",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 91,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1d0eedb4-8eb8-465e-9fc6-208b6e555c3b",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 91,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "61148d6a-a808-405f-acf6-f7ceb51c1aee",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 91,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "ad460745-9f28-40c4-88be-14c4177ebbbc",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 91,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "8a94360a-15a8-4a4c-960a-d97ab30896a5",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 91,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "4b763ec4-2083-4df0-b40b-fddd68e96b5e",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 91,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "8816aede-fefb-4933-8735-dfa0e52d02a4",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 90,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "1cc82bf8-167e-4828-a9b2-395eb5804294",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 90,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "ea9b481a-b441-4f24-a6be-da9814222e6b",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 90,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "179d1501-bf81-406e-8f14-b18809f9c2fb",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 88,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 3
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "99e31c73-cf56-40fe-a2ac-b8fd4ee8cb84",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 88,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5e32d300-5a29-4571-a929-11e12f9595f1",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 87,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9006664c-be8b-4f6b-acde-8f2da4fe2442",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 87,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "b89405fe-e7fe-4af5-af21-960ae2df2563",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 87,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "b229c575-ac6e-43fc-943d-3bf383f1f7d1",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 87,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "a37b7403-0fe3-43fe-87e2-b976950c5b15",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 85,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "69923259-9238-4ffd-82bd-2afe76d43f49",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 85,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "a5cd3e2c-bd18-47fe-8c9f-ad41ed11ea3a",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "89959467-eb84-406e-af38-7f9f1128700c",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "486473e4-a5d6-48d9-813e-88b215956b8f",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "bd3a1c5a-369e-41b1-bbd8-a79967651f38",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "4e622be2-3a0a-4b14-8116-d4d838dda3e0",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "a253fe85-3685-4f7d-bf3e-559ea634e4cc",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "16971e5f-2424-4631-9d92-b41b2ca432d6",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "ace54910-ecc0-4d7e-a5f4-35c3ba8131e1",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1f0d2cb4-75dd-4791-ab77-28ffb38117d4",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "8c0322d3-5312-4b5a-a765-7b6d6f264872",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "a714749a-33e8-4904-b324-8adba396bee5",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "89fccb1a-818d-404d-b4d7-8df90b184176",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "f559dc8b-d432-4c53-a7a2-669492c53496",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "672b47dd-c402-40d7-9d73-a8cb4d557bbf",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "62970b03-d002-46c1-acee-d0fe2f5c1f37",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 84,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3d44280d-101a-4d30-b8b0-6ccc819e1f4a",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 83,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "14b476ff-02f4-4e9d-bbbe-c2d9469d00f0",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 83,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "557b3be6-ea55-49f9-837f-c2babecfd5b6",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 83,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "54471fff-b365-4fff-ba17-73ebe5691b69",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 83,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "22ccdd8d-fa6c-4b96-94a6-79009a71bd17",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 83,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "e1450e78-e2cc-4b99-96c1-77e3405f8f80",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 81,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "cbfcce9f-c6cd-4d09-8636-2a207d31d635",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 81,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "65914ee6-5a7e-4161-8756-352c6dd6321b",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 81,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5f7ba4db-4b4e-4db3-bbdf-30dee9b933b7",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 80,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "e2b9bed7-4d86-4d51-9dbd-80f9fa08586a",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 80,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "cd3780fb-17fe-4738-99fa-2194489b8abb",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 80,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1b7489d0-9db0-4f60-9a50-3d9516711425",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 80,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "35904b59-66cb-4b82-9be7-8a0927a11db7",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 79,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "67647e5c-1e7b-4120-b21b-c0b4628ddc39",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 79,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "b8712611-159d-45f5-9c37-bc5fa99fb026",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 78,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "323a9a25-8422-40c3-8e3e-28f2e3b16470",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 78,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "7d801b7c-c1c2-4ec9-87c9-609f330783eb",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 77,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "7d3d203c-4e35-4f6d-ab70-5511a42dcc67",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 77,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3b044f06-9a2e-4810-9065-08baff2c56ba",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 77,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "88cf05b9-7290-42f9-af2d-c8c056e5eed3",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 77,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "70ddad86-0bab-4c44-a9f1-54ab0fe6c5e4",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 76,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "ababe27f-ae09-4aad-9b24-c4d52c5447f5",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 76,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "5332d4c9-2cb5-42bc-8aee-d3083d8d6c4b",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 76,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "c23c1328-e4d3-433e-819a-02f1dda7c36a",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 76,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "e5159ed1-cf43-460f-86dc-addd38e975d0",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 74,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d846da94-393d-4793-9fee-b10007650415",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 74,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ae82776b-4dd6-4a89-baf9-1bdbe6622230",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 73,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "c99fc2de-b99f-4e75-bbfe-2b4828c75535",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 73,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "cefd227b-5d9b-4ee7-81cb-86013f31f590",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 73,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "3f335594-fec9-47ae-8dc4-cc65c0627458",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 72,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "c7a323ab-f7c9-452e-871f-9e2bd18bc048",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 72,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "8b4505c8-378a-45c1-9f0b-291ea28ae03a",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 72,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "02bfe7ad-e928-4c91-9c0a-f01e705f7484",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 72,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "e6e6d799-e047-4b3e-beba-7cf727523eb8",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 72,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "18c670cc-f8ee-4107-9d2e-524313e98761",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 71,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "65e440a0-7814-405b-a799-96e7c649d78d",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 71,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "ecf258e5-903c-490d-b255-374d683d51a8",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 71,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "18e620fd-0f64-431c-9af3-a60ac8deba78",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "5b43cf62-5a91-4506-8fad-70a94de11140",
+    "customerId": "20717d6d-531c-54be-9159-0a69eb7260f3",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9307334c-55ad-4092-bba5-94f6f491504c",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9fe2779a-7b27-429f-aab3-07db086fb709",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "c4202cd9-ed86-4e6d-9ea5-fc4af1e1412a",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d176a486-1782-481c-b43b-da4d096ddf67",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "280888f4-5ae4-40b9-8773-7e9267150602",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 70,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "bdebda7c-2389-43ba-be7a-af818684b0c4",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 69,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "02a03944-aac2-44ae-b41e-f3ea111611eb",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 69,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "e3cc9913-979b-4f70-8d2d-23c2c176b834",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 69,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "799daec4-d9d4-4785-9471-b8a3e452f92b",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 69,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "249d16cf-976b-4b37-9a0e-ca6824f3bf6e",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 69,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 2
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "0ad058ad-2864-4a06-a4f6-818fca3364b0",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 67,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "c48b2018-6137-4695-8200-45d1fcab9023",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 67,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "72ec8b09-ac0f-4e1e-8fc0-2b32c262da6d",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 66,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "7a927c4a-90d0-433d-a977-370258524366",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 66,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "97c4d066-9b6f-478e-8c7d-ae7ea2c31d7b",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 66,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "b9377a95-9342-4ebb-9e79-39acaa494a3f",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 65,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "311bf804-ba82-430a-81bd-5e4b50aaeed6",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 65,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      },
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "6eb4f2b2-4694-4eac-8d5b-9194924a13b3",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 65,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "73c6a459-3841-4dbc-b968-b8b2615175f4",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 64,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "021b491e-da3b-4ec6-985a-2b72a4ae5e86",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 64,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "d0cffdbc-2b03-4750-84e1-6ed04b38fedc",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 64,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "9a8caf4b-fa9d-44e7-afd1-38cabb88f124",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 64,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "ed28c266-1434-4370-82f6-9bcfe3ed118a",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "4b648fa5-6976-4b6b-93f4-aace9b76d5fa",
+    "customerId": "42962600-a223-52b8-abae-16051793b784",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 12
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 12
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 6
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 6
+      }
+    ]
+  },
+  {
+    "id": "9c4803dc-311d-42d3-86a4-383ffdc1f244",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "66db1f75-8e71-44c6-824a-1cb2802eb46c",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "77b6bdc1-7262-486a-b1ec-93e8aad606ce",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "672eb31c-57bd-420f-be41-8e3811bd84d7",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "c67a698f-cbd5-4852-b407-e25d3bc5e0df",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "69f50608-1c28-43b7-b2a5-c6f40b40fb2d",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 63,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "ea8f266b-e4d5-4e5b-95b3-fd24cc4b4fa4",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 62,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "871fdb04-5fe9-49a9-afc3-172dc4fd1f53",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 62,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9948fbd9-9310-4b7d-a4b9-5ce11edf90b8",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 60,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "56e9ffa7-7fbc-4ecc-88b6-f28ab0a289b8",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 60,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3c5fbb27-5737-4c07-b254-a8354558dd98",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 59,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "11ede5ec-66b4-489b-953a-02f99ffd2f0f",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 59,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "c8475301-8e92-4a96-9ebd-7bc481f3d7f5",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 59,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "cd174b69-8330-4203-b713-9cf9a3d4a8c1",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 59,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "1630bf67-1e6c-4383-a272-7475df2f3c09",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 58,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "717b03f8-7c87-4eac-a401-e447901d0afb",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 58,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "897f5e7f-b63b-49f2-9891-2eaa31b8a773",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 57,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "38fbcb1b-3ea2-410d-9b0b-612007a34104",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 57,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "31cd715f-d8a1-45a8-9903-1831b74a88d1",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 57,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1cd4598c-6bd3-4274-857a-7fc8773c492b",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 57,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "2f3007ba-a03a-4a72-992e-743b28a36a5b",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 57,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1f661545-13e9-45f4-82b8-b177ab22455f",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 57,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "12a12eaf-9208-4993-855c-2ca63e8e5c70",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "88de84fc-bca6-439b-9cad-0d1182644b0e",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ed627174-b924-4a1f-8f40-91647f441b8d",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "d37a15c4-d723-41f4-929c-9fd2dcdfe233",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c580876a-c575-4f26-a0be-cd6a0da7aec8",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "c24c36e3-3528-438b-8fc2-a2745a18e14e",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "4109fbf9-71fa-4322-9a3b-35a568e26888",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9a75a50c-82fe-4dc2-a495-c0e9770f50b1",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "57fc4c65-2046-4c21-875b-6cb8dc910dcf",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 56,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 3
+      },
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ff71d030-c83e-4049-a67f-325a3e2211d2",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 55,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      },
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "02d70739-52ce-4861-9726-c6d900bb0278",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 53,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "2357fc8f-4659-4286-bff8-b4b0b9a78d76",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 53,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "8f913884-0f85-4c1d-b7aa-516f31e852d4",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 53,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "e8f430cc-16d1-4c6b-ac27-3093958ce65b",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 53,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "250d3a20-e72e-44f1-92e5-05a7d7a5baec",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 53,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "75595401-74b1-40ce-8a86-2255f381ded1",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 52,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "a2b99a22-011e-462e-af90-d0322068b0d9",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 52,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "94c16e1e-b85c-4adf-a192-a59afdbbdbcb",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 51,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "a86f5a81-92d4-4427-ba6b-1e77597b5740",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 51,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3143b8e4-8397-4d14-b67a-20b7812e068b",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 51,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "5050eacc-628f-4531-a79f-ea030e84a567",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 51,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "288c9bc4-7cd1-41de-aaf4-4f2a3b209189",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 51,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c452d3a4-7e27-4f8a-a377-cdb9aab536e9",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 50,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "87ebd5c4-46ec-4eff-adc5-8b93d6a3db50",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 49,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d33b4816-ef92-4ad0-b61f-3a637e9cb846",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 49,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "f6352b6a-d7f4-48a2-8467-db90a00732f9",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 49,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "f23ae16b-6445-4092-923c-5c8e7d1321db",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 49,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "fa49d7bf-7800-4798-bfc1-7fb922cf99bf",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "a910f3f2-9a60-4d23-bc28-ef9ed7f37d01",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "04e6fc36-5722-494d-8ba3-197953fd11af",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "e978f1a7-f721-4599-8d30-d2ee22978493",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "aa3eb3b1-acf9-49c8-8a82-43661fcf1c96",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "96d09f03-cb7a-43f8-946a-8573ca54291d",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "54e04955-e5a2-4320-a469-2813a0c2b04b",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "2fbdfc8b-e5fa-49b2-a7bf-dbeb49e2fa28",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 48,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "51f33970-7852-4491-ac85-f388f2447551",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 46,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "29eed6b5-68c6-46b9-a747-506bfb1e6817",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 46,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "01f2544b-ab67-4625-a61b-e18d51cd1f27",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 46,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "6367ce84-b0c9-472d-a6c0-4c6d5ea58e5c",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 46,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "08e0c926-f168-4826-8566-97a26e3e4f21",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 45,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "e2aa58db-c919-488a-b051-ee2edb1d5891",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 45,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "c6791961-efc4-4253-97ea-1dc79f586e71",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 44,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1b2bb74a-8c46-4cd9-9d97-4813f8925d03",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 44,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "0607dbf8-edec-4e95-9f20-167943bf4809",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 43,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "5194f442-c76e-4602-92ad-6ebf01a6aefa",
+    "customerId": "97a58870-dbef-5c61-a888-cce2b9cd375f",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "8b12d504-b06b-4390-8b53-4cb7aefafb68",
+    "customerId": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "6bf3bfe3-9df5-40c8-9d4c-02b1265a5502",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "102e86a1-a951-4a55-8b3b-479d0ffdf07e",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1f0eb5fa-3f87-4dbe-855c-1cbaf7c1b1bb",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "229338d5-efc4-4eb4-a146-69fd0f280694",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "fdb143fd-0f64-4479-9275-cd41a0b06ee2",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "f5be85cf-f3d0-412d-8174-bac46bf64195",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "30d89c6d-41fe-44ce-bafa-6979a4fe5a78",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1399d4e9-d40e-45a4-83bd-871cd57337c8",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "71996999-4868-4c41-a622-11f82dfbaa3d",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "e98d5905-202b-4dc3-ad18-49f002615648",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 42,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "81b44d83-ea0e-4e9b-bac5-75561fc258a7",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 41,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "7fb52e5c-9b6a-413e-b430-9c01f132e483",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 39,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "0fdab63e-df61-4e08-b5ff-41ce171aacfd",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 39,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "19575982-fb42-4050-8a15-15cf84a543e7",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 39,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "14dcffd8-afbc-49a6-83cc-a86c57a0d090",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 38,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "05181c8c-a3bf-443c-86b7-50b47e0ff72c",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 38,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "447923dd-d4cf-40ba-b6ba-9807658a2560",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 38,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "cd3ff39b-6d86-403c-a45a-d6eb1409b3b3",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 38,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "906a49d1-7664-454c-82a7-c119a28a1ae5",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 38,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "09fb0f59-8382-4939-a34e-f3003d0ff60c",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 37,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "2e44a628-08ef-4a23-9a4e-066a16184ccd",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 37,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "2e25922d-bc42-446c-ab52-f357d212b1d8",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 37,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d7120431-93dd-438a-8f8d-5e3d00a7cb52",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 37,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "f15f3713-9507-4767-bf40-60ebe88fc2cb",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 36,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "c517343b-3973-49e7-ad34-d5c89e72aa63",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 36,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "1120c1ea-7c2b-4177-99df-38a82c59e22a",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 36,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "768bed56-d5f4-4b28-be12-4e60f17c07d0",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 36,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "06676752-e691-4edb-955a-542e9d50ee96",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 35,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "1e2b20e7-2abf-4ad3-8780-fd0ad2165694",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 35,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "2ce4f4b1-3cc1-434c-9bbc-2420694bcb3a",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 35,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "3fb1bac3-2caf-465f-a0f6-69356cdebeee",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 35,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ba12cda0-c347-44d0-ac56-372d77a4fae4",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 35,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "e5239208-7af7-4abf-8e71-d8357684906e",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 35,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ac457b0a-0f18-46d6-9e3d-3e48bc8daa3e",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 34,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "7f237337-9ccf-4a02-ae43-4739a26380cb",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 34,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "59bbc0fe-c318-4dde-96d0-19d5550ed631",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 34,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "12008fd0-1837-428b-af38-2373a9fcd1db",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 34,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "254d920a-1931-4b30-82ce-51bd64a18192",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 34,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "6ee1a60d-6800-403c-b9f1-77c8af1ea205",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 32,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "84cd0a86-8ae5-4547-aa9c-6bc8294af477",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 32,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d0177a9b-9ade-43b9-a2d8-f98144606214",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 32,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "7f24e90b-3b8e-4118-b96b-b69bac77cac6",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 32,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "e4cbc701-8952-4c50-a2fc-a7f240deebf2",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 32,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d9192c4c-2e37-4071-9dac-da66228a6f49",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 31,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "a96b5176-30eb-4a52-996b-60e166d27e4c",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 31,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "93e340bf-99c8-4e3d-b51a-4107444c03da",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 30,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "4bbc733a-0584-4af7-8eb7-6e4a230a432c",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 30,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "1f179090-8f3c-4d44-9511-ede02d5fcb99",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 30,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "aebf78e8-befa-48cc-ac1e-f9be645b51b6",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 29,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "fc35afc1-4aff-4d61-b240-ee0e7bb29d18",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 29,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "8b99df6f-af48-4fb3-88c1-42db10c9212a",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 29,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "584792b8-c12b-49ab-a4da-ca797a6e15d3",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 29,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "817f50d5-9906-4b86-b814-8726e1ebbc61",
+    "customerId": "20717d6d-531c-54be-9159-0a69eb7260f3",
+    "kind": "history",
+    "daysAgo": 28,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "63cf7148-bc0c-453b-a6ae-5123b55b9c69",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 28,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "563f6959-43d3-4a66-bb78-439d66bc697d",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 28,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c9eb3e38-b666-467f-a775-2301939045f3",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 28,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "69a476db-a6ab-4845-874a-cd582e99a49a",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 28,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "cfd66a55-174c-4d09-b03c-4a545e178f5a",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 28,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "24dde655-d01c-4ecd-a0bd-dff7afc95577",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "cae0ac17-9c5d-43cb-a82b-9b24887fb3df",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "9618d40e-125e-4a94-978c-e4234ffbb868",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "21a650a1-6294-48db-af6b-422aa6ecce5d",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "25bbacf2-edf9-43ea-87ba-a0b813afdeb4",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "6666de61-286b-49cd-9bd2-409d7e8368b4",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "22c4302f-7f2f-4f66-a9b6-b13a4c5d3559",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3228d27c-aabb-4b70-88fb-199522c6435f",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 27,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "d4912192-316d-42f6-bd15-a282e62f84af",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 25,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "2689b421-279c-46e8-b5c2-c43f951e91ac",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 25,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d893fd3d-c2d6-4ade-87b8-0729396fe478",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 25,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "ffb94d7f-f9e7-438d-8170-4e6ee980d880",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 25,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "d428344f-0c51-4205-8687-aab4c85b02ec",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 24,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "dc66c0ef-376c-4b6c-bda9-50d047e73db1",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 24,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "05a10ef2-395c-4ae2-b10f-e7d1b265fbc1",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 24,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d9c5b890-3455-483a-b54f-9abec3af418c",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 23,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "131f7db3-2f69-4b8e-a1f4-bfdf88cde319",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 23,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "509fdbbe-ad8e-450a-b2fd-fda38bc71d8a",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 22,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "2e5443ca-5724-496c-8d33-febcd33c405c",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 22,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "631ad8d8-af67-439d-85d3-66275f5a3c50",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 22,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "bef351be-267f-4f19-948b-49c1caecc4f7",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 22,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "080b47bf-919c-432b-8ab8-8385bb9648d7",
+    "customerId": "42962600-a223-52b8-abae-16051793b784",
+    "kind": "history",
+    "daysAgo": 21,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 12
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 12
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 6
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 6
+      }
+    ]
+  },
+  {
+    "id": "fc9e4c5b-b341-4e43-9f27-ccb765ff9f92",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 21,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 4
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "7a96ac3d-ed14-490f-a7f8-01727db00d5e",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 21,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "fab759d9-7843-4412-9daf-7f9278e0b942",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 21,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "683d24be-03b4-4668-a4e7-582567b4824a",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 21,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "f43e1cdf-c5d8-4262-b61c-306953dcb854",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 20,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "9a22a9a3-dddf-4b7e-b4f4-80b002ef3e50",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 20,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "92eeb0f5-5d40-40a8-8da5-ad871caabf88",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 20,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "2f2f4f03-3fbe-47f2-974f-96a93b9e7554",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 20,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "5bb157c8-ed7f-4e4e-b17e-85093b53274b",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 18,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "8bc999c0-89ce-4223-8b0f-b67392c61a07",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 18,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "243aed17-e05d-41ff-b2fc-93090acfae35",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 18,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "20c903fd-e9fb-4eb3-a379-2525ad979ca8",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 18,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "8b8249a5-6eda-4ac0-b160-84ffa07e572f",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 18,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "7283c48a-be43-4a93-b8db-19f388202207",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 18,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ce39e3dd-5286-4eaf-82f1-8216d1ea27f7",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 17,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "c5dbde8c-82d6-48b1-9e02-a7f6940e6418",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 17,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3f1c20b1-043f-44b7-af3e-90ce3de3ea30",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 17,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "77f3368b-7fd9-4abb-a3c8-5deff17eee65",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 16,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "3721392a-6a23-4c5b-a00e-76f4e2f1abc5",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 16,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "0338005a-15b7-4362-951b-c6378b7237d0",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 16,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "204a7ef2-58c3-4873-8aee-a36d766f9417",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 15,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "fd37358b-77c4-4831-a4b4-071e0dd3715e",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 15,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c3e46582-f95a-4c1e-990a-de3bbd710026",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 14,
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "6178146b-ce1f-491a-8e81-29cd8432b6d0",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 14,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "85c78c1f-8401-4b0d-a067-2de77bc9ca13",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 14,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1d74aeeb-fda4-4af2-82fd-e535f3200424",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "a45beb14-9356-4156-af20-e5dccab72fb0",
+    "customerId": "c550b739-8817-578c-b0cb-f0028f92d3ba",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "35010568-671d-4497-8c2a-ae3fe013fba7",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "f82bd0f2-cd7a-42fb-9211-115ba1d1c25a",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "ca2788b5-2712-4d84-8902-dfdfa4edb5d7",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "767635cb-1169-4371-8d56-c2862020e3ca",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "a93a963d-a9aa-4c38-b870-c15e2b019886",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "7aa4019b-9df3-40c8-b1dd-1ac39224e50b",
+    "customerId": "d84aa272-d899-5fe9-847d-f3dd7ceeb71c",
+    "kind": "history",
+    "daysAgo": 13,
+    "pickupLocalTime": "11:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "0c4b66b9-c362-4e35-bcb0-d5f17361c1a0",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "fed8b7b8-2b61-4e1c-a967-e2b622df01b4",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "a19f4797-290a-495e-839b-fa30cf8c8909",
+    "customerId": "e9430cb2-7015-5d99-864d-067cc1eb5b8f",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "f397c460-e144-4983-a6db-f28fad145626",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "69f661f3-383b-4983-bfca-4bbecd5dacf6",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "8787ad11-2811-4c3c-be34-fdafe96f0e07",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "f8175188-2f34-4d72-b63e-08d9b5e3862d",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "2fbdada7-b77a-49e7-a64f-1d9c1df35c02",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c5904c7f-785f-4165-b5bf-fea7e6d3b00a",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 11,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "6ecaa0ec-78cd-4f46-81ef-418397751f5e",
+    "customerId": "d0d6fe22-73cb-5036-9a14-a9367329a18b",
+    "kind": "history",
+    "daysAgo": 10,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "ffd3849f-72c4-4947-9e66-c3b5a342bef0",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 10,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "f7b73331-720b-4cf4-a612-d7c0f8b59b4c",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "history",
+    "daysAgo": 10,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "7bc87b44-f4f1-442f-82b8-f40627f4820f",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 10,
+    "pickupLocalTime": "14:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "fd7de5db-fc77-4c67-bb33-a5f12fc34550",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "history",
+    "daysAgo": 9,
+    "pickupLocalTime": "07:15",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "77df8cb4-727f-4998-bd9d-562bb7c7e0eb",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 9,
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "6eecf771-88ab-4f0c-a5d6-5013f955924b",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 9,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 3
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "815bb5f2-6970-4c55-9a03-a9fd64c5dc3b",
+    "customerId": "fc091e44-866b-565e-98b5-afc84beca4ea",
+    "kind": "history",
+    "daysAgo": 8,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "776f7594-1e79-427b-8f42-bc2194eef353",
+    "customerId": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+    "kind": "history",
+    "daysAgo": 8,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "55451bc0-ed34-448e-b85a-d5489503d55b",
+    "customerId": "11409f64-857a-5694-a51d-d8383268ec6d",
+    "kind": "history",
+    "daysAgo": 8,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "8082fbf9-0f05-4e8f-9c26-576a804332fe",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 8,
+    "pickupLocalTime": "12:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 1
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "cef8b0a1-0c50-4741-8e31-7985430a574d",
+    "customerId": "43727817-de2d-5d2c-8785-49422873e1cb",
+    "kind": "history",
+    "daysAgo": 8,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "538ce8bd-5023-44a0-8ed4-28ed0a9ed88c",
+    "customerId": "1e4876a8-4524-5467-8bad-7f42075e7a16",
+    "kind": "history",
+    "daysAgo": 7,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "456fb63a-efb7-4d5d-bc69-14cbb1ff9f72",
+    "customerId": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+    "kind": "history",
+    "daysAgo": 7,
+    "pickupLocalTime": "09:15",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "d3eedaa5-8684-4962-b549-e14a68ec6eb4",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "history",
+    "daysAgo": 7,
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "6e930a50-e323-4a9e-9f1b-46a6276e2d1a",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 7,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "b13d3722-480c-4368-8c75-1458aae2239b",
+    "customerId": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+    "kind": "history",
+    "daysAgo": 7,
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "219536bf-9826-4b12-a991-8b9be48656b0",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "history",
+    "daysAgo": 7,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "db98d251-3482-4984-8972-36fdc40bc17c",
+    "customerId": "3d966cdb-a8b4-5a23-bf25-7aee415a2e88",
+    "kind": "history",
+    "daysAgo": 6,
+    "pickupLocalTime": "08:15",
+    "items": [
+      {
+        "productId": "oat-latte",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "6abc25ee-28d6-4f11-ab7c-d2d6d1c6dc71",
+    "customerId": "435da690-acaf-5761-b5f8-9664fa1483cb",
+    "kind": "history",
+    "daysAgo": 6,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "c7babe90-3237-4012-9439-50a8006310bb",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "history",
+    "daysAgo": 4,
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "rye-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "c3821c30-d428-466c-9551-c7b6ab2ed6be",
+    "customerId": "9ef6917c-2edd-5afe-96d6-bd198a4df343",
+    "kind": "history",
+    "daysAgo": 3,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "morning-bun",
+        "qty": 4
+      },
+      {
+        "productId": "butter-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "d80f53a2-a0c5-4520-855b-96de80408558",
+    "customerId": "18b9de74-40d0-5138-915e-935f5a715006",
+    "kind": "history",
+    "daysAgo": 1,
+    "pickupLocalTime": "07:30",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 3
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "135531fc-707e-4457-84ca-a699f9fd564d",
+    "customerId": "df0bd230-492a-5c87-891b-6ba7592049a5",
+    "kind": "history",
+    "daysAgo": 1,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "almond-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 4
+      }
+    ]
+  },
+  {
+    "id": "985623c3-c970-4d84-ba72-7f120f75ef45",
+    "customerId": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+    "kind": "history",
+    "daysAgo": 1,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "cardamom-knot",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "7c8dd0a6-ff7f-4148-9650-ca1ec87345e4",
+    "customerId": "b34dcf55-9412-55a0-a9a4-16de970343d1",
+    "kind": "history",
+    "daysAgo": 1,
+    "pickupLocalTime": "08:00",
+    "items": [
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "7363287e-0db4-4006-b88d-86cb95f18546",
+    "customerId": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+    "kind": "upcoming",
+    "pickupDay": "next_sat",
+    "pickupLocalTime": "08:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 6
+      },
+      {
+        "productId": "drip-coffee",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "51c7992d-835f-49d9-aa52-0b08ee37cad9",
+    "customerId": "a58ebf3d-5ee1-5be7-bbba-267f37da4fc7",
+    "kind": "upcoming",
+    "pickupDay": "next_sat",
+    "pickupLocalTime": "09:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "quiche-slice",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1381d9a6-9885-41f8-8e1e-44764f747fd1",
+    "customerId": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+    "kind": "upcoming",
+    "pickupDay": "next_sat",
+    "pickupLocalTime": "10:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "almond-croissant",
+        "qty": 3
+      }
+    ]
+  },
+  {
+    "id": "ef8c1c28-2db1-48c7-810b-419cec6749e4",
+    "customerId": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+    "kind": "upcoming",
+    "pickupDay": "next_sat",
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "sourdough-loaf",
+        "qty": 2
+      },
+      {
+        "productId": "baguette",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "35c815f8-bfab-4683-a447-7f49e1b18c88",
+    "customerId": "ef8c7444-cf84-5c2e-9e26-75d7316fdac0",
+    "kind": "upcoming",
+    "pickupDay": "next_sat",
+    "pickupLocalTime": "12:00",
+    "items": [
+      {
+        "productId": "birthday-cake-6",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "1a4984d8-77b1-4538-a35e-2b8bbdace93e",
+    "customerId": "b9698edf-32c1-560f-b132-6b69cdbe4d55",
+    "kind": "upcoming",
+    "pickupDay": "next_sun",
+    "pickupLocalTime": "09:00",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 4
+      },
+      {
+        "productId": "oat-latte",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "b4793269-3114-464c-971b-9f1517974b9f",
+    "customerId": "daed5b09-94a5-58cc-b352-0b841ca0b1f4",
+    "kind": "upcoming",
+    "pickupDay": "next_sun",
+    "pickupLocalTime": "10:30",
+    "items": [
+      {
+        "productId": "butter-croissant",
+        "qty": 2
+      },
+      {
+        "productId": "sourdough-loaf",
+        "qty": 1
+      }
+    ]
+  },
+  {
+    "id": "0b1a2863-9198-4c5c-b29a-a09868dd9daf",
+    "customerId": "b35ed5e7-a1f8-51cf-978d-0bcc513b2dcf",
+    "kind": "upcoming",
+    "pickupDay": "next_sun",
+    "pickupLocalTime": "11:00",
+    "items": [
+      {
+        "productId": "pain-au-chocolat",
+        "qty": 2
+      },
+      {
+        "productId": "morning-bun",
+        "qty": 2
+      }
+    ]
+  }
+]
