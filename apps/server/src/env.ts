@@ -4,7 +4,8 @@ import { z } from "zod";
 
 config({ path: fileURLToPath(new URL("../../../.env", import.meta.url)), quiet: true });
 
-const optional = z.string().min(1).optional();
+/** Blank values (`KEY=` copied from .env.example) count as unset. */
+const optional = z.preprocess((v) => (v === "" ? undefined : v), z.string().min(1).optional());
 
 const Env = z.object({
   PORT: z.coerce.number().int().positive().default(8787),
