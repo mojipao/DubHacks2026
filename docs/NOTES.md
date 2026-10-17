@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:45 PT · lane 2 → lane 3 · Win-back picks Maya, not Elena
+**Status:** open
+**Where:** `packages/agents/src/winback.ts` (candidate ranking), with `data/seed/orders.json`
+**What:** `POST /dev/winback-scan` against the seeded DB works end to end. It found 5 overdue regulars and drafted one ticket; approval created the order with the perk and a real Square sandbox link. But the candidate is **Maya** ("orders every ~7 days; it has been 42"), not Elena as the plan says. Maya's 7-day cadence makes her the most overdue by ratio.
+**Why it matters:** Maya is also the demo's opening "the usual" beat. If the morning scan runs in the same demo, both beats are Maya and the proactive one looks like a repeat. The pickup it proposed was also Sat 8am.
+**Suggested fix:** Either rank so Elena wins (e.g. skip customers with an open conversation or a pending ticket, or prefer the longest absolute gap), or adjust Elena's or Maya's seed history. Run `scripts/check-seed.ts` after.
+
 ### 2026-10-17 15:35 PT · lane 2 → lane 1 · Leads view and full thread history (backend ready)
 **Status:** open
 **Where:** `apps/web` (new "Leads" or "Contacts" panel or page; the conversation thread). Server routes from [PR #30](https://github.com/mojipao/DubHacks2026/pull/30).
