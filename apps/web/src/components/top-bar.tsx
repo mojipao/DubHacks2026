@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { MoreHorizontal, QrCode, Sunrise, Truck } from "lucide-react";
+import { MoreHorizontal, QrCode, ScrollText, Smartphone, Sunrise, Truck, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { AgentStatus } from "@/components/agent-status";
+import { GlowButton } from "@/components/glow-button";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -78,27 +79,35 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
             <DialogHeader>
               <DialogTitle>Control room</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col gap-2">
-              <Button variant="outline" onClick={onOpenSim}>
+            <div className="flex flex-col gap-4 pt-1">
+              <GlowButton block tone="sky" onClick={onOpenSim}>
+                <Smartphone className="size-4" />
                 Phone simulator
-              </Button>
-              <Button variant="outline" asChild>
-                <Link href="/join/qr">
-                  <QrCode className="size-4" />
-                  Join QR
-                </Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link href="/audit">Audit log</Link>
-              </Button>
-              <Button variant="outline" asChild>
-                <Link href="/join">Judge join page</Link>
-              </Button>
-              <div className="mt-2 border-t border-line pt-3 font-mono text-[11px] tracking-[0.14em] text-muted uppercase">
-                Demo controls
+              </GlowButton>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <GlowButton block tone="amber" asChild>
+                  <Link href="/join/qr">
+                    <QrCode className="size-4" />
+                    Join QR
+                  </Link>
+                </GlowButton>
+                <GlowButton block tone="amber" asChild>
+                  <Link href="/join">
+                    <UserPlus className="size-4" />
+                    Join page
+                  </Link>
+                </GlowButton>
               </div>
-              <Button
-                variant="outline"
+              <GlowButton block tone="basil" asChild>
+                <Link href="/audit">
+                  <ScrollText className="size-4" />
+                  Audit log
+                </Link>
+              </GlowButton>
+              <div className="eyebrow mt-2 border-t border-line pt-4">Demo controls</div>
+              <GlowButton
+                block
+                tone="amber"
                 onClick={() =>
                   void winbackScan()
                     .then((n) => toast.message(n > 0 ? `Morning scan drafted ${n} win-back${n === 1 ? "" : "s"}` : "Morning scan: no lapsed regulars"))
@@ -107,9 +116,10 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
               >
                 <Sunrise className="size-4" />
                 Morning scan
-              </Button>
-              <Button
-                variant="outline"
+              </GlowButton>
+              <GlowButton
+                block
+                tone="sky"
                 onClick={() =>
                   void receiveDelivery()
                     .then(() => toast.success("Supplier delivery received"))
@@ -117,8 +127,8 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
                 }
               >
                 <Truck className="size-4" />
-                Receive supplier delivery (simulated)
-              </Button>
+                Receive delivery (simulated)
+              </GlowButton>
             </div>
           </DialogContent>
         </Dialog>

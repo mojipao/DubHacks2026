@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/glow-button";
 import { useStore } from "@/lib/data/store";
 import { maskHandle, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -47,13 +48,9 @@ export function ConversationThread({
           </div>
         </div>
         {onOpenTicket && conv.hasPendingTicket && (
-          <button
-            type="button"
-            onClick={() => onOpenTicket(conv.id)}
-            className="shrink-0 rounded-full bg-amber px-3.5 py-1.5 text-[13px] font-semibold text-ink hover:bg-amber/90"
-          >
+          <GlowButton tone="amber" size="sm" className="shrink-0" onClick={() => onOpenTicket(conv.id)}>
             Ticket waiting · open in the pass
-          </button>
+          </GlowButton>
         )}
       </div>
       <div className={cn("min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3", standalone && "mx-auto w-full max-w-3xl px-6 py-5")}>

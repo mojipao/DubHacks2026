@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Check, Copy, MessageCircle, ShieldAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { GlowButton } from "@/components/glow-button";
 import { Input } from "@/components/ui/input";
 import { ActionError, joinDemo } from "@/lib/actions";
 import { BUSINESS } from "@/lib/business";
@@ -95,12 +95,12 @@ export default function JoinPage() {
           </p>
         )}
 
-        <Button asChild className="mt-6 h-12 bg-[#1d82f5] text-base font-semibold text-white hover:bg-[#1d82f5]/90">
+        <GlowButton asChild tone="sky" size="lg" block className="mt-7">
           <a href={sms}>
             <MessageCircle className="size-5" />
             Open iMessage
           </a>
-        </Button>
+        </GlowButton>
         <p className="mt-3 text-[14px] leading-relaxed text-muted">
           Send from the number you entered, as an iMessage (blue bubble). The owner approves every reply, so give it a
           moment.
@@ -193,13 +193,9 @@ export default function JoinPage() {
             {error}
           </p>
         )}
-        <Button
-          type="submit"
-          disabled={loading}
-          className="h-12 w-full bg-ticket text-[16px] font-semibold text-ink hover:bg-ticket/90"
-        >
+        <GlowButton type="submit" disabled={loading} tone="amber" size="lg" block className="!mt-6">
           {loading ? "Connecting your number…" : "Get the shop's number"}
-        </Button>
+        </GlowButton>
       </form>
     </main>
   );
