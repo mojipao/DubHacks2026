@@ -8,13 +8,16 @@
   },
   "scripts": {
     "dev": "pnpm --parallel --filter @boh/server --filter @boh/web dev",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r typecheck && tsc -p scripts",
     "build": "pnpm -r --if-present build",
     "seed": "tsx scripts/seed.ts",
-    "reset": "tsx scripts/reset.ts"
+    "reset": "tsx scripts/reset.ts",
+    "demo:host": "PHOTON_INBOUND=on OWNER_NOTIFY=on pnpm --filter @boh/server start"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "devDependencies": {
     "@types/node": "^24.0.0",

@@ -4,7 +4,8 @@ import { business } from "./business.ts";
 import { supabaseDataPort } from "./data-port.ts";
 import { db } from "./db.ts";
 import { env } from "./env.ts";
-import { logEvent, type Actor } from "./events.ts";
+import { logEvent, type Actor, type Subject } from "./events.ts";
+import { handleOwnerCommand, notifyOwner } from "./owner.ts";
 
 export interface InboundMessage {
   platform: "imessage" | "simulated";
@@ -22,6 +23,13 @@ const pending = new Map<string, { timer: NodeJS.Timeout; messageId: string }>();
 export function normalizeHandle(handle: string): string {
   const h = handle.trim();
   return h.includes("@") ? h.toLowerCase() : h.replace(/[^\d+]/g, "");
+}
+
+/** "+12065550100" → "+1 206 •••• 0100"; emails keep the first letter and the domain. */
+export function maskHandle(handle: string): string {
+  const h = normalizeHandle(handle);
+  if (h.includes("@")) return h.replace(/^(.).*(@.*)$/, "$1•••$2");
+  return h.length >= 10 ? `${h.slice(0, 2)} ${h.slice(2, 5)} •••• ${h.slice(-4)}` : "••••";
 }
 
 /** Stores one inbound message and schedules the agents. Returns null for a redelivered Photon message. */
@@ -53,8 +61,11 @@ export async function ingestInbound(input: InboundMessage): Promise<{ conversati
     platform: input.platform,
   });
 
-  // Owner commands arrive in Phase 6; the owner's texts never reach the agents.
-  if (isOwner) return { conversationId, messageId: message.id };
+  // The owner's texts go to the command parser, never to the agents. Hard equality on the normalized handle.
+  if (isOwner) {
+    await handleOwnerCommand(input.text, message.id);
+    return { conversationId, messageId: message.id };
+  }
 
   await supersedePendingReplies(conversationId);
   return { conversationId, messageId: message.id };
@@ -118,8 +129,8 @@ function schedule(conversationId: string, messageId: string) {
   pending.set(conversationId, { timer, messageId });
 }
 
-async function runAgents(conversationId: string, messageId: string) {
-  const subject = { type: "message", id: messageId };
+/** Agent context whose trace calls become `agent.step` events on the subject. Await `flush` before reading the trace back. */
+export function agentContext(subject: Subject | null): { ctx: AgentContext; flush: () => Promise<unknown> } {
   const traceWrites: Promise<void>[] = [];
   const ctx: AgentContext = {
     data: supabaseDataPort,
@@ -134,17 +145,23 @@ async function runAgents(conversationId: string, messageId: string) {
       );
     },
   };
+  return { ctx, flush: () => Promise.all(traceWrites) };
+}
+
+async function runAgents(conversationId: string, messageId: string) {
+  const subject = { type: "message", id: messageId };
+  const { ctx, flush } = agentContext(subject);
 
   let drafts: unknown[];
   try {
     const handleInbound = await loadHandleInbound();
     drafts = await handleInbound({ conversationId, messageId }, ctx);
   } catch (err) {
-    await Promise.all(traceWrites);
+    await flush();
     await logEvent("agent:intake", "agent.step", subject, { agent: "intake", step: "error", error: String(err) });
     return;
   }
-  await Promise.all(traceWrites);
+  await flush();
   if (await hasNewerInbound(conversationId, messageId)) {
     await logEvent("system", "agent.step", subject, { agent: "intake", step: "discard", summary: "A newer message arrived; drafts dropped" });
     return;
@@ -165,7 +182,8 @@ async function hasNewerInbound(conversationId: string, messageId: string) {
   return data?.id !== messageId;
 }
 
-async function storeDrafts(raw: unknown[], conversationId: string, messageId: string) {
+/** Validates and stores agent drafts as pending proposals. Returns the stored IDs in input order (null when invalid). */
+export async function storeDrafts(raw: unknown[], conversationId: string | null, messageId: string | null) {
   const ids: (string | null)[] = [];
   const parents: (number | undefined)[] = [];
 
@@ -174,7 +192,7 @@ async function storeDrafts(raw: unknown[], conversationId: string, messageId: st
     if (!parsed.success) {
       ids.push(null);
       parents.push(undefined);
-      await logEvent("agent:intake", "agent.step", { type: "message", id: messageId }, {
+      await logEvent("agent:intake", "agent.step", messageId ? { type: "message", id: messageId } : null, {
         agent: "intake",
         step: "validate",
         error: parsed.error.message,
@@ -217,4 +235,9 @@ async function storeDrafts(raw: unknown[], conversationId: string, messageId: st
     const parentId = parentIndex === undefined ? null : ids[parentIndex];
     if (id && parentId) await db().from("proposals").update({ parent_proposal_id: parentId }).eq("id", id);
   }
+
+  for (const [i, id] of ids.entries()) {
+    if (id && parents[i] === undefined) await notifyOwner(id).catch((err) => console.error("notifyOwner failed", err));
+  }
+  return ids;
 }
