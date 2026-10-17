@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { INGREDIENT_NAMES, PRODUCT_NAMES } from "@/lib/business";
 import type { UiProposal } from "@/lib/data/types";
 import { isGuardFlag } from "@/lib/flags";
-import { friendlyPickup, relativeTime } from "@/lib/format";
+import { friendlyPickup, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // Tickets are paper, so their buttons need paper colors rather than the dark shadcn defaults.
@@ -113,13 +113,13 @@ export function Ticket({
           proposal.agent === "winback" && "bg-[#1f4a2e]",
         )}
       >
-        <span>
+        <span className="min-w-0 truncate">
           {proposal.agent} · {proposal.kind}
           {proposal.customerName ? ` · ${proposal.customerName}` : " · unknown"}
         </span>
-        <div className="flex items-center gap-2 normal-case tracking-normal">
-          <span className="font-mono text-[10px] text-white/70">
-            {relativeTime(proposal.createdAt)}
+        <div className="flex shrink-0 items-center gap-2 tracking-normal normal-case">
+          <span className="font-mono text-[10px] whitespace-nowrap text-white/70">
+            {shortRelativeTime(proposal.createdAt)}
           </span>
           <ConfidenceMeter value={proposal.confidence} />
         </div>
@@ -185,8 +185,11 @@ export function Ticket({
                 <span key={i}>
                   {chunk}
                   {i < arr.length - 1 && (
-                    <span className="mx-0.5 inline-flex rounded-full bg-sky/20 px-2 py-0.5 text-[11px] font-semibold text-[#1a4f7a]">
-                      Square payment link (created on approve)
+                    <span
+                      className="mx-0.5 inline-flex rounded-full bg-sky/20 px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap text-[#1a4f7a]"
+                      title="The server creates the Square payment link when you approve"
+                    >
+                      Square link · on approve
                     </span>
                   )}
                 </span>

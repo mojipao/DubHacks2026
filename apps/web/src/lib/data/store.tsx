@@ -70,7 +70,7 @@ type StoreApi = {
   markPaid: (orderId: string) => Promise<void>;
   winbackScan: () => Promise<number>;
   receiveDelivery: () => Promise<void>;
-  getTrace: (triggerMessageId: string | null) => TraceStep[];
+  getTrace: (proposal: Pick<UiProposal, "triggerMessageId" | "agent" | "createdAt">) => TraceStep[];
 };
 
 const StoreContext = createContext<StoreApi | null>(null);
@@ -112,9 +112,17 @@ function affectedIds(proposals: UiProposal[], id: string, includeLinked?: boolea
   ];
 }
 
-export function traceFromEvents(events: UiEvent[], triggerMessageId: string): TraceStep[] {
+/** The agent.step events behind a ticket, oldest first. */
+export function traceFor(events: UiEvent[], proposal: Pick<UiProposal, "triggerMessageId" | "agent" | "createdAt">): TraceStep[] {
+  const created = Date.parse(proposal.createdAt);
   return events
-    .filter((e) => e.type === "agent.step" && e.subjectId === triggerMessageId)
+    .filter((e) => {
+      if (e.type !== "agent.step") return false;
+      if (proposal.triggerMessageId) return e.subjectId === proposal.triggerMessageId;
+      // Win-back scans have no trigger message: take that scan's steps, written just before the ticket.
+      const at = Date.parse(e.at);
+      return e.data.agent === proposal.agent && at <= created + 2000 && at >= created - 60_000;
+    })
     .slice()
     .sort((a, b) => Date.parse(a.at) - Date.parse(b.at) || Number(a.id) - Number(b.id))
     .map((e) => ({
@@ -254,10 +262,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const winbackScan = useCallback(() => boot.source.winbackScan(), [boot.source]);
   const receiveDelivery = useCallback(() => boot.source.receiveDelivery(), [boot.source]);
 
-  const getTrace = useCallback(
-    (triggerMessageId: string | null): TraceStep[] => {
-      return triggerMessageId ? traceFromEvents(state.events, triggerMessageId) : [];
-    },
+  const getTrace = useCallback<StoreApi["getTrace"]>(
+    (proposal) => traceFor(state.events, proposal),
     [state.events],
   );
 

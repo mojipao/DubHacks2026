@@ -2,7 +2,6 @@ import type {
   ConnectionMode,
   FrictionStats,
   StoreState,
-  TraceStep,
   UiConversation,
   UiCustomer,
   UiEvent,
@@ -28,7 +27,6 @@ export type DataSource = {
   mode: ConnectionMode;
   load(): Promise<DataSnapshot>;
   subscribe(onChange: (patch: Partial<DataSnapshot>) => void): () => void;
-  getTrace(triggerMessageId: string): TraceStep[];
   approve(id: string, opts?: { editedText?: string; includeLinked?: boolean }): Promise<void>;
   reject(id: string, opts?: { reason?: string; includeLinked?: boolean }): Promise<void>;
   simulateInbound(input: { handle: string; name?: string; text: string }): Promise<void>;

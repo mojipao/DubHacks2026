@@ -398,10 +398,6 @@ export function createLiveSource(): DataSource {
         void sb.removeChannel(channel);
       };
     },
-    getTrace() {
-      // Live traces are derived from the store's agent.step events.
-      return [];
-    },
     async approve(id, opts) {
       await approveProposal(id, opts);
       scheduleRefresh();

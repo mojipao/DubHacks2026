@@ -6,6 +6,7 @@ import { ConversationThread } from "@/components/conversations/thread";
 import { FrictionStrip } from "@/components/friction-strip";
 import { PassRail, type DrawerTarget } from "@/components/pass/rail";
 import { PhoneSimulator } from "@/components/phone-simulator";
+import { ShortcutHelp } from "@/components/shortcut-help";
 import { EventTicker } from "@/components/ticker";
 import { PickupsBoard } from "@/components/today/pickups";
 import { TodayRevenue } from "@/components/today/revenue";
@@ -18,6 +19,7 @@ import { toast } from "sonner";
 export function ControlRoom() {
   const { state, focusProposal, approve, reject } = useStore();
   const [drawer, setDrawer] = useState<DrawerTarget>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [simOpen, setSimOpen] = useState(() => {
     if (typeof window === "undefined") return false;
     return new URLSearchParams(window.location.search).get("sim") === "1";
@@ -29,7 +31,7 @@ export function ControlRoom() {
       if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       // Shortcuts act on the pass only; an open drawer or simulator owns the keyboard.
-      if (drawer || simOpen) return;
+      if (drawer || simOpen || helpOpen) return;
 
       const pending = state.proposals.filter((p) => p.status === "pending");
       const focused =
@@ -41,7 +43,7 @@ export function ControlRoom() {
       }
       if (e.key === "?") {
         e.preventDefault();
-        toast.message("A approve · E edit · R reject · J/K focus · S simulator");
+        setHelpOpen(true);
       }
       if (!focused) return;
       const hasChildren = pending.some((p) => p.parentProposalId === focused.id);
@@ -80,7 +82,7 @@ export function ControlRoom() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [state.proposals, state.focusedProposalId, approve, reject, focusProposal, drawer, simOpen]);
+  }, [state.proposals, state.focusedProposalId, approve, reject, focusProposal, drawer, simOpen, helpOpen]);
 
   const dayLabel = new Intl.DateTimeFormat("en-US", {
     timeZone: BUSINESS.timezone,
@@ -94,7 +96,7 @@ export function ControlRoom() {
       <TopBar onOpenSim={() => setSimOpen(true)} />
       <FrictionStrip />
       <div className="flex min-h-0 flex-1">
-        <aside className="flex w-[320px] shrink-0 flex-col border-r border-line bg-panel/30">
+        <aside className="flex w-[272px] shrink-0 flex-col border-r border-line bg-panel/30 min-[1400px]:w-[320px]">
           <div className="min-h-0 flex-[1.1]">
             <ConversationList />
           </div>
@@ -105,7 +107,7 @@ export function ControlRoom() {
 
         <PassRail onOpenSim={() => setSimOpen(true)} drawer={drawer} onDrawer={setDrawer} />
 
-        <aside className="w-[340px] shrink-0 overflow-y-auto bg-panel/30 px-4 py-3">
+        <aside className="w-[288px] shrink-0 overflow-y-auto bg-panel/30 px-4 py-3 min-[1400px]:w-[340px]">
           <h2 className="mb-3 font-mono text-[12px] tracking-[0.2em] text-muted uppercase">
             Today · {dayLabel}
           </h2>
@@ -116,6 +118,7 @@ export function ControlRoom() {
       </div>
       <EventTicker />
       <PhoneSimulator open={simOpen} onOpenChange={setSimOpen} />
+      <ShortcutHelp open={helpOpen} onOpenChange={setHelpOpen} />
     </div>
   );
 }

@@ -19,6 +19,13 @@ const AGENT_TEXT: Record<string, string> = {
   winback: "text-basil",
 };
 
+/** "orders ×14" instead of fourteen chips. */
+function groupReads(reads: TraceStep["reads"]) {
+  const counts = new Map<string, number>();
+  for (const r of reads) counts.set(r.table, (counts.get(r.table) ?? 0) + 1);
+  return [...counts.entries()];
+}
+
 export function TraceTimeline({ steps }: { steps: TraceStep[] }) {
   const reduce = useReducedMotion();
   if (steps.length === 0) {
@@ -74,13 +81,17 @@ export function TraceTimeline({ steps }: { steps: TraceStep[] }) {
                     {flagMeta(f).label}
                   </span>
                 ))}
-                {step.reads.map((r, j) => (
+                {groupReads(step.reads).map(([table, n]) => (
                   <span
-                    key={`${r.table}-${r.id}-${j}`}
+                    key={table}
                     className="rounded bg-bg px-1.5 py-0.5 font-mono text-[10px] text-muted"
-                    title={`${r.table}/${r.id}`}
+                    title={step.reads
+                      .filter((r) => r.table === table)
+                      .map((r) => `${r.table}/${r.id}`)
+                      .join("\n")}
                   >
-                    {r.table}/{r.id.slice(0, 8)}
+                    {table}
+                    {n > 1 ? ` ×${n}` : ""}
                   </span>
                 ))}
               </div>

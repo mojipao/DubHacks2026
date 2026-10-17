@@ -266,9 +266,6 @@ export function createMockSource(): DataSource {
       listeners.add(onChange);
       return () => void listeners.delete(onChange);
     },
-    getTrace() {
-      return [];
-    },
     async approve(id, opts) {
       await approveIds(id, opts ?? {}, "control_room");
     },
@@ -368,6 +365,14 @@ export function createMockSource(): DataSource {
         error: null,
         customerName: elena.name,
       };
+      const steps = [
+        { step: "context", ms: 64, summary: "30 customers with history, 1 overdue past 2.5x their own cadence", reads: [{ table: "customers", id: elena.id }] },
+        { step: "plan", ms: 12, summary: "Elena: every 14 days for four months, last order 6 weeks ago; usual is a rye loaf", reads: [{ table: "orders", id: "elena-last" }] },
+        { step: "draft", ms: 410, summary: "Personal note with her usual and the welcome-back 10%", reads: [] },
+      ];
+      for (const st of steps) {
+        log({ actor: "agent:winback", type: "agent.step", subjectType: null, subjectId: null, data: { agent: "winback", flags: [], ...st } });
+      }
       snap.proposals = [proposal, ...snap.proposals];
       log({ actor: "system", type: "winback.scanned", subjectType: null, subjectId: null, data: { candidates: 1 } });
       log({ actor: "agent:winback", type: "proposal.created", subjectType: "proposal", subjectId: proposal.id, data: { kind: "reply" } });

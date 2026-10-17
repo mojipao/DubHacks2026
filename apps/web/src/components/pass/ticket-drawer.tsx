@@ -126,7 +126,7 @@ export function TicketDrawer({
   const reorder = proposal.kind === "reorder" ? (proposal.payload as ReorderPayload) : null;
   const text = draftById[proposal.id] ?? reply?.text ?? "";
   const edited = reply !== null && text !== reply.text;
-  const trace = getTrace(proposal.triggerMessageId);
+  const trace = getTrace(proposal);
   const pending = proposal.status === "pending";
   const children = state.proposals.filter((p) => p.parentProposalId === proposal.id && p.status === "pending");
   const canEdit = pending && reply !== null;
