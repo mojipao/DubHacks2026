@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { useStore } from "@/lib/data/store";
+import { useFlash } from "@/lib/use-flash";
 import { cn } from "@/lib/utils";
 
 const COLLAPSED = 6;
@@ -11,32 +12,11 @@ function fmt(n: number) {
   return Number.isInteger(n) ? String(n) : n.toFixed(n < 10 ? 2 : 1).replace(/0+$/, "").replace(/\.$/, "");
 }
 
-/** Ingredients whose on-hand or on-order just changed, so their row can flash. */
-function useChanged(ingredients: { id: string; onHand: number; onOrder: number }[]) {
-  const prev = useRef(new Map<string, string>());
-  const [changed, setChanged] = useState<Set<string>>(() => new Set());
-  useEffect(() => {
-    const hits: string[] = [];
-    for (const i of ingredients) {
-      const sig = `${i.onHand}|${i.onOrder}`;
-      const before = prev.current.get(i.id);
-      if (before !== undefined && before !== sig) hits.push(i.id);
-      prev.current.set(i.id, sig);
-    }
-    if (hits.length === 0) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setChanged(new Set(hits));
-    const t = setTimeout(() => setChanged(new Set()), 1800);
-    return () => clearTimeout(t);
-  }, [ingredients]);
-  return changed;
-}
-
 export function StockBars() {
   const { state } = useStore();
   const reduce = useReducedMotion();
   const [showAll, setShowAll] = useState(false);
-  const changed = useChanged(state.ingredients);
+  const changed = useFlash(state.ingredients.map((i) => ({ id: i.id, sig: `${i.onHand}|${i.onOrder}` })));
 
   // Tightest first: the ingredients closest to (or under) their reorder point, plus anything that just moved.
   const sorted = useMemo(

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Shield } from "lucide-react";
 import { isGuardFlag } from "@/lib/flags";
+import { useFlash } from "@/lib/use-flash";
 import { useStore } from "@/lib/data/store";
 import { maskHandle, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,9 @@ import { cn } from "@/lib/utils";
 export function ConversationList() {
   const { state, selectConversation } = useStore();
   const reduce = useReducedMotion();
+  const flashing = useFlash(
+    state.conversations.map((c) => ({ id: c.id, sig: c.lastMessageAt })),
+  );
   const guarded = useMemo(
     () =>
       new Set(
@@ -53,6 +57,7 @@ export function ConversationList() {
                 className={cn(
                   "flex w-full items-start gap-2 border-b border-line/70 px-3 py-3 text-left transition-colors",
                   selected && "bg-amber/10",
+                  flashing.has(c.id) && "bg-sky/15",
                 )}
               >
                 <span
