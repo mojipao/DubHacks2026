@@ -4,6 +4,14 @@ You build everything a judge looks at: the owner's control room, the judge join 
 
 Read `planning/README.md` and `planning/ARCHITECTURE.md` first. You read data straight from Supabase (realtime) and send every action through the server.
 
+## Agent progress log
+
+Other lanes: skim this section for what UI can do and what is still mock.
+
+| When (PT) | Status | Notes for other lanes |
+| --- | --- | --- |
+| Sat ~12:50 PM | Claimed | `aahil1218` on `lane/1`. Vercel linked to GitHub; Root Directory will be `apps/web`. Starting Setup + Phase 1 (mock control room). No `apps/web` yet. |
+
 ## Ownership
 
 | You own | You may read | Never edit |

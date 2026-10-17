@@ -25,7 +25,7 @@ Every person, and every agent at the start of a session:
 
 | Lane | Branch | Who |
 | --- | --- | --- |
-| 1 | `lane/1` | Frontend, unclaimed. Plan: [`planning/LANE-1-FRONTEND.md`](planning/LANE-1-FRONTEND.md) |
+| 1 | `lane/1` | Frontend, aahil1218. Plan: [`planning/LANE-1-FRONTEND.md`](planning/LANE-1-FRONTEND.md) |
 | 2 | `lane/2` | Backend, mojipao. Plan: [`planning/LANE-2-BACKEND.md`](planning/LANE-2-BACKEND.md) |
 | 3 | `lane/3` | Agents, unclaimed. Plan: [`planning/LANE-3-AGENTS.md`](planning/LANE-3-AGENTS.md) |
 

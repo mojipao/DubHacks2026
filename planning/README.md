@@ -105,7 +105,7 @@ After `v-core` is tagged, any change that breaks the loop gets reverted, not deb
 
 | Lane | Owner | Role | Owns |
 | --- | --- | --- | --- |
-| 1 | unassigned | Frontend | `apps/web/**` |
+| 1 | aahil1218 | Frontend | `apps/web/**` |
 | 2 | mojipao | Backend | repo root config, `apps/server/**`, `packages/shared/**`, `supabase/**`, `scripts/seed.ts`, `scripts/reset.ts` |
 | 3 | unassigned | Agents | `packages/agents/**`, `data/**`, `scripts/generate-history.ts`, `scripts/photon-ping.ts`, `submission/**` |
 
