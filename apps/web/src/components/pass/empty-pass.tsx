@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { Smartphone } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { GlowButton } from "@/components/glow-button";
 
 /** Empty rail: three blank tickets swaying on their clips, waiting for the first text. */
 export function EmptyPass({ onOpenSim }: { onOpenSim: () => void }) {
@@ -34,14 +34,10 @@ export function EmptyPass({ onOpenSim }: { onOpenSim: () => void }) {
       <p className="mt-1 max-w-sm text-[14px] text-muted">
         Text the shop to see the agents work. Every reply waits here for your call.
       </p>
-      <Button
-        className="mt-5 border-line bg-transparent text-fg hover:bg-panel"
-        variant="outline"
-        onClick={onOpenSim}
-      >
+      <GlowButton tone="sky" className="mt-6" onClick={onOpenSim}>
         <Smartphone className="size-4" />
         Open phone simulator
-      </Button>
+      </GlowButton>
     </div>
   );
 }

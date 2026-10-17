@@ -194,6 +194,151 @@
   }
 }
 
+/* Glass glow button (adapted from a uiverse-style component): a frosted pill whose
+   colored "lamps" above and below swell into a glow on hover or keyboard focus. */
+@layer components {
+  .glow-btn {
+    --glow: var(--amber);
+    position: relative;
+    display: inline-flex;
+    isolation: isolate;
+    height: 44px;
+    min-width: 10rem;
+  }
+
+  .glow-btn[data-size="sm"] {
+    height: 36px;
+    min-width: 7.5rem;
+  }
+
+  .glow-btn[data-size="lg"] {
+    height: 50px;
+  }
+
+  .glow-btn[data-block] {
+    display: flex;
+    width: 100%;
+  }
+
+  .glow-btn::before,
+  .glow-btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    z-index: -1;
+    width: 30px;
+    height: 8px;
+    border-radius: 10px;
+    background: var(--glow);
+    box-shadow:
+      0 0 5px var(--glow),
+      0 0 15px var(--glow),
+      0 0 30px var(--glow);
+    transition: all 0.5s ease 0.15s;
+  }
+
+  .glow-btn::before {
+    bottom: -4px;
+  }
+
+  .glow-btn::after {
+    top: -4px;
+  }
+
+  .glow-btn:hover::before,
+  .glow-btn:has(.glow-btn__face:focus-visible)::before {
+    bottom: 0;
+    width: 80%;
+    height: 50%;
+    border-radius: 30px;
+  }
+
+  .glow-btn:hover::after,
+  .glow-btn:has(.glow-btn__face:focus-visible)::after {
+    top: 0;
+    width: 80%;
+    height: 50%;
+    border-radius: 30px;
+  }
+
+  .glow-btn__face {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    padding: 0 1.4rem;
+    border-radius: 999px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      letter-spacing 0.5s,
+      background-color 0.5s;
+    outline: none;
+  }
+
+  .glow-btn[data-size="sm"] .glow-btn__face {
+    padding: 0 1rem;
+    font-size: 13px;
+  }
+
+  /* The light sweep across the glass. */
+  .glow-btn__face::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+    transform: skewX(45deg) translateX(-120%);
+    transition: transform 0.5s;
+    pointer-events: none;
+  }
+
+  .glow-btn:hover .glow-btn__face,
+  .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face {
+    letter-spacing: 1.6px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .glow-btn:hover .glow-btn__face::before,
+  .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face::before {
+    transform: skewX(45deg) translateX(320%);
+  }
+
+  .glow-btn__face:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 0 4px var(--glow);
+  }
+
+  .glow-btn[data-disabled] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .glow-btn[data-disabled]::before,
+  .glow-btn[data-disabled]::after {
+    box-shadow: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
