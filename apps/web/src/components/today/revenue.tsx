@@ -21,7 +21,7 @@ export function TodayRevenue() {
   }, [state.orders, today]);
 
   return (
-    <div className="mt-6 overflow-hidden rounded-xl border border-line bg-gradient-to-br from-basil/10 via-transparent to-transparent px-4 py-3">
+    <div className="surface overflow-hidden rounded-xl bg-gradient-to-br from-basil/10 via-surface to-surface px-5 py-4">
       <div className="eyebrow">Paid today</div>
       <div className="mt-1 font-serif text-[34px] leading-none text-fg tabular-nums">{money(paidCents)}</div>
       <div className="mt-1.5 text-[13px] text-muted">

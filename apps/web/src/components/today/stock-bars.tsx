@@ -33,7 +33,7 @@ export function StockBars() {
     : sorted.filter((ing, i) => i < COLLAPSED || changed.has(ing.id) || ing.onOrder > 0);
 
   return (
-    <div className="mt-6">
+    <div>
       <div className="mb-2 flex items-baseline justify-between">
         <h3 className="eyebrow">Stock</h3>
         <span className="flex items-center gap-2 font-mono text-[10px] text-muted">
