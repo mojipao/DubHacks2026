@@ -9,6 +9,7 @@
     "reset.ts",
     "generate-history.ts",
     "check-seed.ts",
-    "photon-ping.ts"
+    "photon-ping.ts",
+    "env-doctor.ts"
   ]
 }
