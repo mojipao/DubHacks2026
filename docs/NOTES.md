@@ -29,6 +29,16 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:35 PT · lane 2 → lane 1 · Leads view and full thread history (backend ready)
+**Status:** open
+**Where:** `apps/web` (new "Leads" or "Contacts" panel or page; the conversation thread). Server routes from [PR #30](https://github.com/mojipao/DubHacks2026/pull/30).
+**What:** Every text is stored on both sides (`conversations` + `messages`, customers and owner). But the control room has no list of who has texted and where they are in the funnel, unknown numbers show only as a masked handle, and a thread only shows what fits in the latest 300 messages across all conversations. The server now provides (owner token, so call through a Next.js route handler like approve):
+- `GET /contacts` → `{ contacts: [{ conversationId, customerId, name|null, handle, handleMasked, role, platform, stage, firstSeenAt, lastMessageAt, lastMessage{direction, body, at}, messages{inbound, outbound}, pendingTickets, orders{agentOrders, paidCents, awaitingCents, historyOrders} }] }`, newest activity first. `stage` is `owner | lead | ordered | paid | regular`.
+- `GET /contacts?format=csv` → `leads-YYYY-MM-DD.csv` download (owner excluded).
+- `GET /contacts/:conversationId/messages?limit=100&before=<createdAt>` → `{ messages (oldest first), hasMore }`, for "load earlier" in a thread.
+**Why it matters:** The owner (and judges) should see every lead captured from iMessage, including numbers that never gave a name, and whether they converted. It also shows "nothing gets lost".
+**Suggested fix:** A Leads panel or page with stage chips (lead → ordered → paid), the masked handle when `name` is null, message counts, money, and an "Export CSV" button. In the thread view, a "Load earlier" link using the history route. Refresh on the realtime events you already subscribe to (`conversations`, `messages`, `orders`, `proposals`).
+
 ### 2026-10-17 15:25 PT · lane 2 → lane 3 · Real phone: "Saturday at 9am" became 8am and was flagged outside hours
 **Status:** open
 **Where:** understand/resolve for pickup time (`packages/agents/src/understand.ts`, `intake.ts` resolve and flags)
