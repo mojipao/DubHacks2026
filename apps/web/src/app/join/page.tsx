@@ -53,7 +53,8 @@ export default function JoinPage() {
   const [copied, setCopied] = useState(false);
 
   if (result) {
-    const sms = `sms:${result.agentNumber}&body=${encodeURIComponent("Hi! Can I order for Saturday?")}`;
+    // `sms:number&body=` (no ?) makes iOS open a green SMS thread. Photon only receives iMessage.
+    const sms = `sms:${encodeURIComponent(result.agentNumber)}?body=${encodeURIComponent("Hi! Can I order for Saturday?")}`;
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
         <h1 className="mt-2 heading text-[36px] leading-tight tracking-tight text-fg">
@@ -96,12 +97,13 @@ export default function JoinPage() {
         <GlowButton asChild tone="sky" size="lg" block className="mt-7">
           <a href={sms}>
             <MessageCircle className="size-5" />
-            Open iMessage
+            Open Messages
           </a>
         </GlowButton>
         <p className="mt-3 text-[14px] leading-relaxed text-muted">
-          Send from the number you entered, as an iMessage (blue bubble). The owner approves every reply, so give it a
-          moment.
+          The bubble must be <span className="font-semibold text-ink">blue</span> before you send. Green is SMS — the shop
+          never sees it. Send from the number you entered (Settings → Messages → Send & Receive). Orders wait for the
+          owner; a plain question may come back on its own.
         </p>
 
         <section className="mt-8">
@@ -126,8 +128,8 @@ export default function JoinPage() {
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
       <h1 className="mt-2 heading text-[40px] leading-[1.05] tracking-tight text-fg">Text the shop like a regular.</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">
-        An AI drafts every reply from the shop&apos;s real orders and stock. Nothing reaches you until the owner approves
-        it.
+        An AI drafts every reply from the shop&apos;s real orders and stock. No order or payment goes out until the owner
+        approves it.
       </p>
 
       <form

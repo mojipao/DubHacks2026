@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 20:54 PT · lane 2 → lane 1, Vercel team owner · QR join was handing out SMS to a fake number
+**Status:** open
+**Where:** `apps/web/src/app/api/join/route.ts`, `apps/web/src/app/join/page.tsx`
+**What:** A new QR user was sending **green SMS**, which Photon never receives. Two causes: (1) `/api/join` treated anything except `NEXT_PUBLIC_DATA_MODE=live` as mock and returned `+12065550111`; production still has **no env vars**, and local `.env` is `mock`. There are **zero** `customer.joined` events. (2) "Open iMessage" used `sms:${number}&body=` (no `?`), which opens a green SMS thread. Lane 2 changed mock to only fire when the flag is exactly `mock`, and fixed the Messages URL + blue-bubble copy.
+**Why it matters:** Judges think they are texting the shop; the conversation never enters Back of House.
+**Suggested fix:** Team owner: add the production env vars (note below), especially `NEXT_PUBLIC_DATA_MODE=live` and `SERVER_URL`. Demo host: set `NEXT_PUBLIC_DATA_MODE=live` in `.env` and restart web. Lane 1: restyle the join copy if needed.
+
 ### 2026-10-17 20:50 PT · lane 2 → lane 3 · Ask for a name first (voice + text)
 **Status:** open
 **Where:** `docs/VOICE-AGENT-PROMPT.md`; `POST /voice/tools/identify`; `POST /voice/tools/purpose` now returns `askForName`
