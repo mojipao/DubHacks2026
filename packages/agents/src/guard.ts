@@ -235,6 +235,30 @@ export function checkReply(text: string, facts: GuardFacts): GuardResult {
     );
   }
 
+  // 10. Ordering by text is the product. A live model has drafted "we can't take orders
+  //     through this chat" on "hi" and on a pickup time, which sends the customer away.
+  if (
+    /\b(can'?t|cannot|can not|don'?t|do not|unable to)\s+(take|accept|place|process)\s+orders?\b/i.test(text) ||
+    /\borders?\s+(through|in|via|on)\s+this\s+(chat|message|text|thread)\b/i.test(text) ||
+    /\bplace\s+an?\s+order\b.{0,40}\b(website|app|online)\b/i.test(text)
+  ) {
+    blocking.push(
+      "Do not say the shop cannot take orders by text, and do not send them to a website or app. This shop takes orders by iMessage. Invite what they would like and a pickup time instead.",
+    );
+  }
+
+  // 11. Without an attached order, never promise that something is ready or being made.
+  if (
+    !facts.hasOrder &&
+    /\b(we('ll| will) (get|have|make|prepare)\b.{0,60}\bready\b|ready for (you|pickup)|let you know when (it'?s|your order is) ready)\b/i.test(
+      text,
+    )
+  ) {
+    blocking.push(
+      "Do not promise anything is being prepared: no order is scheduled. Ask for the missing item or pickup time instead.",
+    );
+  }
+
   const ok = blocking.length === 0;
   return {
     ok,

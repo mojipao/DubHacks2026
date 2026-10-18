@@ -18,6 +18,8 @@ Rules:
 - pickupLocal is "YYYY-MM-DDTHH:mm" local time, or null when the message names no time.
 - When a time of day is vague ("morning"), use 09:00. ("afternoon") use 13:00.
 - Set needsClarification when you cannot tell what was ordered, and write one short question.
+- This shop takes orders by text. Never write a clarifyingQuestion that says orders cannot be taken by chat, message, website, or app.
+- When EARLIER IN THIS CONVERSATION named items or a pickup time and this message supplies the other half, fill both fields. A message that is only a time still belongs to the open order.
 - confidence is your own certainty that this reading is right, from 0 to 1.`;
 
 export function understandPrompt(input: {

@@ -22,7 +22,11 @@ interface Harness {
   weekend: { sat: string; sun: string };
 }
 
-function harness(text: string, handle: string | null): Harness {
+function harness(
+  text: string,
+  handle: string | null,
+  prior: { direction: "inbound" | "outbound"; body: string }[] = [],
+): Harness {
   const world = createFixtureWorld({
     now: NOW,
     handles: { maya: MAYA_HANDLE, jun: JUN_HANDLE },
@@ -30,7 +34,15 @@ function harness(text: string, handle: string | null): Harness {
       id: "conv-1",
       handle: handle ?? "+12065559999",
       customerId: null,
-      messages: [{ id: "msg-1", direction: "inbound", body: text, createdAt: NOW.toISOString() }],
+      messages: [
+        ...prior.map((m, index) => ({
+          id: `h${index}`,
+          direction: m.direction,
+          body: m.body,
+          createdAt: NOW.toISOString(),
+        })),
+        { id: "msg-1", direction: "inbound" as const, body: text, createdAt: NOW.toISOString() },
+      ],
     } satisfies ConversationContext,
   });
 
@@ -290,6 +302,60 @@ describe("the shared contract", () => {
       }
     });
   }
+});
+
+describe("guiding toward an order", () => {
+  it("greets a bare hi by inviting an order, never refusing chat orders", async () => {
+    const drafts = await run(harness("hi", null));
+    const reply = drafts[0];
+    if (reply?.kind !== "reply") throw new Error("expected a reply draft");
+
+    expect(reply.payload.orders).toEqual([]);
+    expect(reply.payload.text).toMatch(/order|coffee|chai|cake|what/i);
+    expect(reply.payload.text).not.toMatch(/can'?t take orders|cannot take orders|website or app|through this (chat|message)/i);
+  });
+
+  it("combines a coffee with a later pickup time into one order", async () => {
+    const h = harness("Pickup time at 12pm tomorrow", null, [{ direction: "inbound", body: "Can I have a coffee" }]);
+    const drafts = await run(h);
+    const reply = drafts[0];
+    if (reply?.kind !== "reply") throw new Error("expected a reply draft");
+
+    expect(reply.payload.orders).toHaveLength(1);
+    expect(reply.payload.orders[0]?.items).toEqual([{ productId: "yemeni-coffee", qty: 1 }]);
+    expect(reply.payload.orders[0]?.pickupAt).toContain("2026-10-18T12:00");
+    expect(reply.payload.text.split(PAYMENT_LINK_TOKEN)).toHaveLength(2);
+    expect(reply.payload.text).not.toMatch(/can'?t take orders|through this (chat|message)/i);
+  });
+
+  it("combines a day with a later item into one order", async () => {
+    const h = harness("Can I have a coffee", null, [{ direction: "inbound", body: "Can I order for Saturday?" }]);
+    const drafts = await run(h);
+    const reply = drafts[0];
+    if (reply?.kind !== "reply") throw new Error("expected a reply draft");
+
+    expect(reply.payload.orders).toHaveLength(1);
+    expect(reply.payload.orders[0]?.items).toEqual([{ productId: "yemeni-coffee", qty: 1 }]);
+    expect(reply.payload.orders[0]?.pickupAt).toContain(h.weekend.sat);
+  });
+
+  it("does not replay an order when they say thanks", async () => {
+    const drafts = await run(
+      harness("thanks!!", MAYA_HANDLE, [{ direction: "inbound", body: "usual for saturday please" }]),
+    );
+    const reply = drafts[0];
+    if (reply?.kind !== "reply") throw new Error("expected a reply draft");
+    expect(reply.payload.orders).toEqual([]);
+  });
+
+  it("asks for a pickup time when they name an item and no time", async () => {
+    const drafts = await run(harness("Can I have a coffee", null));
+    const reply = drafts[0];
+    if (reply?.kind !== "reply") throw new Error("expected a reply draft");
+    expect(reply.payload.orders).toEqual([]);
+    expect(reply.payload.text).toMatch(/pick(?: it)? up|what (day|time)/i);
+    expect(reply.payload.text).not.toMatch(/ready for (you|pickup)/i);
+  });
 });
 
 describe("resilience", () => {
