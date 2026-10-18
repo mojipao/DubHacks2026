@@ -72,6 +72,18 @@ async function prune(products: SeedProduct[], ingredients: SeedIngredient[], rec
   const staleOrders = history.map((o) => o.id).filter((id) => !keepOrders.has(id));
   await chunked(staleOrders, 100, async (ids) => void check(await db().from("orders").delete().in("id", ids), "prune orders"));
 
+  // Seeded orders keep their IDs when their items change, so drop item lines the seed no longer lists.
+  const keepItems = new Set(orders.flatMap((o) => o.items.map((i) => `${o.id}|${i.productId}`)));
+  const seededIds = [...keepOrders];
+  let staleItems = 0;
+  await chunked(seededIds, 100, async (ids) => {
+    const items = check(await db().from("order_items").select("order_id, product_id").in("order_id", ids), "list order items") ?? [];
+    for (const it of items.filter((it) => !keepItems.has(`${it.order_id}|${it.product_id}`))) {
+      check(await db().from("order_items").delete().eq("order_id", it.order_id).eq("product_id", it.product_id), "prune order item");
+      staleItems++;
+    }
+  });
+
   const lines = check(await db().from("recipe_lines").select("product_id, ingredient_id"), "list recipe lines") ?? [];
   for (const l of lines.filter((l) => !keepRecipes.has(`${l.product_id}|${l.ingredient_id}`))) {
     check(
@@ -95,6 +107,7 @@ async function prune(products: SeedProduct[], ingredients: SeedIngredient[], rec
 
   return {
     orders: staleOrders.length,
+    orderItems: staleItems,
     products: staleProducts.filter((id) => !deactivated.includes(id)),
     deactivatedProducts: deactivated,
     ingredients: staleIngredients,
