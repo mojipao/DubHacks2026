@@ -1,5 +1,5 @@
 {
-  "name": "Kettle & Crow Coffee",
+  "name": "Mokha Coffee House",
   "timezone": "America/Los_Angeles",
   "hours": {
     "mon": null,
@@ -42,6 +42,6 @@
     "reorder": 8,
     "guardCatch": 2
   },
-  "voice": "Warm and brief, the way the barista at the counter actually talks. Use the customer's first name. Say the real constraint plainly instead of apologizing twice. No exclamation-mark pileups, at most one emoji, never all caps. Prices come from the menu, never invented. Sign off with — Kettle & Crow.",
+  "voice": "Warm and brief, the way the person at the counter of a Yemeni coffee house actually talks: hospitable, never pushy. Use the customer's first name. Say the real constraint plainly instead of apologizing twice. No exclamation-mark pileups, at most one emoji, never all caps. Prices come from the menu, never invented. Sign off with — Mokha Coffee House.",
   "poweredByFooter": "Sent with Back of House · backofhouse.app"
 }

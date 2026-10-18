@@ -55,7 +55,7 @@ export const FIXTURE_CONVERSATIONS: UiConversation[] = [
     platform: "simulated",
     role: "customer",
     lastMessageAt: minutesAgo(2),
-    lastPreview: "Can I get 4 dozen croissants for Saturday 9am?",
+    lastPreview: "Can I get 4 dozen milk cakes for Saturday 9am?",
     hasPendingTicket: true,
   },
   {
@@ -88,7 +88,7 @@ export const FIXTURE_CONVERSATIONS: UiConversation[] = [
     platform: "simulated",
     role: "customer",
     lastMessageAt: hoursAgo(2),
-    lastPreview: "2 almond croissants Sunday?",
+    lastPreview: "2 pistachio maamoul Sunday?",
     hasPendingTicket: true,
   },
 ];
@@ -98,7 +98,7 @@ export const FIXTURE_MESSAGES: UiMessage[] = [
     id: "msg-jun-1",
     conversationId: "conv-jun",
     direction: "inbound",
-    body: "Can I get 4 dozen croissants for Saturday 9am?",
+    body: "Can I get 4 dozen milk cakes for Saturday 9am?",
     status: "received",
     createdAt: minutesAgo(2),
   },
@@ -114,7 +114,7 @@ export const FIXTURE_MESSAGES: UiMessage[] = [
     id: "msg-maya-2",
     conversationId: "conv-maya",
     direction: "outbound",
-    body: `Hi Maya — 2 almond croissants + oat latte for Sat 9:00. Welcome back 10% off. Pay here: https://square.link/demo\n— ${BRAND_SHORT}`,
+    body: `Hi Maya — 2 pistachio maamoul + adeni chai for Sat 9:00. Welcome back 10% off. Pay here: https://square.link/demo\n— ${BRAND_SHORT}`,
     status: "sent",
     createdAt: minutesAgo(18),
     approvedByOwner: true,
@@ -131,7 +131,7 @@ export const FIXTURE_MESSAGES: UiMessage[] = [
     id: "msg-priya-1",
     conversationId: "conv-priya",
     direction: "inbound",
-    body: "can I get 2 almond croissants sunday?",
+    body: "can I get 2 pistachio maamoul sunday?",
     status: "received",
     createdAt: hoursAgo(2),
   },
@@ -151,28 +151,28 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
     triggerMessageId: "msg-jun-1",
     parentProposalId: null,
     title: "Counteroffer for Jun",
-    summary: "Split 48 butter croissants across Sat/Sun with one payment link.",
+    summary: "Split 48 milk cakes across Sat/Sun with one payment link.",
     rationale:
-      "Can't fit 48 Saturday: split 24 Sat / 24 Sun, butter reorder needed.",
+      "Can't fit 48 Saturday: split 24 Sat / 24 Sun, ghee reorder needed.",
     payload: {
-      text: `Hi Jun — Saturday only has 24 butter croissants left, so I can't do all 48 that morning. I can hold 24 Sat 9:00 and 24 Sun 9:00 behind one link. Paying confirms the split. ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+      text: `Hi Jun — Saturday only has 24 milk cakes left, so I can't do all 48 that morning. I can hold 24 Sat 9:00 and 24 Sun 9:00 behind one link. Paying confirms the split. ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
       orders: [
         {
-          items: [{ productId: "butter-croissant", qty: 24 }],
+          items: [{ productId: "milk-cake", qty: 24 }],
           pickupAt: satPickup,
         },
         {
-          items: [{ productId: "butter-croissant", qty: 24 }],
+          items: [{ productId: "milk-cake", qty: 24 }],
           pickupAt: sunPickup,
         },
       ],
     },
     evidence: [
       { label: "Customer", value: "Jun Park, catering", source: { table: "customers", id: "cust-jun" } },
-      { label: "Saturday capacity", value: "Butter croissant 12/36, 24 left", source: { table: "products", id: "butter-croissant" } },
-      { label: "Sunday capacity", value: "Butter croissant 6/36, 30 left", source: { table: "products", id: "butter-croissant" } },
-      { label: "Stock", value: "Butter covers ~30 more; plan needs more", source: { table: "ingredients", id: "butter" } },
-      { label: "Asked", value: "48 × butter croissant Sat 9:00", source: { table: "messages", id: "msg-jun-1" } },
+      { label: "Saturday capacity", value: "Milk cake 12/36, 24 left", source: { table: "products", id: "milk-cake" } },
+      { label: "Sunday capacity", value: "Milk cake 6/36, 30 left", source: { table: "products", id: "milk-cake" } },
+      { label: "Stock", value: "Ghee covers ~30 more; plan needs more", source: { table: "ingredients", id: "ghee" } },
+      { label: "Asked", value: "48 × milk cake Sat 9:00", source: { table: "messages", id: "msg-jun-1" } },
     ],
     reads: [
       { table: "orders", id: "hist-1" },
@@ -189,8 +189,8 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
       { table: "orders", id: "hist-6" },
       { table: "orders", id: "hist-7" },
       { table: "orders", id: "hist-8" },
-      { table: "products", id: "butter-croissant" },
-      { table: "ingredients", id: "butter" },
+      { table: "products", id: "milk-cake" },
+      { table: "ingredients", id: "ghee" },
       { table: "customers", id: "cust-jun" },
       { table: "capacity", id: "sat" },
       { table: "capacity", id: "sun" },
@@ -212,12 +212,12 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
     conversationId: "conv-jun",
     triggerMessageId: "msg-jun-1",
     parentProposalId: "prop-jun-reply",
-    title: "Reorder butter from Rainier Dairy",
-    summary: "3 kg butter needed by Friday for Jun's split order.",
-    rationale: "Butter on hand covers ~30 more; 48 croissants needs a restock.",
+    title: "Reorder ghee from Rainier Dairy",
+    summary: "3 kg ghee needed by Friday for Jun's split order.",
+    rationale: "Ghee on hand covers ~30 more; 48 milk cakes needs a restock.",
     payload: {
       supplier: "Rainier Dairy",
-      lines: [{ ingredientId: "butter", qty: 3 }],
+      lines: [{ ingredientId: "ghee", qty: 3 }],
       neededBy: (() => {
         const d = new Date(satPickup);
         d.setDate(d.getDate() - 1);
@@ -225,11 +225,11 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
       })(),
     },
     evidence: [
-      { label: "Supplier", value: "Rainier Dairy", source: { table: "ingredients", id: "butter" } },
-      { label: "Shortfall", value: "~1.6 kg after plan", source: { table: "ingredients", id: "butter" } },
+      { label: "Supplier", value: "Rainier Dairy", source: { table: "ingredients", id: "ghee" } },
+      { label: "Shortfall", value: "~1.6 kg after plan", source: { table: "ingredients", id: "ghee" } },
     ],
     reads: [
-      { table: "ingredients", id: "butter" },
+      { table: "ingredients", id: "ghee" },
       { table: "ingredients", id: "bread-flour" },
     ],
     confidence: 0.9,
@@ -284,14 +284,14 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
     conversationId: "conv-priya",
     triggerMessageId: "msg-priya-1",
     parentProposalId: null,
-    title: "Almond croissants for Priya",
-    summary: "2 almond croissants Sunday; allergy note surfaced.",
+    title: "Pistachio maamoul for Priya",
+    summary: "2 pistachio maamoul Sunday; allergy note surfaced.",
     rationale: "Notes mention tree nut allergy — flag for owner confirm.",
     payload: {
-      text: `Hi Priya — 2 almond croissants for Sunday 9:00. We'll confirm allergen details with the owner before bake. ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+      text: `Hi Priya — 2 pistachio maamoul for Sunday 9:00. We'll confirm allergen details with the owner before bake. ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
       orders: [
         {
-          items: [{ productId: "almond-croissant", qty: 2 }],
+          items: [{ productId: "pistachio-maamoul", qty: 2 }],
           pickupAt: sunPickup,
         },
       ],
@@ -304,7 +304,7 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
       { table: "customers", id: "cust-priya" },
       { table: "orders", id: "priya-1" },
       { table: "orders", id: "priya-2" },
-      { table: "products", id: "almond-croissant" },
+      { table: "products", id: "pistachio-maamoul" },
     ],
     confidence: 0.72,
     riskFlags: ["allergy_mentioned"],
@@ -331,8 +331,8 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
       orders: [
         {
           items: [
-            { productId: "almond-croissant", qty: 2 },
-            { productId: "oat-latte", qty: 1 },
+            { productId: "pistachio-maamoul", qty: 2 },
+            { productId: "adeni-chai", qty: 1 },
           ],
           pickupAt: satPickup,
           perk: "welcome_back_10",
@@ -366,8 +366,8 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     createdAt: minutesAgo(18),
     paidAt: minutesAgo(17),
     items: [
-      { productId: "almond-croissant", name: "Almond croissant", qty: 2 },
-      { productId: "oat-latte", name: "Oat latte", qty: 1 },
+      { productId: "pistachio-maamoul", name: "Pistachio maamoul", qty: 2 },
+      { productId: "adeni-chai", name: "Adeni chai", qty: 1 },
     ],
   },
   {
@@ -381,7 +381,7 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     source: "history",
     createdAt: hoursAgo(72),
     paidAt: hoursAgo(72),
-    items: [{ productId: "butter-croissant", name: "Butter croissant", qty: 12 }],
+    items: [{ productId: "milk-cake", name: "Milk cake", qty: 12 }],
     hasShortfall: true,
   },
   {
@@ -395,7 +395,7 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     source: "history",
     createdAt: hoursAgo(50),
     paidAt: hoursAgo(50),
-    items: [{ productId: "butter-croissant", name: "Butter croissant", qty: 6 }],
+    items: [{ productId: "milk-cake", name: "Milk cake", qty: 6 }],
   },
   {
     id: "order-today-1",
@@ -409,8 +409,8 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     createdAt: hoursAgo(3),
     paidAt: hoursAgo(3),
     items: [
-      { productId: "pain-au-chocolat", name: "Pain au chocolat", qty: 2 },
-      { productId: "oat-latte", name: "Oat latte", qty: 1 },
+      { productId: "bint-al-sahn", name: "Bint al-sahn", qty: 2 },
+      { productId: "adeni-chai", name: "Adeni chai", qty: 1 },
     ],
   },
   {
@@ -424,7 +424,7 @@ export const FIXTURE_ORDERS: UiOrder[] = [
     source: "agent",
     createdAt: minutesAgo(40),
     paidAt: null,
-    items: [{ productId: "butter-croissant", name: "Butter croissant", qty: 5 }],
+    items: [{ productId: "milk-cake", name: "Milk cake", qty: 5 }],
   },
 ];
 
@@ -434,7 +434,7 @@ export const FIXTURE_INGREDIENTS: UiIngredient[] = ingredientsJson.map((i) => ({
   name: i.name,
   unit: i.unit,
   onHand: i.onHand,
-  onOrder: i.id === "oat-milk" ? 6 : 0,
+  onOrder: i.id === "evaporated-milk" ? 6 : 0,
   reorderPoint: i.reorderPoint,
 }));
 
@@ -549,10 +549,10 @@ export const FIXTURE_EVENTS: UiEvent[] = ([
       agent: "ops",
       step: "ops_check",
       ms: 41,
-      summary: "Saturday butter croissants: 12 of 36 committed, 24 left; butter covers ~30 more.",
+      summary: "Saturday milk cakes: 12 of 36 committed, 24 left; ghee covers ~30 more.",
       reads: [
-        { table: "products", id: "butter-croissant" },
-        { table: "ingredients", id: "butter" },
+        { table: "products", id: "milk-cake" },
+        { table: "ingredients", id: "ghee" },
       ],
       flags: ["capacity_shortfall", "ingredient_shortfall"],
     },
@@ -580,8 +580,8 @@ export const FIXTURE_TRACE: Record<string, TraceStep[]> = {
       agent: "intake",
       step: "understand",
       ms: 910,
-      summary: "48 × butter croissant, Sat 9:00 (aliases: croissants)",
-      reads: [{ table: "products", id: "butter-croissant" }],
+      summary: "48 × milk cake, Sat 9:00 (aliases: milk cakes)",
+      reads: [{ table: "products", id: "milk-cake" }],
       flags: ["large_order"],
     },
     {
@@ -590,10 +590,10 @@ export const FIXTURE_TRACE: Record<string, TraceStep[]> = {
       agent: "ops",
       step: "ops_check",
       ms: 41,
-      summary: "Saturday butter croissants: 12 of 36 committed, 24 left; butter covers ~30 more.",
+      summary: "Saturday milk cakes: 12 of 36 committed, 24 left; ghee covers ~30 more.",
       reads: [
-        { table: "products", id: "butter-croissant" },
-        { table: "ingredients", id: "butter" },
+        { table: "products", id: "milk-cake" },
+        { table: "ingredients", id: "ghee" },
       ],
       flags: ["capacity_shortfall", "ingredient_shortfall"],
     },
@@ -603,7 +603,7 @@ export const FIXTURE_TRACE: Record<string, TraceStep[]> = {
       agent: "ops",
       step: "plan",
       ms: 18,
-      summary: "Split 24 Sat / 24 Sun + butter reorder from Rainier Dairy",
+      summary: "Split 24 Sat / 24 Sun + ghee reorder from Rainier Dairy",
       reads: [{ table: "capacity", id: "sun" }],
       flags: ["counteroffer"],
     },
@@ -670,7 +670,7 @@ export const FIXTURE_TRACE: Record<string, TraceStep[]> = {
       agent: "intake",
       step: "resolve",
       ms: 30,
-      summary: "Tree nut allergy in notes + almond croissant",
+      summary: "Tree nut allergy in notes + pistachio maamoul",
       reads: [{ table: "customers", id: "cust-priya" }],
       flags: ["allergy_mentioned"],
     },

@@ -408,12 +408,12 @@ export function createMockSource(): DataSource {
         rationale: "Elena came every other Saturday for four months, then stopped. Offer her usual cold brew, 10% off.",
         payload: {
           text: `Hi Elena, it's been a while. Want your cold brew on us at 10% off this Saturday? ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
-          orders: [{ items: [{ productId: "cold-brew", qty: 1 }, { productId: "cardamom-knot", qty: 1 }], pickupAt: FIXTURE_SAT_PICKUP, perk: "welcome_back_10" }],
+          orders: [{ items: [{ productId: "cold-brew", qty: 1 }, { productId: "sesame-kaak", qty: 1 }], pickupAt: FIXTURE_SAT_PICKUP, perk: "welcome_back_10" }],
         },
         evidence: [
           { label: "Cadence", value: "Every 14 days for four months", source: { table: "customers", id: elena.id } },
           { label: "Last order", value: "6 weeks ago (3× her usual gap)", source: { table: "orders", id: "elena-last" } },
-          { label: "Usual", value: "1× cold brew, 1× cardamom knot", source: { table: "orders", id: "elena-last" } },
+          { label: "Usual", value: "1× cold brew, 1× sesame kaak", source: { table: "orders", id: "elena-last" } },
         ],
         reads: [
           { table: "customers", id: elena.id },

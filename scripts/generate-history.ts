@@ -1,5 +1,5 @@
 /**
- * Writes `data/seed/orders.json`: the synthetic order history Larch & Rye runs on.
+ * Writes `data/seed/orders.json`: the synthetic order history Mokha Coffee House runs on.
  *
  *   pnpm tsx scripts/generate-history.ts
  *
@@ -107,8 +107,8 @@ const orders: SeedOrder[] = [];
 // ---------------------------------------------------------------------------
 
 const MAYA_USUAL: SeedItem[] = [
-  { productId: "almond-croissant", qty: 2 },
-  { productId: "oat-latte", qty: 1 },
+  { productId: "pistachio-maamoul", qty: 2 },
+  { productId: "adeni-chai", qty: 1 },
 ];
 
 /**
@@ -119,22 +119,22 @@ const MAYA_USUAL: SeedItem[] = [
  */
 const MAYA_VARIATIONS: Record<number, SeedItem[]> = {
   2: [
-    { productId: "almond-croissant", qty: 2 },
-    { productId: "oat-latte", qty: 1 },
-    { productId: "morning-bun", qty: 1 },
+    { productId: "pistachio-maamoul", qty: 2 },
+    { productId: "adeni-chai", qty: 1 },
+    { productId: "sabaya", qty: 1 },
   ],
   6: [
-    { productId: "almond-croissant", qty: 1 },
-    { productId: "oat-latte", qty: 1 },
+    { productId: "pistachio-maamoul", qty: 1 },
+    { productId: "adeni-chai", qty: 1 },
   ],
   9: [
-    { productId: "almond-croissant", qty: 2 },
-    { productId: "drip-coffee", qty: 1 },
+    { productId: "pistachio-maamoul", qty: 2 },
+    { productId: "qishr", qty: 1 },
   ],
   13: [
-    { productId: "almond-croissant", qty: 2 },
-    { productId: "oat-latte", qty: 1 },
-    { productId: "cappuccino", qty: 1 },
+    { productId: "pistachio-maamoul", qty: 2 },
+    { productId: "adeni-chai", qty: 1 },
+    { productId: "yemeni-coffee", qty: 1 },
   ],
 };
 
@@ -151,14 +151,14 @@ for (let i = 0; i < 14; i++) {
 
 /**
  * Jun's two catering orders, 36 mixed pastries each. The most recent is 21 days ago,
- * inside `welcomeBackAfterDays`, so his 4-dozen-croissant ask in the demo does not
+ * inside `welcomeBackAfterDays`, so his 4-dozen-milk-cake ask in the demo does not
  * also pick up a welcome-back discount and muddy the counteroffer.
  */
 const JUN_CATERING: SeedItem[] = [
-  { productId: "butter-croissant", qty: 12 },
-  { productId: "almond-croissant", qty: 12 },
-  { productId: "pain-au-chocolat", qty: 6 },
-  { productId: "morning-bun", qty: 6 },
+  { productId: "milk-cake", qty: 12 },
+  { productId: "pistachio-maamoul", qty: 12 },
+  { productId: "bint-al-sahn", qty: 6 },
+  { productId: "sabaya", qty: 6 },
 ];
 
 for (const daysAgo of [21, 63]) {
@@ -172,7 +172,7 @@ for (const daysAgo of [21, 63]) {
   });
 }
 
-/** Priya: two orders, nothing with almond in them, last visit inside the perk window. */
+/** Priya: two orders, nothing with pistachio in them, last visit inside the perk window. */
 orders.push({
   id: seededUuid(),
   customerId: persona("priya"),
@@ -180,8 +180,8 @@ orders.push({
   daysAgo: 28,
   pickupLocalTime: "10:00",
   items: [
-    { productId: "quiche-slice", qty: 1 },
-    { productId: "drip-coffee", qty: 1 },
+    { productId: "malawah", qty: 1 },
+    { productId: "qishr", qty: 1 },
   ],
 });
 orders.push({
@@ -191,8 +191,8 @@ orders.push({
   daysAgo: 70,
   pickupLocalTime: "10:00",
   items: [
-    { productId: "cappuccino", qty: 1 },
-    { productId: "oat-latte", qty: 1 },
+    { productId: "yemeni-coffee", qty: 1 },
+    { productId: "adeni-chai", qty: 1 },
   ],
 });
 
@@ -204,14 +204,14 @@ orders.push({
  * allowed for persona histories.
  */
 for (let i = 0; i < 7; i++) {
-  const extras: SeedItem[] = i % 3 === 0 ? [{ productId: "cardamom-knot", qty: 2 }] : [];
+  const extras: SeedItem[] = i % 3 === 0 ? [{ productId: "sesame-kaak", qty: 2 }] : [];
   orders.push({
     id: seededUuid(),
     customerId: persona("elena"),
     kind: "history",
     daysAgo: 42 + i * 14,
     pickupLocalTime: "09:30",
-    items: [{ productId: "cold-brew", qty: 1 }, { productId: "drip-coffee", qty: 1 }, ...extras],
+    items: [{ productId: "cold-brew", qty: 1 }, { productId: "qishr", qty: 1 }, ...extras],
   });
 }
 
@@ -231,34 +231,34 @@ const WEEKDAY_TIMES = ["07:15", "07:30", "08:00", "08:30", "09:00", "09:30", "10
 
 /** Weighted so the pastry case and the coffee bar carry most orders, as in a real morning. */
 const COMMON: readonly string[] = [
-  "butter-croissant",
-  "butter-croissant",
-  "butter-croissant",
-  "almond-croissant",
-  "almond-croissant",
-  "pain-au-chocolat",
-  "pain-au-chocolat",
-  "morning-bun",
-  "cardamom-knot",
-  "quiche-slice",
-  "cappuccino",
-  "cappuccino",
+  "milk-cake",
+  "milk-cake",
+  "milk-cake",
+  "pistachio-maamoul",
+  "pistachio-maamoul",
+  "bint-al-sahn",
+  "bint-al-sahn",
+  "sabaya",
+  "sesame-kaak",
+  "malawah",
+  "yemeni-coffee",
+  "yemeni-coffee",
   "cold-brew",
-  "mocha",
-  "drip-coffee",
-  "drip-coffee",
-  "oat-latte",
-  "oat-latte",
+  "mokha-latte",
+  "qishr",
+  "qishr",
+  "adeni-chai",
+  "adeni-chai",
 ];
 
 const MAX_QTY: Record<string, number> = {
   "coffee-box": 1,
-  "cappuccino": 2,
+  "yemeni-coffee": 2,
   "cold-brew": 2,
-  "mocha": 3,
-  "quiche-slice": 2,
-  "oat-latte": 2,
-  "drip-coffee": 3,
+  "mokha-latte": 3,
+  "malawah": 2,
+  "adeni-chai": 2,
+  "qishr": 3,
 };
 
 for (let n = 0; n < TARGET_HISTORY_ORDERS; n++) {
@@ -290,7 +290,7 @@ for (let n = 0; n < TARGET_HISTORY_ORDERS; n++) {
 
 // ---------------------------------------------------------------------------
 // Upcoming paid orders: the committed load the counteroffer is computed against.
-// Butter croissants total 12 on Saturday and 6 on Sunday, so against a daily
+// Milk cakes total 12 on Saturday and 6 on Sunday, so against a daily
 // capacity of 36 there are 24 left Saturday and 30 left Sunday. Hand-written
 // rather than generated, because the whole demo depends on these numbers.
 // ---------------------------------------------------------------------------
@@ -301,8 +301,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sat",
     at: "08:30",
     items: [
-      { productId: "butter-croissant", qty: 6 },
-      { productId: "drip-coffee", qty: 2 },
+      { productId: "milk-cake", qty: 6 },
+      { productId: "qishr", qty: 2 },
     ],
   },
   {
@@ -310,8 +310,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sat",
     at: "09:30",
     items: [
-      { productId: "butter-croissant", qty: 4 },
-      { productId: "quiche-slice", qty: 1 },
+      { productId: "milk-cake", qty: 4 },
+      { productId: "malawah", qty: 1 },
     ],
   },
   {
@@ -319,8 +319,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sat",
     at: "10:00",
     items: [
-      { productId: "butter-croissant", qty: 2 },
-      { productId: "almond-croissant", qty: 3 },
+      { productId: "milk-cake", qty: 2 },
+      { productId: "pistachio-maamoul", qty: 3 },
     ],
   },
   {
@@ -328,8 +328,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sat",
     at: "11:00",
     items: [
-      { productId: "cappuccino", qty: 2 },
-      { productId: "mocha", qty: 1 },
+      { productId: "yemeni-coffee", qty: 2 },
+      { productId: "mokha-latte", qty: 1 },
     ],
   },
   {
@@ -343,8 +343,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sun",
     at: "09:00",
     items: [
-      { productId: "butter-croissant", qty: 4 },
-      { productId: "oat-latte", qty: 2 },
+      { productId: "milk-cake", qty: 4 },
+      { productId: "adeni-chai", qty: 2 },
     ],
   },
   {
@@ -352,8 +352,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sun",
     at: "10:30",
     items: [
-      { productId: "butter-croissant", qty: 2 },
-      { productId: "cappuccino", qty: 1 },
+      { productId: "milk-cake", qty: 2 },
+      { productId: "yemeni-coffee", qty: 1 },
     ],
   },
   {
@@ -361,8 +361,8 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sun",
     at: "11:00",
     items: [
-      { productId: "pain-au-chocolat", qty: 2 },
-      { productId: "morning-bun", qty: 2 },
+      { productId: "bint-al-sahn", qty: 2 },
+      { productId: "sabaya", qty: 2 },
     ],
   },
 ];

@@ -33,7 +33,7 @@ const plain = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace
 const singular = (s: string) => s.replace(/(es|s)$/, "");
 const plural = (n: number, name: string) => (n === 1 || /s$/.test(name) ? name : `${name}s`);
 
-/** Matches what a caller said ("croissants", "a cold brew") to a menu item by id, name, or alias. */
+/** Matches what a caller said ("milk cakes", "a cold brew") to a menu item by id, name, or alias. */
 function findProduct(catalog: Product[], spoken: string): Product | null {
   const want = plain(spoken).replace(/^(a|an|the|some)\s+/, "");
   const names = (p: Product) => [p.id.replace(/-/g, " "), p.name, ...p.aliases].map(plain);

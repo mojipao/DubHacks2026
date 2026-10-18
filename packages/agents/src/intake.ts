@@ -48,7 +48,7 @@ const DraftText = z.object({ text: z.string().min(1).max(600) });
 /**
  * Notes only count as an allergy when they say so.
  *
- * Maya's note is "Usual is 2 almond croissants…", and matching allergen words against
+ * Maya's note is "Usual is 2 pistachio maamoul…", and matching allergen words against
  * the whole note flagged her own favourite order as an allergy risk — wrong flag and a
  * wrong sentence on the demo's happiest ticket.
  */
@@ -56,10 +56,10 @@ const ALLERGY_INDICATOR = /\b(allerg(y|ic|ies)|intoleran(t|ce)|can'?t have|canno
 
 /** Allergen keywords per product, for matching a customer's noted allergy to the menu. */
 const ALLERGEN_KEYWORDS: Record<string, readonly string[]> = {
-  "almond-flour": ["nut", "almond", "tree nut"],
-  "oat-milk": ["oat", "gluten"],
-  butter: ["dairy", "milk", "lactose"],
-  "cream-cheese": ["dairy", "milk", "lactose"],
+  "pistachios": ["nut", "pistachio", "tree nut"],
+  "evaporated-milk": ["oat", "gluten"],
+  ghee: ["dairy", "milk", "lactose"],
+  "sesame-seeds": ["dairy", "milk", "lactose"],
   eggs: ["egg"],
   "bread-flour": ["gluten", "wheat"],
   "whole-milk": ["dairy", "milk", "lactose"],
@@ -459,7 +459,7 @@ function allergenRisk(productId: string, notes: string): boolean {
     const stem = ingredientId.split("-")[0] ?? "";
     if (productId.includes(stem)) return true;
   }
-  return /\b(nut|almond)\b/.test(lower) && productId.includes("almond");
+  return /\b(nut|pistachio)\b/.test(lower) && productId.includes("pistachio");
 }
 
 // ---------------------------------------------------------------------------
@@ -527,7 +527,7 @@ function composeReply(args: DraftArgs): string {
     return "We'd rather keep things friendly here. Happy to help if you'd like to order something.";
   }
   if (reading.offTopic) {
-    return "We're just the coffee shop, so that one's outside our wheelhouse. Can we get you a coffee or something from the case?";
+    return "We're just the coffee house, so that one's outside our wheelhouse. Can we get you a Yemeni coffee or something from the case?";
   }
   if (reading.intent === "complaint") {
     return `${hi} — sorry that happened. The owner will take a look and get back to you today.`;

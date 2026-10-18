@@ -3,7 +3,7 @@
  *
  * The model never writes these. Every row is built here from values the pipeline
  * already read, which is what makes the numbers on a ticket checkable — a judge can
- * follow "Saturday capacity: 24 left" back to `products/butter-croissant`.
+ * follow "Saturday capacity: 24 left" back to `products/milk-cake`.
  */
 import type { DayLoad, Evidence, IngredientNeed, OrderSummary, Product } from "@boh/shared";
 import type { Usual } from "./usual.ts";

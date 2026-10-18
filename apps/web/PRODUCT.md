@@ -45,7 +45,7 @@ The control room uses the kitchen **"pass"** metaphor: tickets hang on a rail; n
 
 - Owner token stays server-side; browser never sees `OWNER_TOKEN`.
 - Catalog prices and business rules come from shared seed / server — UI must not invent prices.
-- Product name stays **Back of House**. Demo business display name is **Yemeni Coffee** (UI). Seed may still say Kettle & Crow until data is updated — chrome uses `SHOP_NAME` in `apps/web`.
+- Product name stays **Back of House**. Demo business display name is **Yemeni Coffee** (UI). Seed may still say Mokha Coffee House until data is updated — chrome uses `SHOP_NAME` in `apps/web`.
 - Open product facts (not for this file to invent): who texts as Maya; multi-track entry rules with organizers.
 
 ## Brand Commitments
@@ -58,7 +58,7 @@ The control room uses the kitchen **"pass"** metaphor: tickets hang on a rail; n
 
 ## Evidence on Hand
 
-- Seed and fixtures under `data/seed/` and `apps/web/src/mocks/` (synthetic customers, orders, demo scenarios including Maya usual, Jun 4-dozen counteroffer + butter reorder, Guard injection, allergy, win-back).
+- Seed and fixtures under `data/seed/` and `apps/web/src/mocks/` (synthetic customers, orders, demo scenarios including Maya usual, Jun 4-dozen counteroffer + ghee reorder, Guard injection, allergy, win-back).
 - Live integrations exist on the demo host (Photon, Square sandbox, Supabase); do not fabricate testimonials, revenue claims, or paid-customer proof.
 - Friction minutes come from `BusinessProfile.minutesSaved` in seed — estimated owner minutes, not measured field study.
 

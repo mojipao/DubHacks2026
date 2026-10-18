@@ -1,9 +1,9 @@
 /**
  * The counteroffer, checked without a model in the loop.
  *
- * planning/LANE-3-AGENTS.md asks for exactly this test: 48 butter croissants on
+ * planning/LANE-3-AGENTS.md asks for exactly this test: 48 milk cakes on
  * Saturday against the seed numbers must come back as 24 Saturday, 24 Sunday, and a
- * butter reorder from Rainier Dairy. If this test fails, the demo's second beat is gone.
+ * ghee reorder from Rainier Dairy. If this test fails, the demo's second beat is gone.
  */
 import { describe, expect, it } from "vitest";
 import { createFixtureWorld } from "./fixtures/fixture-port.ts";
@@ -15,11 +15,11 @@ const NOW = new Date("2026-10-17T12:00:00-07:00");
 const world = () => createFixtureWorld({ now: NOW });
 
 describe("planFulfillment", () => {
-  it("splits 4 dozen croissants across Saturday and Sunday", async () => {
+  it("splits 4 dozen milk cakes across Saturday and Sunday", async () => {
     const { port, business, weekend } = world();
 
     const plan = await planFulfillment(
-      [{ productId: "butter-croissant", qty: 48 }],
+      [{ productId: "milk-cake", qty: 48 }],
       `${weekend.sat}T09:00`,
       port,
       business,
@@ -29,12 +29,12 @@ describe("planFulfillment", () => {
     expect(plan.days[0]).toMatchObject({
       localDate: weekend.sat,
       pickupLocal: `${weekend.sat}T09:00`,
-      items: [{ productId: "butter-croissant", qty: 24 }],
+      items: [{ productId: "milk-cake", qty: 24 }],
     });
     expect(plan.days[1]).toMatchObject({
       localDate: weekend.sun,
       pickupLocal: `${weekend.sun}T09:00`,
-      items: [{ productId: "butter-croissant", qty: 24 }],
+      items: [{ productId: "milk-cake", qty: 24 }],
     });
 
     expect(plan.unfulfilled).toEqual([]);
@@ -44,22 +44,22 @@ describe("planFulfillment", () => {
     expect(plan.flags).toContain("ingredient_shortfall");
   });
 
-  it("reports the butter shortfall across both days against one stock pool", async () => {
+  it("reports the ghee shortfall across both days against one stock pool", async () => {
     const { port, business, weekend } = world();
 
     const plan = await planFulfillment(
-      [{ productId: "butter-croissant", qty: 48 }],
+      [{ productId: "milk-cake", qty: 48 }],
       `${weekend.sat}T09:00`,
       port,
       business,
     );
 
-    const butter = plan.needs.find((n) => n.ingredientId === "butter");
-    expect(butter).toBeDefined();
-    // 24 + 24 croissants on top of both days' committed butter orders, against 1.66 kg.
-    expect(butter?.need).toBeCloseTo(2.195, 3);
-    expect(butter?.onHand).toBe(1.66);
-    expect(butter?.shortfall).toBeCloseTo(0.535, 3);
+    const ghee = plan.needs.find((n) => n.ingredientId === "ghee");
+    expect(ghee).toBeDefined();
+    // 24 + 24 milk cakes on top of both days' committed ghee orders, against 1.66 kg.
+    expect(ghee?.need).toBeCloseTo(2.195, 3);
+    expect(ghee?.onHand).toBe(1.66);
+    expect(ghee?.shortfall).toBeCloseTo(0.535, 3);
   });
 
   it("leaves a request that fits alone on its day", async () => {
@@ -67,8 +67,8 @@ describe("planFulfillment", () => {
 
     const plan = await planFulfillment(
       [
-        { productId: "almond-croissant", qty: 2 },
-        { productId: "oat-latte", qty: 1 },
+        { productId: "pistachio-maamoul", qty: 2 },
+        { productId: "adeni-chai", qty: 1 },
       ],
       `${weekend.sat}T09:00`,
       port,
@@ -101,11 +101,11 @@ describe("planFulfillment", () => {
 });
 
 describe("planReorder", () => {
-  it("orders 3 kg of butter from Rainier Dairy, the $38.40 in the architecture doc", async () => {
+  it("orders 3 kg of ghee from Rainier Dairy, the $38.40 in the architecture doc", async () => {
     const { port, business, weekend } = world();
 
     const plan = await planFulfillment(
-      [{ productId: "butter-croissant", qty: 48 }],
+      [{ productId: "milk-cake", qty: 48 }],
       `${weekend.sat}T09:00`,
       port,
       business,
@@ -113,26 +113,26 @@ describe("planReorder", () => {
     const reorders = planReorder(plan.needs, business, plan.days[0]?.localDate ?? weekend.sat);
 
     expect(reorders).toHaveLength(1);
-    const butter = reorders[0];
-    expect(butter?.payload.supplier).toBe("Rainier Dairy");
-    expect(butter?.payload.lines).toEqual([{ ingredientId: "butter", qty: 3 }]);
-    expect(butter?.totalCents).toBe(3840);
-    expect(butter?.title).toContain("Rainier Dairy");
+    const ghee = reorders[0];
+    expect(ghee?.payload.supplier).toBe("Rainier Dairy");
+    expect(ghee?.payload.lines).toEqual([{ ingredientId: "ghee", qty: 3 }]);
+    expect(ghee?.totalCents).toBe(3840);
+    expect(ghee?.title).toContain("Rainier Dairy");
   });
 
-  it("needs the butter by the last open day before pickup, which is the Friday", async () => {
+  it("needs the ghee by the last open day before pickup, which is the Friday", async () => {
     const { port, business, weekend } = world();
 
     const plan = await planFulfillment(
-      [{ productId: "butter-croissant", qty: 48 }],
+      [{ productId: "milk-cake", qty: 48 }],
       `${weekend.sat}T09:00`,
       port,
       business,
     );
-    const [butter] = planReorder(plan.needs, business, weekend.sat);
+    const [ghee] = planReorder(plan.needs, business, weekend.sat);
 
     // The shop is closed Monday; the day before a Saturday pickup is the Friday.
-    const neededBy = butter?.payload.neededBy ?? "";
+    const neededBy = ghee?.payload.neededBy ?? "";
     expect(neededBy.slice(0, 10)).toBe("2026-10-23");
   });
 

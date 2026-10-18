@@ -1,104 +1,107 @@
 [
   {
-    "id": "butter-croissant",
-    "name": "Butter croissant",
+    "id": "milk-cake",
+    "name": "Milk cake",
     "category": "pastry",
     "priceCents": 450,
     "dailyCapacity": 36,
     "aliases": [
-      "croissant",
-      "croissants",
-      "plain croissant",
-      "plain croissants",
-      "butter croissants",
-      "classic croissant",
-      "regular croissant"
+      "milk cakes",
+      "milkcake",
+      "milk cake slice",
+      "slice of milk cake",
+      "kek haleeb"
     ],
     "active": true
   },
   {
-    "id": "almond-croissant",
-    "name": "Almond croissant",
+    "id": "pistachio-maamoul",
+    "name": "Pistachio maamoul",
     "category": "pastry",
     "priceCents": 525,
     "dailyCapacity": 48,
     "aliases": [
-      "almond croissants",
-      "almond",
-      "almonds",
-      "amandine",
-      "almond pastry"
+      "maamoul",
+      "ma'amoul",
+      "pistachio maamoul",
+      "pistachio cookies",
+      "pistachio cookie",
+      "pistachio"
     ],
     "active": true
   },
   {
-    "id": "pain-au-chocolat",
-    "name": "Pain au chocolat",
+    "id": "bint-al-sahn",
+    "name": "Bint al-sahn (honey cake)",
     "category": "pastry",
     "priceCents": 495,
     "dailyCapacity": 36,
     "aliases": [
-      "chocolate croissant",
-      "chocolate croissants",
-      "choc croissant",
-      "pain au chocolate",
-      "chocolatine"
+      "bint al sahn",
+      "bint al-sahn",
+      "honey cake",
+      "honey cakes",
+      "honey bread"
     ],
     "active": true
   },
   {
-    "id": "morning-bun",
-    "name": "Morning bun",
+    "id": "sabaya",
+    "name": "Sabaya",
     "category": "pastry",
     "priceCents": 475,
     "dailyCapacity": 24,
     "aliases": [
-      "morning buns",
-      "cinnamon bun",
-      "cinnamon buns",
-      "morning roll"
+      "sabayah",
+      "layered bread",
+      "honey layered bread"
     ],
     "active": true
   },
   {
-    "id": "cardamom-knot",
-    "name": "Cardamom knot",
+    "id": "sesame-kaak",
+    "name": "Sesame kaak",
     "category": "pastry",
     "priceCents": 525,
     "dailyCapacity": 24,
     "aliases": [
-      "cardamom knots",
-      "cardamom bun",
-      "cardamom buns",
-      "knot",
-      "knots"
+      "kaak",
+      "ka'ak",
+      "sesame rings",
+      "sesame ring",
+      "sesame cookies"
     ],
     "active": true
   },
   {
-    "id": "quiche-slice",
-    "name": "Quiche slice",
+    "id": "malawah",
+    "name": "Malawah with honey",
     "category": "savory",
     "priceCents": 650,
     "dailyCapacity": 20,
     "aliases": [
-      "quiche",
-      "quiche slices",
-      "slice of quiche"
+      "malawah",
+      "malawach",
+      "flatbread",
+      "malawah with honey"
     ],
     "active": true
   },
   {
-    "id": "cappuccino",
-    "name": "Cappuccino",
+    "id": "yemeni-coffee",
+    "name": "Yemeni coffee (Haraz)",
     "category": "drink",
     "priceCents": 575,
     "dailyCapacity": 150,
     "aliases": [
-      "cappuccinos",
-      "capp",
-      "cap",
-      "cappucino"
+      "yemeni coffee",
+      "haraz",
+      "haraz coffee",
+      "qahwa",
+      "cardamom coffee",
+      "coffee",
+      "coffees",
+      "cup of coffee"
     ],
     "active": true
   },
@@ -116,52 +119,54 @@
     "active": true
   },
   {
-    "id": "mocha",
-    "name": "Mocha",
+    "id": "mokha-latte",
+    "name": "Mokha latte",
     "category": "drink",
     "priceCents": 625,
     "dailyCapacity": 100,
     "aliases": [
-      "mochas",
-      "cafe mocha",
-      "chocolate coffee"
+      "mokha latte",
+      "mokha",
+      "mocha",
+      "mocha latte",
+      "mochas"
     ],
     "active": true
   },
   {
-    "id": "oat-latte",
-    "name": "Oat latte",
+    "id": "adeni-chai",
+    "name": "Adeni chai",
     "category": "drink",
     "priceCents": 800,
     "dailyCapacity": 120,
     "aliases": [
-      "latte",
-      "lattes",
-      "oat milk latte",
-      "oatmilk latte",
-      "oat latté"
+      "adeni tea",
+      "chai",
+      "adeni",
+      "milk tea",
+      "shai adeni",
+      "tea"
     ],
     "active": true
   },
   {
-    "id": "drip-coffee",
-    "name": "Drip coffee",
+    "id": "qishr",
+    "name": "Qishr (coffee-husk tea)",
     "category": "drink",
     "priceCents": 350,
     "dailyCapacity": 200,
     "aliases": [
-      "coffee",
-      "coffees",
-      "drip",
-      "black coffee",
-      "cup of coffee",
-      "regular coffee"
+      "qishr",
+      "qeshr",
+      "coffee husk tea",
+      "ginger coffee",
+      "husk tea"
     ],
     "active": true
   },
   {
     "id": "coffee-box",
-    "name": "Coffee box (serves 12)",
+    "name": "Yemeni coffee box (serves 12)",
     "category": "drink",
     "priceCents": 3600,
     "dailyCapacity": 4,
@@ -175,8 +180,8 @@
     "active": true
   },
   {
-    "id": "house-beans",
-    "name": "House espresso beans, 12 oz bag",
+    "id": "yemeni-beans",
+    "name": "Yemeni coffee beans, 250 g bag",
     "category": "drink",
     "priceCents": 1800,
     "dailyCapacity": 30,
@@ -184,7 +189,8 @@
       "beans",
       "bag of beans",
       "coffee beans",
-      "whole bean"
+      "whole bean",
+      "yemeni beans"
     ],
     "active": true
   }

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Back of House: AI drafts every reply for a small bakery; the owner approves it at the pass.";
+export const alt = "Back of House: AI drafts every reply for a small coffee house; the owner approves it at the pass.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -21,13 +21,13 @@ export default function OpengraphImage() {
       >
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", width: 560 }}>
           <div style={{ fontSize: 26, letterSpacing: 6, color: "#F2A541", textTransform: "uppercase" }}>
-            Larch &amp; Rye · Back of House
+            Mokha Coffee House · Back of House
           </div>
           <div style={{ fontSize: 70, lineHeight: 1.04, marginTop: 20, letterSpacing: -2 }}>
             Agents draft. The owner calls it.
           </div>
           <div style={{ fontSize: 28, color: "#9C9188", marginTop: 24, lineHeight: 1.35 }}>
-            Customers text the bakery on iMessage. Nothing goes out until the owner approves it at the pass.
+            Customers text the coffee house on iMessage. Nothing goes out until the owner approves it at the pass.
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", marginLeft: 64, flex: 1 }}>
@@ -59,7 +59,7 @@ export default function OpengraphImage() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", padding: 24 }}>
               <div style={{ fontSize: 30, lineHeight: 1.2, letterSpacing: -0.5 }}>
-                Can&apos;t fit 48 Saturday: split 24 Sat / 24 Sun, butter reorder needed.
+                Can&apos;t fit 48 Saturday: split 24 Sat / 24 Sun, ghee reorder needed.
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 18 }}>
                 {["Over capacity", "Counteroffer"].map((f) => (

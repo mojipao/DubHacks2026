@@ -1,7 +1,7 @@
 [
   {
-    "id": "butter",
-    "name": "Cultured butter",
+    "id": "ghee",
+    "name": "Ghee",
     "unit": "kg",
     "onHand": 1.66,
     "reorderPoint": 2,
@@ -27,8 +27,8 @@
     "unitCostCents": 190
   },
   {
-    "id": "almond-flour",
-    "name": "Almond flour",
+    "id": "pistachios",
+    "name": "Pistachios",
     "unit": "kg",
     "onHand": 9.5,
     "reorderPoint": 4,
@@ -36,8 +36,8 @@
     "unitCostCents": 1450
   },
   {
-    "id": "dark-chocolate",
-    "name": "Dark chocolate batons",
+    "id": "sidr-honey",
+    "name": "Sidr honey",
     "unit": "kg",
     "onHand": 6.2,
     "reorderPoint": 3,
@@ -63,8 +63,8 @@
     "unitCostCents": 540
   },
   {
-    "id": "oat-milk",
-    "name": "Barista oat milk",
+    "id": "evaporated-milk",
+    "name": "Evaporated milk",
     "unit": "L",
     "onHand": 18,
     "reorderPoint": 8,
@@ -72,8 +72,8 @@
     "unitCostCents": 320
   },
   {
-    "id": "coffee-beans",
-    "name": "Espresso beans",
+    "id": "yemeni-coffee-beans",
+    "name": "Yemeni coffee beans (Haraz)",
     "unit": "kg",
     "onHand": 7.5,
     "reorderPoint": 3,
@@ -99,8 +99,8 @@
     "unitCostCents": 980
   },
   {
-    "id": "cream-cheese",
-    "name": "Cream cheese",
+    "id": "sesame-seeds",
+    "name": "Sesame seeds",
     "unit": "kg",
     "onHand": 4.5,
     "reorderPoint": 2,
