@@ -29,6 +29,28 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 · lane 2 → DubHacks26 Vercel team owner (lane 1) · Set the production env vars on `dub-hacks2026`
+**Status:** open
+**Where:** Vercel → team **DubHacks26** → project **dub-hacks2026** (root `apps/web`, auto-deploys from this repo) → Settings → Environment Variables
+**What:** The project had **no environment variables**, so `https://dub-hacks2026.vercel.app` couldn't reach Supabase or the server. Lane 2 added all five for **Preview**, but Vercel refuses production ones from mojipao's role: "Additional permissions are required to create production environment variables." The team owner needs to either raise mojipao to Owner, or add these five for **Production** (values are in the shared `.env`; never paste them in chat):
+| Name | Value | Type |
+| - | - | - |
+| `NEXT_PUBLIC_SUPABASE_URL` | same as `.env` | plain |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | same as `.env` (publishable key) | plain |
+| `NEXT_PUBLIC_DATA_MODE` | `live` | plain |
+| `SERVER_URL` | `https://paging-dreamless-darkened.ngrok-free.dev` (the demo host's tunnel) | plain |
+| `OWNER_TOKEN` | same as `.env` | **sensitive** |
+
+Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows live tickets, and `/join/qr` opened **on the vercel.app URL** encodes `https://dub-hacks2026.vercel.app/join`, which fixes the localhost QR note below. The server must be running (`pnpm demo:host` on mojipao's laptop) for actions to work.
+**Why it matters:** Judges reach the shop through the QR → `/join`, which only works on a public URL.
+
+### 2026-10-17 · lane 2 → lane 1 · Lock the control room before the URL is public
+**Status:** open
+**Where:** `apps/web/src/app/api/**` route handlers and `/`, `/audit`
+**What:** The route handlers add `x-owner-token` server side and accept any caller. On a public Vercel URL, anyone who finds it can `POST /api/proposals/:id/approve` or `/reject`, `/api/dev/inbound` (fake customer texts, plus model usage), `/api/dev/square-pay/:id`, `/api/dev/mark-paid/:id`, and read `/api/contacts` (customers' phone numbers). `/join` and `/api/join` must stay public.
+**Why it matters:** A judge (or anyone) could approve, reject, or pay tickets mid-demo, or pull the leads list with handles.
+**Suggested fix:** A `src/proxy.ts` (Next 16 middleware) that requires HTTP Basic auth (`CONTROL_ROOM_PASSWORD` env, sensitive) for everything except `/join`, `/join/qr`, `/api/join`, static assets and the OG image. Or Vercel Password Protection (the team is on Pro), but that would also block `/join`, so the middleware is the better fit.
+
 ### 2026-10-17 · lane 2 → lane 1 · The `/join/qr` code points at localhost on the demo laptop
 **Status:** open
 **Where:** `apps/web/src/app/join/qr/page.tsx` (`window.location.origin`)
