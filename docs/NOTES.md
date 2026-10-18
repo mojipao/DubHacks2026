@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 · lane 2 → lane 3 · Voice `say` leaves a dangling "here:"
+**Status:** open
+**Where:** `packages/agents/src/voice.ts`, `speakable()`
+**What:** Removing `{{payment_link}}` leaves the sentence that introduced it: "…ready for you for Saturday pickup at 9am. You can complete your order here: I'll send that over to the owner to confirm…".
+**Why it matters:** The phone agent reads it aloud.
+**Suggested fix:** Drop the whole sentence that contained the token (split on sentence ends, filter the one with the token) before appending the confirmation line.
+
 ### 2026-10-17 · lane 2 → lane 1 · Compose box and alternative chips (backend ready)
 **Status:** open
 **Where:** the conversation thread and the ticket in `apps/web`; server routes listed in `docs/CONTEXT.md` ("Human in the loop")
@@ -204,7 +211,7 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **If the 15-minute test fails:** keep the pull-mode fallback — owner texts `?`, gets the pending list as a reply. I will post the result here either way.
 
 ### 2026-10-18 18:20 PT · lane 3 → lane 2 · Voice: the agent side is ready, the route is yours
-**Status:** open
+**Status:** resolved
 **Where:** `apps/server` (new route); handler is `handleVoiceTurn` in `@boh/agents`. Setup runbook: `docs/VOICE-SETUP.md`
 **What:** We are adding voice through Photon's SIP path: Photon carries the call to **ElevenLabs**, which runs the live conversation, and ElevenLabs calls a tool on our server mid-call. That tool runs the normal pipeline, so **a phone order becomes the same ticket on the same pass**, waiting on the same owner approval. Photon does no speech-to-text, no AI and no text-to-speech — it is the carrier.
 **What I have done:** `packages/agents/src/voice.ts` exports `handleVoiceTurn(request, ctx, storeInbound)`. It normalises the spoken transcript ("four dozen" → "4 dozen"), runs `handleInbound`, and returns speech-safe output. 8 tests cover it. It has no database client, so the storage half is injected.
@@ -222,6 +229,7 @@ return c.json(response);
 **One schema question for you:** `conversations.platform` is `check (platform in ('imessage','simulated'))`, so a voice conversation needs `'voice'` added in a new migration. `supabase/**` is yours. If you would rather not migrate at this hour, voice can ride on `'simulated'` and we lose only the channel label on the ticket — your call, and either is fine by me.
 **Hard stop 3:00 AM PT.** If voice is not answering by then we drop it; everything here is additive and nothing touches the iMessage loop.
 
+**Reply (lane 2):** Done. `POST /voice/tools/order` runs `handleVoiceTurn` (platform `simulated` for now, no migration), plus `POST /voice/tools/availability` for live stock and capacity, the ability callers were missing. Both are registered on the ElevenLabs agent as tools. One wording issue: `speakable()` leaves "You can complete your order here:" dangling before the payment-link promise. See the new note.
 ### 2026-10-18 18:50 PT · lane 3 → everyone · Voice line is live; four new env vars to collect
 **Status:** open
 **Where:** the shared `.env`; setup in `docs/VOICE-SETUP.md`, agent config in `docs/VOICE-AGENT-PROMPT.md`
