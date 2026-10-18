@@ -6,10 +6,23 @@ import { SHOP_NAME } from "@/lib/business";
 
 const subscribe = () => () => {};
 
+/** Public site origin when set (Vercel); otherwise fall back to the page origin. */
+function configuredOrigin(): string | null {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return null;
+  return raw.replace(/\/$/, "");
+}
+
 /** Full-screen QR for a second screen at the table. */
 export default function JoinQrPage() {
-  // The origin only exists in the browser; the server renders a placeholder and the client fills it in.
-  const origin = useSyncExternalStore(subscribe, () => window.location.origin, () => null);
+  const configured = configuredOrigin();
+  // Prefer NEXT_PUBLIC_SITE_URL so a laptop showing /join/qr still encodes the
+  // public Vercel URL judges can open. Fall back to window.origin when unset.
+  const origin = useSyncExternalStore(
+    subscribe,
+    () => configured ?? window.location.origin,
+    () => configured,
+  );
   const url = origin ? `${origin}/join` : null;
 
   return (
