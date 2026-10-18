@@ -10,6 +10,13 @@
  * model that gets a case right two times in three is not something to demo. Exits
  * non-zero below 90%, so it can gate a PR.
  *
+ * It paces itself. Firing every case back to back is roughly 68 model calls in two
+ * minutes, which trips the gateway's free-tier rate limit; every call then returns 429,
+ * the pipeline falls back to the deterministic reader, and the run reports a healthy
+ * score for a model that never answered. Demo traffic is nothing like that — about one
+ * message every 20-30 seconds — so the harness waits between cases rather than
+ * measuring a self-inflicted outage. `--fast` removes the gap when the model is off.
+ *
  * Paste the table into the PR description. The point is not a number; it is knowing
  * which specific cases are still wrong before a judge finds them.
  */
@@ -68,6 +75,8 @@ const args = process.argv.slice(2);
 const flag = (name: string): string | undefined =>
   args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3);
 const RUNS = args.includes("--once") ? 1 : Number(flag("runs") ?? 3);
+/** Gap between cases. Enough to stay under the free tier's per-minute cap. */
+const PACE_MS = args.includes("--fast") ? 0 : Number(flag("pace") ?? 1_500);
 const FILTER = flag("filter");
 const VERBOSE = args.includes("--verbose");
 
@@ -231,9 +240,14 @@ async function main(): Promise<void> {
   const rows: string[] = [];
   const failedDetail: string[] = [];
 
-  for (const testCase of cases) {
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  for (const [index, testCase] of cases.entries()) {
     const attempts: Attempt[] = [];
-    for (let i = 0; i < RUNS; i++) attempts.push(await runOnce(testCase));
+    for (let i = 0; i < RUNS; i++) {
+      if (PACE_MS > 0 && (index > 0 || i > 0) && isModelConfigured()) await sleep(PACE_MS);
+      attempts.push(await runOnce(testCase));
+    }
 
     modelRuns += attempts.filter((a) => a.usedModel).length;
     totalRuns += attempts.length;

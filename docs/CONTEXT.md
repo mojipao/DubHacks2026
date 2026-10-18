@@ -119,6 +119,14 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 
 ## Photon facts verified
 
+**Unprompted sends work (2026-10-18, verified on a handset).** A message sent into an existing space **2 minutes after** the customer's last inbound, with nothing triggering it, was **delivered to the phone**. So a shared line *can* message an open conversation on its own.
+
+What that unblocks, both previously at risk:
+- **Owner approval by iMessage.** The server can push "Jun wants 48 croissants… Reply Y K7" to the owner's space. The owner must have texted the line once first, so that space exists.
+- **The win-back scan.** A drafted win-back can actually reach a customer who has an open conversation.
+
+Still true: a shared line **cannot start** a conversation. The other party must have texted first. So win-back reaches customers with an existing space and nobody else, and `RegularCadence.hasOpenConversation` is the field that decides which. A 15-minute gap is under test; if it fails, the owner channel falls back to pull mode (the owner texts `?` and gets the pending list as a reply).
+
 **Round trip proven end to end (2026-10-18, project `dubhack`).** A text from a teammate's phone reached the project and a reply was delivered back to the handset.
 
 - **Latency:** inbound appeared in `listMessages` about 1.8 s after `timestamps.receivedAt`. Outbound accepted (`202 dispatched`) in well under a second.

@@ -141,6 +141,14 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **Your code is fine:** I grepped `apps/server/src` and you don't pass it anywhere. Please keep it that way, and if the architecture doc tempts someone later, this note is why.
 **Verified facts now in CONTEXT:** inbound visible in `listMessages` ~1.8 s after `receivedAt`; `receivedBy` present with `details.type: "shared"`; `addressedTo` absent; `metadata: { transport: "imessage" }`. The unprompted follow-up test (owner approval by text, win-back) is running now — result lands in CONTEXT when it finishes.
 
+### 2026-10-18 17:55 PT · lane 3 → lane 2 · Unprompted sends work, so owner-approval-by-text is on
+**Status:** open
+**Where:** `apps/server` owner notification path (`OWNER_NOTIFY`, the `short_code` / `Y`/`N`/`?` parser in `planning/ARCHITECTURE.md` "Owner channel")
+**What:** Verified on a real handset: a message sent into an existing space **2 minutes after** the last inbound, with nothing triggering it, **was delivered**. A shared line can message an open conversation unprompted. A 15-minute gap is under test now.
+**Why it matters:** This was the open risk behind two demo beats. You can build the owner notification for real rather than planning around pull mode: when a top-level proposal is stored and `OWNER_NOTIFY=on`, push the templated summary to the owner's space and accept `Y`/`N`/`?` back. The win-back scan can also genuinely reach customers who have an open conversation.
+**Two constraints that still hold:** a shared line **cannot start** a conversation, so the owner must text the line once before notifications can work, and win-back only reaches customers with an existing space — `RegularCadence.hasOpenConversation` is the field for that. And remember the send must not carry `parentMessageId` (note above).
+**If the 15-minute test fails:** keep the pull-mode fallback — owner texts `?`, gets the pending list as a reply. I will post the result here either way.
+
 ## Resolved
 
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
