@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AlertTriangle, Phone, RefreshCw, Send, Sparkles } from "lucide-react";
+import { AlertTriangle, Phone, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { askAgent, sendCampaign, syncCalls, type AssistantAnswer } from "@/lib/actions";
 import { useStore } from "@/lib/data/store";
@@ -43,11 +43,12 @@ export function AssistantView() {
   };
 
   return (
-    <div className="mx-auto flex min-h-0 w-full max-w-4xl flex-1 flex-col">
+    <div id="view-ask" role="tabpanel" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+    <div className="mx-auto w-full max-w-4xl px-4 pt-7 pb-12 sm:px-8">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="heading text-[40px] text-fg">Ask the agent</h1>
-          <p className="mt-1 max-w-[60ch] text-[15px] text-muted">
+          <h1 className="heading text-[34px] text-ink">Ask the agent</h1>
+          <p className="mt-1 max-w-[60ch] text-[15px] leading-relaxed text-muted">
             Check stock and inventory, text customers about a special, or ask for a call. Texts are previewed first; nothing goes out until you press Send.
             You can also text these to the shop line from the owner&apos;s phone.
           </p>
@@ -58,10 +59,10 @@ export function AssistantView() {
             mode === "mock"
               ? toast.message("Needs live mode")
               : void syncCalls()
-                  .then((r) => toast.success(r.imported ? `${r.imported} new call${r.imported > 1 ? "s" : ""} added to Messages` : "No new calls"))
+                  .then((r) => toast.success(r.imported ? `${r.imported} new call${r.imported > 1 ? "s" : ""} added to People` : "No new calls"))
                   .catch((e: Error) => toast.error(e.message))
           }
-          className="inline-flex items-center gap-1.5 rounded-full border border-line-strong px-3 py-1.5 text-[12px] font-semibold tracking-wide text-muted uppercase hover:text-fg"
+          className="inline-flex h-9 items-center gap-2 rounded-full border border-line-strong px-3.5 text-[14px] font-semibold text-ink hover:bg-surface-2"
         >
           <RefreshCw className="size-3.5" aria-hidden /> Check for new calls
         </button>
@@ -72,43 +73,44 @@ export function AssistantView() {
           e.preventDefault();
           void ask(text);
         }}
-        className="flex items-center gap-2 rounded-full border border-line-strong bg-surface-2 py-1.5 pr-1.5 pl-4"
+        className="flex items-center gap-2 rounded-full border border-line-strong bg-paper py-1.5 pr-1.5 pl-5 focus-within:border-brew"
       >
-        <Sparkles className="size-4 shrink-0 text-amber" aria-hidden />
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="e.g. how much ghee is left?"
           aria-label="Ask the agent"
-          className="min-w-0 flex-1 bg-transparent py-1.5 text-[15px] text-fg placeholder:text-muted focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent py-1.5 text-[16px] text-ink focus:outline-none"
         />
         <button
           type="submit"
           disabled={!text.trim() || busy}
-          className="rounded-full bg-crema px-4 py-2 text-[13px] font-semibold text-ink disabled:opacity-40"
+          className="h-10 rounded-full bg-brew px-6 text-[15px] font-semibold text-paper hover:bg-[#4a2711] disabled:opacity-40"
         >
           Ask
         </button>
       </form>
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {SUGGESTIONS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => void ask(s)}
-            className="rounded-full border border-line px-3 py-1 text-[12.5px] text-muted hover:border-line-strong hover:text-fg"
-          >
-            {s}
-          </button>
-        ))}
-      </div>
+      {turns.length === 0 && (
+        <div className="mt-6">
+          <p className="text-[14px] text-muted">Try one of these</p>
+          <ul className="mt-1 divide-y divide-line border-y border-line">
+            {SUGGESTIONS.map((s) => (
+              <li key={s}>
+                <button type="button" onClick={() => void ask(s)} className="w-full py-2.5 text-left text-[15px] text-ink hover:text-brew">
+                  {s}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-      <div className="mt-6 min-h-0 flex-1 space-y-4 overflow-y-auto pb-6">
+      <div className="mt-6 divide-y divide-line">
         {turns.map((t) => (
-          <article key={t.id} className="rounded-[22px] border border-line bg-panel px-5 py-4">
-            <p className="font-mono text-[12px] text-muted">You asked: {t.question}</p>
+          <article key={t.id} className="py-5 first:pt-0">
+            <p className="text-[14px] text-muted">You asked: {t.question}</p>
             {t.error ? (
-              <p className="mt-2 text-[14px] text-tomato">{t.error}</p>
+              <p className="mt-2 text-[15px] text-qamar">{t.error}</p>
             ) : !t.answer ? (
               <p className="mt-2 text-[14px] text-muted">Checking…</p>
             ) : (
@@ -118,6 +120,7 @@ export function AssistantView() {
         ))}
       </div>
     </div>
+    </div>
   );
 }
 
@@ -126,21 +129,21 @@ function Answer({ answer }: { answer: AssistantAnswer }) {
   if (answer.kind === "campaign") return <CampaignAnswer answer={answer} />;
   if (answer.kind === "call")
     return (
-      <p className={cn("mt-2 flex items-start gap-2 text-[15px] leading-snug", answer.placed ? "text-fg" : "text-amber")}>
+      <p className={cn("mt-2 flex items-start gap-2 text-[16px] leading-snug", answer.placed ? "text-ink" : "text-qamar")}>
         {answer.placed ? <Phone className="mt-0.5 size-4 shrink-0" /> : <AlertTriangle className="mt-0.5 size-4 shrink-0" />}
         {answer.say}
       </p>
     );
-  return <p className="mt-2 text-[15px] text-fg">{answer.say}</p>;
+  return <p className="mt-2 text-[16px] text-ink">{answer.say}</p>;
 }
 
 function StockAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "stock" }> }) {
   const day = answer.products[0]?.date;
   return (
     <div className="mt-2">
-      <p className="text-[15px] leading-snug text-fg">{answer.say}</p>
+      <p className="text-[16px] leading-snug text-ink">{answer.say}</p>
       <div className="mt-3 grid gap-4 md:grid-cols-2">
-        <table className="w-full text-[13px]">
+        <table className="w-full text-[14px]">
           <thead>
             <tr className="text-left text-muted">
               <th className="pb-1 font-medium">Ingredient</th>
@@ -150,19 +153,19 @@ function StockAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "sto
           </thead>
           <tbody>
             {answer.ingredients.map((i) => (
-              <tr key={i.id} className={cn("border-t border-line", i.low && "text-tomato")}>
+              <tr key={i.id} className={cn("border-t border-line", i.low && "text-qamar")}>
                 <td className="py-1">{i.name}</td>
-                <td className="py-1 text-right font-mono tabular-nums">
+                <td className="py-1 text-right tabular">
                   {i.onHand} {i.unit}
-                  {i.onOrder > 0 && <span className="text-basil"> +{i.onOrder}</span>}
+                  {i.onOrder > 0 && <span className="text-qishr-ink"> +{i.onOrder}</span>}
                 </td>
-                <td className="py-1 text-right font-mono tabular-nums">{i.reorderPoint}</td>
+                <td className="py-1 text-right tabular">{i.reorderPoint}</td>
               </tr>
             ))}
           </tbody>
         </table>
         {day && (
-          <table className="w-full text-[13px]">
+          <table className="w-full text-[14px]">
             <thead>
               <tr className="text-left text-muted">
                 <th className="pb-1 font-medium">Can still make on {day}</th>
@@ -173,7 +176,7 @@ function StockAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "sto
               {answer.products.map((p) => (
                 <tr key={p.id} className="border-t border-line">
                   <td className="py-1">{p.name}</td>
-                  <td className={cn("py-1 text-right font-mono tabular-nums", p.capacity && p.left / p.capacity < 0.35 && "text-amber")}>
+                  <td className={cn("py-1 text-right tabular", p.capacity && p.left / p.capacity < 0.35 && "text-qamar")}>
                     {p.left} / {p.capacity}
                   </td>
                 </tr>
@@ -210,7 +213,7 @@ function CampaignAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "
 
   return (
     <div className="mt-2">
-      <p className="text-[15px] leading-snug text-fg">{answer.say}</p>
+      <p className="text-[16px] leading-snug text-ink">{answer.say}</p>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -218,13 +221,13 @@ function CampaignAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "
         maxLength={1000}
         aria-label="Message to send"
         disabled={sent !== null}
-        className="mt-3 w-full resize-y rounded-2xl border border-line-strong bg-surface-2 px-3 py-2 text-[14px] text-fg disabled:opacity-60"
+        className="mt-3 w-full resize-y rounded-2xl border border-line-strong bg-paper px-4 py-2.5 text-[15px] text-ink focus:border-brew focus:outline-none disabled:opacity-60"
       />
       <ul className="mt-3 max-h-64 space-y-1 overflow-y-auto">
         {answer.recipients.map((r, i) => {
           const id = r.conversationId;
           return (
-            <li key={`${id ?? r.name}-${i}`} className="flex items-start gap-2.5 text-[13px]">
+            <li key={`${id ?? r.name}-${i}`} className="flex items-start gap-2.5 text-[14px]">
               <input
                 type="checkbox"
                 className="mt-0.5"
@@ -244,8 +247,8 @@ function CampaignAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "
               />
               <span className="min-w-0">
                 <span className={cn("font-medium", r.reachable ? "text-fg" : "text-muted")}>{r.name}</span>
-                <span className="ml-2 font-mono text-[11px] text-muted">{r.handleMasked}</span>
-                <span className={cn("block text-[12px]", r.reachable ? "text-muted" : "text-amber")}>{r.note}</span>
+                <span className="ml-2 text-[13px] text-muted">{r.handleMasked}</span>
+                <span className={cn("block text-[12px]", r.reachable ? "text-muted" : "text-qamar")}>{r.note}</span>
               </span>
             </li>
           );
@@ -256,12 +259,11 @@ function CampaignAnswer({ answer }: { answer: Extract<AssistantAnswer, { kind: "
           type="button"
           onClick={() => void send()}
           disabled={!picked.size || sending || sent !== null || !text.trim()}
-          className="inline-flex items-center gap-1.5 rounded-full bg-crema px-4 py-2 text-[13px] font-semibold text-ink disabled:opacity-40"
+          className="inline-flex h-10 items-center rounded-full bg-brew px-6 text-[15px] font-semibold text-paper hover:bg-[#4a2711] disabled:opacity-40"
         >
-          <Send className="size-3.5" aria-hidden />
           {sent !== null ? `Sent to ${sent}` : `Send to ${picked.size}`}
         </button>
-        <span className="text-[12px] text-muted">Each text is logged in that customer&apos;s thread.</span>
+        <span className="text-[13px] text-muted">Each text is logged in that customer&apos;s thread.</span>
       </div>
     </div>
   );

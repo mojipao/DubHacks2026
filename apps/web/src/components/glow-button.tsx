@@ -4,13 +4,13 @@ import type { ComponentProps, CSSProperties } from "react";
 import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-// Bright lamp colors: these glow against a black pill, so they're lighter than the text-safe status tokens.
+// Every tone is a colour of the room: coffee for the main action, then the meaning colours.
 const TONES = {
-  cherry: "#ff4a3d",
-  amber: "#ffb53d",
-  basil: "#3ee07f",
-  tomato: "#ff5a36",
-  sky: "#3b9bff",
+  cherry: "var(--brew)",
+  amber: "var(--qishr-ink)",
+  basil: "var(--terrace)",
+  tomato: "var(--qamar)",
+  sky: "var(--brew)",
 } as const;
 
 export type GlowTone = keyof typeof TONES;

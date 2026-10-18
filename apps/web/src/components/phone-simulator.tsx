@@ -11,7 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { BRAND_SHORT, SHOP_NAME } from "@/lib/business";
+import { SHOP_NAME } from "@/lib/business";
 import { useStore } from "@/lib/data/store";
 import type { UiCustomer } from "@/lib/data/types";
 import { money } from "@/lib/format";
@@ -177,7 +177,10 @@ export function PhoneSimulator({
 
         <div className="flex justify-center px-2 pt-3 pb-6">
           <div className="relative w-[318px] rounded-[44px] border-[7px] border-[#2a2622] bg-black p-1 shadow-[0_30px_60px_rgba(0,0,0,0.6)]">
-            <div className="overflow-hidden rounded-[36px] bg-[#0e0d0c]">
+            <div
+              className="overflow-hidden rounded-[36px] bg-[#0e0d0c]"
+              style={{ "--fg": "#f4ede4", "--muted": "#a39a90", "--line": "#2e2a26", "--line-strong": "#3a352f" } as React.CSSProperties}
+            >
               <div className="relative flex items-center justify-center px-4 pt-3 pb-2">
                 <div className="absolute top-2 h-6 w-24 rounded-full bg-black" />
               </div>
@@ -185,7 +188,7 @@ export function PhoneSimulator({
                 <ChevronLeft className="size-5 text-sky" />
                 <div className="flex flex-1 flex-col items-center">
                   <div className="flex size-9 items-center justify-center rounded-full bg-gradient-to-b from-[#6d635b] to-[#3b342f] text-[13px] font-semibold text-white">
-                    {personaId === "owner" ? "BH" : BRAND_SHORT.split(/\s*&\s*|\s+/).map((w) => w[0]).join("&")}
+                    {personaId === "owner" ? "BH" : SHOP_NAME.split(/\s+/).slice(0, 2).map((w) => w[0]).join("")}
                   </div>
                   <div className="mt-0.5 text-[11px] text-fg/90">
                     {personaId === "owner" ? "Back of House" : SHOP_NAME}
@@ -309,7 +312,7 @@ export function PhoneSimulator({
             </div>
           </div>
         </div>
-        <p className="px-6 pb-6 text-center font-mono text-[11px] text-muted">
+        <p className="px-6 pb-6 text-center text-[12px] text-muted tabular">
           {personaId === "owner" ? "as owner" : `as ${def.name} · ${handle.replace(/\d(?=\d{4})/g, "•")}`}
         </p>
       </SheetContent>

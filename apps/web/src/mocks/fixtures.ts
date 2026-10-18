@@ -156,6 +156,10 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
       "Can't fit 48 Saturday: split 24 Sat / 24 Sun, ghee reorder needed.",
     payload: {
       text: `Hi Jun — Saturday only has 24 milk cakes left, so I can't do all 48 that morning. I can hold 24 Sat 9:00 and 24 Sun 9:00 behind one link. Paying confirms the split. ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+      alternatives: [
+        `Hi Jun, Saturday can only take 24 milk cakes. 24 Sat + 24 Sun 9:00, one link: ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+        `Hi Jun, we can do 24 milk cakes Saturday and the other 24 Sunday at 9:00, and we'll add a flask of Adeni chai for the office. ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+      ],
       orders: [
         {
           items: [{ productId: "milk-cake", qty: 24 }],

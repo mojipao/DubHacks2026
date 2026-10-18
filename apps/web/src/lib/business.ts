@@ -6,11 +6,11 @@ import productsJson from "../../../../data/seed/products.json";
 /** Read from lane 3's seed at build time, so the UI and the agents agree on the shop. */
 export const BUSINESS = businessJson as BusinessProfile;
 
-/**
- * Display name for chrome and join pages.
- * Demo shop is Yemeni Coffee (UI brand). Seed may still say Mokha Coffee House until data catches up.
- */
-export const SHOP_NAME = "Yemeni Coffee";
+/** Display name for chrome and join pages: the seed's, so the screen and the agents' sign-off agree. */
+export const SHOP_NAME = BUSINESS.name;
+
+/** "Mokha coffee" in Arabic, set beside the wordmark. */
+export const SHOP_NAME_AR = "قهوة المخا";
 
 /** Short mark for the top bar — same as the shop name unless a longer legal form lands later. */
 export const BRAND_SHORT = SHOP_NAME;

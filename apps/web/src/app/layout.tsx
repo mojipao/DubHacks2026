@@ -1,20 +1,28 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Saira, Spectral } from "next/font/google";
+import { Geist_Mono, Manrope, Marcellus, Reem_Kufi } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { SHOP_NAME } from "@/lib/business";
 import "./globals.css";
 
-const saira = Saira({
-  variable: "--font-saira",
+/** Every working word: labels, buttons, data. Arwa's own UI face. */
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
-/** Display voice — heritage café, not dashboard shout. */
-const spectral = Spectral({
-  variable: "--font-spectral",
+/** Only the shop name and page titles: a flared, carved-stone serif, like lettering over a doorway. */
+const marcellus = Marcellus({
+  variable: "--font-marcellus",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "400",
+});
+
+/** The shop's name in Arabic beside the wordmark. */
+const reemKufi = Reem_Kufi({
+  variable: "--font-reem-kufi",
+  subsets: ["arabic"],
+  weight: ["500"],
 });
 
 const geistMono = Geist_Mono({
@@ -35,7 +43,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${saira.variable} ${spectral.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${manrope.variable} ${marcellus.variable} ${reemKufi.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <TooltipProvider>
