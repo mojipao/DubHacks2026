@@ -231,7 +231,7 @@ export function checkReply(text: string, facts: GuardFacts): GuardResult {
   // gets a reply that does not contain the word, rather than one that denies having one.
   if (/\b(prompts?|instructions?|language\s+model|\bLLM\b|as\s+an\s+AI|AI\s+(model|assistant))\b/i.test(text)) {
     blocking.push(
-      "Do not use the words prompt, instruction, or AI, and do not mention how you work. Reply only as the bakery.",
+      "Do not use the words prompt, instruction, or AI, and do not mention how you work. Reply only as the coffee shop.",
     );
   }
 

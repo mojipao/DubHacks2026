@@ -33,7 +33,7 @@ export const stubHandleInbound: HandleInbound = async ({ conversationId, message
       reads: [{ table: "messages", id: messageId }],
       confidence: 0.5,
       riskFlags: ["low_confidence"],
-      payload: { text: "Hi! This is Larch & Rye. We got your message and will confirm shortly.", orders: [] },
+      payload: { text: "Hi! This is Kettle & Crow Coffee. We got your message and will confirm shortly.", orders: [] },
     },
   ];
 };

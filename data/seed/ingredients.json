@@ -3,7 +3,7 @@
     "id": "butter",
     "name": "Cultured butter",
     "unit": "kg",
-    "onHand": 1.86,
+    "onHand": 1.66,
     "reorderPoint": 2,
     "supplier": "Rainier Dairy",
     "unitCostCents": 1280
@@ -18,13 +18,13 @@
     "unitCostCents": 180
   },
   {
-    "id": "rye-flour",
-    "name": "Rye flour",
-    "unit": "kg",
-    "onHand": 12,
-    "reorderPoint": 6,
-    "supplier": "Cascade Restaurant Supply",
-    "unitCostCents": 240
+    "id": "whole-milk",
+    "name": "Whole milk",
+    "unit": "L",
+    "onHand": 24,
+    "reorderPoint": 10,
+    "supplier": "Rainier Dairy",
+    "unitCostCents": 190
   },
   {
     "id": "almond-flour",

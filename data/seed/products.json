@@ -5,7 +5,15 @@
     "category": "pastry",
     "priceCents": 450,
     "dailyCapacity": 36,
-    "aliases": ["croissant", "croissants", "plain croissant", "plain croissants", "butter croissants", "classic croissant", "regular croissant"],
+    "aliases": [
+      "croissant",
+      "croissants",
+      "plain croissant",
+      "plain croissants",
+      "butter croissants",
+      "classic croissant",
+      "regular croissant"
+    ],
     "active": true
   },
   {
@@ -14,7 +22,13 @@
     "category": "pastry",
     "priceCents": 525,
     "dailyCapacity": 48,
-    "aliases": ["almond croissants", "almond", "almonds", "amandine", "almond pastry"],
+    "aliases": [
+      "almond croissants",
+      "almond",
+      "almonds",
+      "amandine",
+      "almond pastry"
+    ],
     "active": true
   },
   {
@@ -23,7 +37,13 @@
     "category": "pastry",
     "priceCents": 495,
     "dailyCapacity": 36,
-    "aliases": ["chocolate croissant", "chocolate croissants", "choc croissant", "pain au chocolate", "chocolatine"],
+    "aliases": [
+      "chocolate croissant",
+      "chocolate croissants",
+      "choc croissant",
+      "pain au chocolate",
+      "chocolatine"
+    ],
     "active": true
   },
   {
@@ -32,7 +52,12 @@
     "category": "pastry",
     "priceCents": 475,
     "dailyCapacity": 24,
-    "aliases": ["morning buns", "cinnamon bun", "cinnamon buns", "morning roll"],
+    "aliases": [
+      "morning buns",
+      "cinnamon bun",
+      "cinnamon buns",
+      "morning roll"
+    ],
     "active": true
   },
   {
@@ -41,7 +66,13 @@
     "category": "pastry",
     "priceCents": 525,
     "dailyCapacity": 24,
-    "aliases": ["cardamom knots", "cardamom bun", "cardamom buns", "knot", "knots"],
+    "aliases": [
+      "cardamom knots",
+      "cardamom bun",
+      "cardamom buns",
+      "knot",
+      "knots"
+    ],
     "active": true
   },
   {
@@ -50,34 +81,51 @@
     "category": "savory",
     "priceCents": 650,
     "dailyCapacity": 20,
-    "aliases": ["quiche", "quiche slices", "slice of quiche"],
+    "aliases": [
+      "quiche",
+      "quiche slices",
+      "slice of quiche"
+    ],
     "active": true
   },
   {
-    "id": "sourdough-loaf",
-    "name": "Sourdough loaf",
-    "category": "bread",
-    "priceCents": 900,
-    "dailyCapacity": 30,
-    "aliases": ["sourdough", "sourdough bread", "sourdough loaves", "loaf of sourdough"],
+    "id": "cappuccino",
+    "name": "Cappuccino",
+    "category": "drink",
+    "priceCents": 575,
+    "dailyCapacity": 150,
+    "aliases": [
+      "cappuccinos",
+      "capp",
+      "cap",
+      "cappucino"
+    ],
     "active": true
   },
   {
-    "id": "rye-loaf",
-    "name": "Rye loaf",
-    "category": "bread",
-    "priceCents": 950,
-    "dailyCapacity": 18,
-    "aliases": ["rye", "rye bread", "rye loaves", "loaf of rye"],
+    "id": "cold-brew",
+    "name": "Cold brew",
+    "category": "drink",
+    "priceCents": 525,
+    "dailyCapacity": 120,
+    "aliases": [
+      "cold brews",
+      "iced coffee",
+      "coldbrew"
+    ],
     "active": true
   },
   {
-    "id": "baguette",
-    "name": "Baguette",
-    "category": "bread",
-    "priceCents": 450,
-    "dailyCapacity": 40,
-    "aliases": ["baguettes", "french bread", "french stick"],
+    "id": "mocha",
+    "name": "Mocha",
+    "category": "drink",
+    "priceCents": 625,
+    "dailyCapacity": 100,
+    "aliases": [
+      "mochas",
+      "cafe mocha",
+      "chocolate coffee"
+    ],
     "active": true
   },
   {
@@ -86,7 +134,13 @@
     "category": "drink",
     "priceCents": 800,
     "dailyCapacity": 120,
-    "aliases": ["latte", "lattes", "oat milk latte", "oatmilk latte", "oat latté"],
+    "aliases": [
+      "latte",
+      "lattes",
+      "oat milk latte",
+      "oatmilk latte",
+      "oat latté"
+    ],
     "active": true
   },
   {
@@ -95,16 +149,43 @@
     "category": "drink",
     "priceCents": 350,
     "dailyCapacity": 200,
-    "aliases": ["coffee", "coffees", "drip", "black coffee", "cup of coffee", "regular coffee"],
+    "aliases": [
+      "coffee",
+      "coffees",
+      "drip",
+      "black coffee",
+      "cup of coffee",
+      "regular coffee"
+    ],
     "active": true
   },
   {
-    "id": "birthday-cake-6",
-    "name": "6-inch birthday cake",
-    "category": "cake",
-    "priceCents": 4200,
+    "id": "coffee-box",
+    "name": "Coffee box (serves 12)",
+    "category": "drink",
+    "priceCents": 3600,
     "dailyCapacity": 4,
-    "aliases": ["birthday cake", "cake", "6 inch cake", "6-inch cake", "small cake", "round cake"],
+    "aliases": [
+      "coffee box",
+      "box of coffee",
+      "coffee traveler",
+      "traveler",
+      "carafe"
+    ],
+    "active": true
+  },
+  {
+    "id": "house-beans",
+    "name": "House espresso beans, 12 oz bag",
+    "category": "drink",
+    "priceCents": 1800,
+    "dailyCapacity": 30,
+    "aliases": [
+      "beans",
+      "bag of beans",
+      "coffee beans",
+      "whole bean"
+    ],
     "active": true
   }
 ]

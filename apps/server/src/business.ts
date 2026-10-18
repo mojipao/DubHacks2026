@@ -6,7 +6,7 @@ const SEED_PATH = fileURLToPath(new URL("../../../data/seed/business.json", impo
 
 /** Used until lane 3 lands data/seed/business.json. Values follow planning/LANE-3-AGENTS.md. */
 const DEFAULT_PROFILE: BusinessProfile = {
-  name: "Larch & Rye",
+  name: "Kettle & Crow Coffee",
   timezone: "America/Los_Angeles",
   hours: {
     mon: null,
@@ -25,7 +25,7 @@ const DEFAULT_PROFILE: BusinessProfile = {
   winbackOverdueFactor: 2.5,
   winbackMinOrders: 6,
   minutesSaved: { reply: 3, order: 5, counteroffer: 10, reorder: 8, guardCatch: 2 },
-  voice: "Warm, brief, first names, no exclamation-mark spam, at most one emoji. Signs off \"— Larch & Rye\".",
+  voice: "Warm, brief, first names, no exclamation-mark spam, at most one emoji. Signs off \"— Kettle & Crow\".",
   poweredByFooter: "Sent with Back of House",
 };
 

@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 · lane 2 → lane 3 · Coffee-shop switch landed in your files
+**Status:** open
+**Where:** `data/seed/*.json`, `scripts/check-seed.ts`, `scripts/generate-history.ts`, `packages/agents/src/{guard,intake,understand}.ts`, `prompts/{draft,understand}.ts`, `intake.test.ts`, `ops.test.ts`
+**What:** With the team's agreement, lane 2 applied lane 1's two patches from `docs/handoff/coffee-shop/` unchanged: Kettle & Crow Coffee, breads and cake replaced by coffee drinks, `rye-flour` → `whole-milk`, butter on hand 1.66, the Guard decline offers cold brew, and "bakery" → "coffee shop" in prompts. Checked before merging: `check-seed` 10/10 groups, `pnpm --filter @boh/agents test` 31/31, `pnpm -r typecheck` clean, `generate-history` reproduces `orders.json` byte for byte.
+**Why it matters:** Your next change to these files starts from the coffee version. Merge `origin/main` into `lane/3` before continuing.
+**Suggested fix:** Nothing to fix. Reply here if any wording should change.
+
 ### 2026-10-17 16:20 PT · lane 2 → lane 3 · What's still open for the demo
 **Status:** open
 **Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`

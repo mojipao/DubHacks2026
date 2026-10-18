@@ -55,6 +55,52 @@ export function seedCustomerIds(): string[] {
   return existsSync(`${SEED_DIR}customers.json`) ? read<SeedCustomer[]>("customers").map((c) => c.id) : [];
 }
 
+/**
+ * Upserts never remove anything, so a seed that drops a product (the bakery → coffee shop switch
+ * dropped the breads and the cake) would leave it in the menu. This deletes what the seed files no
+ * longer contain: history orders first (their items reference products), then recipe lines,
+ * then products and ingredients. Agent orders are reset's job; a product one still uses is
+ * deactivated instead of deleted.
+ */
+async function prune(products: SeedProduct[], ingredients: SeedIngredient[], recipes: SeedRecipe[], orders: SeedOrder[]) {
+  const keepOrders = new Set(orders.map((o) => o.id));
+  const keepProducts = new Set(products.map((p) => p.id));
+  const keepIngredients = new Set(ingredients.map((i) => i.id));
+  const keepRecipes = new Set(recipes.map((r) => `${r.productId}|${r.ingredientId}`));
+
+  const history = check(await db().from("orders").select("id").eq("source", "history").limit(10_000), "list history orders") ?? [];
+  const staleOrders = history.map((o) => o.id).filter((id) => !keepOrders.has(id));
+  await chunked(staleOrders, 100, async (ids) => void check(await db().from("orders").delete().in("id", ids), "prune orders"));
+
+  const lines = check(await db().from("recipe_lines").select("product_id, ingredient_id"), "list recipe lines") ?? [];
+  for (const l of lines.filter((l) => !keepRecipes.has(`${l.product_id}|${l.ingredient_id}`))) {
+    check(
+      await db().from("recipe_lines").delete().eq("product_id", l.product_id).eq("ingredient_id", l.ingredient_id),
+      "prune recipe line",
+    );
+  }
+
+  const staleProducts = (check(await db().from("products").select("id"), "list products") ?? []).map((p) => p.id).filter((id) => !keepProducts.has(id));
+  const deactivated: string[] = [];
+  for (const id of staleProducts) {
+    const { error } = await db().from("products").delete().eq("id", id);
+    if (error?.code === "23503") {
+      check(await db().from("products").update({ active: false }).eq("id", id), "deactivate product");
+      deactivated.push(id);
+    } else if (error) throw new Error(`prune product ${id}: ${error.message}`);
+  }
+
+  const staleIngredients = (check(await db().from("ingredients").select("id"), "list ingredients") ?? []).map((i) => i.id).filter((id) => !keepIngredients.has(id));
+  if (staleIngredients.length) check(await db().from("ingredients").delete().in("id", staleIngredients), "prune ingredients");
+
+  return {
+    orders: staleOrders.length,
+    products: staleProducts.filter((id) => !deactivated.includes(id)),
+    deactivatedProducts: deactivated,
+    ingredients: staleIngredients,
+  };
+}
+
 export async function seed() {
   const missing = FILES.filter((f) => !existsSync(`${SEED_DIR}${f}.json`));
   if (missing.length) {
@@ -170,6 +216,8 @@ export async function seed() {
   );
   await chunked(itemRows, 500, async (chunk) => void check(await db().from("order_items").upsert(chunk), "order_items"));
 
+  const pruned = await prune(products, ingredients, recipes, orders);
+
   let squareCustomers = 0;
   if (features.square) {
     for (const c of customers) {
@@ -187,6 +235,7 @@ export async function seed() {
     customers: customers.length,
     personasWithPhones: [...handles.keys()].filter((k) => customers.some((c) => c.personaKey === k)),
     orders: orders.length,
+    pruned,
     squareCustomers: features.square ? squareCustomers : `skipped (Square not configured, ${env.SQUARE_ENVIRONMENT})`,
   };
   return summary;

@@ -6,7 +6,7 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 
 - **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders, including counteroffers when a request can't be met as asked; nothing goes out until the owner approves it in the live control room or by replying to an iMessage.
 - **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-croissant counteroffer with a linked butter reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
-- **Demo business:** Larch & Rye, a fictional Seattle bakery. All data synthetic.
+- **Demo business:** Kettle & Crow Coffee, a fictional Seattle coffee shop (switched from the Larch & Rye bakery on 2026-10-17; see `docs/DECISIONS.md`). All data synthetic. Demo numbers unchanged: Sat 12/36 butter croissants committed, 48 → 24 Sat + 24 Sun with a 3 kg butter reorder ($38.40), Maya's usual $18.50, Jun's 48 = $216.00.
 - **Title track:** Cook Smarter
 - **Sponsored tracks:** Photon, VEYZL, SideShift
 - **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
