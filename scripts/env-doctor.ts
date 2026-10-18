@@ -56,6 +56,7 @@ const SPECS: readonly Spec[] = [
   { name: "SQUARE_ACCESS_TOKEN", kind: "shared-secret", owner: "lane 2", required: true },
   { name: "SQUARE_WEBHOOK_SIGNATURE_KEY", kind: "shared-secret", owner: "lane 2", required: false, note: "demo host only" },
   { name: "AI_GATEWAY_API_KEY", kind: "shared-secret", owner: "lane 3 (ybassyiouni)", required: false, note: "agents fall back to the deterministic path without it" },
+  { name: "ELEVENLABS_API_KEY", kind: "shared-secret", owner: "lane 3 (ybassyiouni)", required: false, note: "voice: runs the live call" },
 
   // Shared config: identical everywhere, but not secret. Safe in docs/CONTEXT.md.
   { name: "SUPABASE_URL", kind: "shared-config", owner: "lane 2", required: true },
@@ -67,6 +68,10 @@ const SPECS: readonly Spec[] = [
   { name: "SQUARE_ENVIRONMENT", kind: "shared-config", owner: "lane 2", required: true },
   { name: "AGENT_MODEL", kind: "shared-config", owner: "lane 3", required: false, note: "anthropic/claude-haiku-4-5" },
   { name: "DEMO_PERSONAS", kind: "shared-config", owner: "lane 1", required: false, note: "persona=E.164 pairs" },
+  { name: "PHOTON_VOICE_NUMBER", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the line customers call" },
+  { name: "PHOTON_VOICE_PROFILE_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: SIP profile routing to ElevenLabs" },
+  { name: "PHOTON_VOICE_RESOURCE_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the provisioned line" },
+  { name: "ELEVENLABS_AGENT_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the Larch & Rye agent" },
 
   // Per-machine: these are SUPPOSED to differ. Copying someone else's is the bug.
   { name: "PORT", kind: "per-machine", owner: "you", required: false },

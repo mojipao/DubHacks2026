@@ -222,6 +222,14 @@ return c.json(response);
 **One schema question for you:** `conversations.platform` is `check (platform in ('imessage','simulated'))`, so a voice conversation needs `'voice'` added in a new migration. `supabase/**` is yours. If you would rather not migrate at this hour, voice can ride on `'simulated'` and we lose only the channel label on the ticket — your call, and either is fine by me.
 **Hard stop 3:00 AM PT.** If voice is not answering by then we drop it; everything here is additive and nothing touches the iMessage loop.
 
+### 2026-10-18 18:50 PT · lane 3 → everyone · Voice line is live; four new env vars to collect
+**Status:** open
+**Where:** the shared `.env`; setup in `docs/VOICE-SETUP.md`, agent config in `docs/VOICE-AGENT-PROMPT.md`
+**What:** The bakery now has a phone line. Photon carries the call and hands it to an ElevenLabs agent over SIP; the Photon side (number, voice profile, inbound routing) was all done by API and needs nothing from you.
+**New vars — ask lane 3 for the values, or run `pnpm tsx scripts/env-doctor.ts --share`:** `PHOTON_VOICE_NUMBER`, `PHOTON_VOICE_PROFILE_ID`, `PHOTON_VOICE_RESOURCE_ID`, `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`. None of them are needed to run the server or the web app — voice is additive, and nothing existing breaks without them.
+**One trap worth knowing, since it cost us the first call:** ElevenLabs stored the number as `2065804372` while Photon addresses the SIP INVITE to `+12065804372`. No match, so the call was dropped at the SIP layer *before* a conversation record existed — the Conversations list stayed empty rather than showing a failed call, which is a confusing symptom. Worse, `PATCH` on the phone number returns `200` and silently ignores a `phone_number` change, so it had to be deleted and recreated. **Any number given to ElevenLabs must be full E.164 with the `+1`.**
+**Still missing:** the `check_order` tool, which needs lane 2's `POST /voice/tool` route and a public tunnel. Until then the voice agent can talk but cannot check capacity, so it will invent answers. The route contract is in the earlier voice note.
+
 ## Resolved
 
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
