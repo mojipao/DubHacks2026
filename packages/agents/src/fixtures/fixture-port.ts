@@ -297,6 +297,11 @@ export function createFixtureWorld(options: FixturePortOptions): FixtureWorld {
             ? (sorted[mid] as number)
             : ((sorted[mid - 1] as number) + (sorted[mid] as number)) / 2;
 
+        // The injected conversation is this customer's: they are mid-conversation now.
+        const inConversation = options.conversation
+          ? handleToCustomerId.get(options.conversation.handle) === customer.id
+          : false;
+
         cadences.push({
           customerId: customer.id,
           name: customer.name,
@@ -305,6 +310,7 @@ export function createFixtureWorld(options: FixturePortOptions): FixtureWorld {
           daysSinceLast: dayNumber(today) - dayNumber(theirs[0] as string),
           // Only personas with a handle have a Photon space the line could reply into.
           hasOpenConversation: [...handleToCustomerId.values()].includes(customer.id),
+          ...(inConversation ? { daysSinceLastContact: 0 } : {}),
         });
       }
       return cadences;

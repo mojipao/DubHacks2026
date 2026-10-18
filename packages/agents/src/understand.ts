@@ -108,9 +108,13 @@ function sanitize(value: Understanding, input: UnderstandInput): Understanding {
 
   const pickupLocal = normalizeLocalDateTime(value.pickupLocal);
 
+  // "🥐🥐☕️ sat?" is a real order that a model will often return no items for, and the
+  // alias table already knows what those glyphs mean. Only ever fills an empty list.
+  const withEmoji = items.length === 0 ? matchItems(input.text, input.catalog) : items;
+
   return {
     ...value,
-    items,
+    items: withEmoji,
     pickupLocal,
     needsClarification: value.needsClarification || dropped,
     confidence: dropped ? Math.min(value.confidence, 0.5) : value.confidence,
@@ -235,8 +239,14 @@ function resolvePickup(text: string, todayLocal: string, timezone: string): stri
   return `${date ?? todayLocal}T${time ?? "09:00"}`;
 }
 
-/** Longest alias first, so "almond croissant" wins over "croissant". */
-function matchItems(text: string, catalog: Product[]): { productId: string; qty: number }[] {
+/**
+ * Longest alias first, so "almond croissant" wins over "croissant".
+ *
+ * Exported because the deterministic reading is useful even on the model path: it
+ * answers "which product is this question about?" for a price query, and it catches
+ * emoji the model does not map.
+ */
+export function matchItems(text: string, catalog: Product[]): { productId: string; qty: number }[] {
   const labels: { productId: string; label: string }[] = [];
   for (const product of catalog) {
     for (const label of [product.name, ...product.aliases]) {

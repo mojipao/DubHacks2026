@@ -12,7 +12,7 @@
     "build": "pnpm -r --if-present build",
     "seed": "tsx scripts/seed.ts",
     "reset": "tsx scripts/reset.ts",
-    "demo:host": "PHOTON_INBOUND=on OWNER_NOTIFY=on pnpm --filter @boh/server start"
+    "demo:host": "tsx scripts/demo-host.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

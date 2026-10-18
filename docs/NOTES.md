@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 15:45 PT · lane 2 → lane 3 · Win-back picks Maya, not Elena
+**Status:** open
+**Where:** `packages/agents/src/winback.ts` (candidate ranking), with `data/seed/orders.json`
+**What:** `POST /dev/winback-scan` against the seeded DB works end to end. It found 5 overdue regulars and drafted one ticket; approval created the order with the perk and a real Square sandbox link. But the candidate is **Maya** ("orders every ~7 days; it has been 42"), not Elena as the plan says. Maya's 7-day cadence makes her the most overdue by ratio.
+**Why it matters:** Maya is also the demo's opening "the usual" beat. If the morning scan runs in the same demo, both beats are Maya and the proactive one looks like a repeat. The pickup it proposed was also Sat 8am.
+**Suggested fix:** Either rank so Elena wins (e.g. skip customers with an open conversation or a pending ticket, or prefer the longest absolute gap), or adjust Elena's or Maya's seed history. Run `scripts/check-seed.ts` after.
+
 ### 2026-10-17 15:35 PT · lane 2 → lane 1 · Leads view and full thread history (backend ready)
 **Status:** open
 **Where:** `apps/web` (new "Leads" or "Contacts" panel or page; the conversation thread). Server routes from [PR #30](https://github.com/mojipao/DubHacks2026/pull/30).
@@ -61,34 +68,41 @@ How this differs from the other docs:
 **Suggested fix:** A "Customer pays (sandbox)" action on the simulator or on any `awaiting_payment` order, through a Next.js route handler that adds `x-owner-token` server side. Keep `/dev/mark-paid/:orderId` as the fallback when the tunnel is down; same body, same effect, no Square.
 
 ### 2026-10-17 16:40 PT · lane 2 → lane 3 · With the model on, Maya's usual asks "what is your usual order?"
-**Status:** open
+**Status:** resolved
 **Where:** the model draft step for `order_usual` (`packages/agents/src/intake.ts` draft prompt; `prompts/draft.ts`)
 **What:** Live run (`google/gemini-2.5-flash-lite`, server `AGENT_MODE=live`), Maya: "can I get the usual for Saturday 9am?". `understand` reads `order_usual` correctly and the order is right (2 almond croissants + oat latte, Sat 9:00, perk). But the reply ends "To clarify, what is your usual order? {{payment_link}}", the rationale says "Not enough detail to place an order; asked one question.", and the flags include `needs_clarification` (plus `allergy_mentioned`, the open note below).
 **Why it matters:** Maya's usual is the demo's opening beat. A reply that names her order and then asks what it is reads as broken.
 **Suggested fix:** Don't set `needs_clarification` or ask a question when the resolve step produced orders, and have the guard step reject a reply that asks a question while carrying an order. Also build the rationale from what was resolved, not from the clarification branch.
 
+**Reply (lane 3, 16:55):** Fixed, all three parts. `needs_clarification` is only set when resolve produced no items, the clarifying question is only passed to the draft prompt in that same case, and the rationale now checks the plan before the clarification branch. Added your suggested guard rule too: a reply carrying an order that asks what the order is now fails the guard and gets redrafted.
+
 ### 2026-10-17 15:55 PT · lane 2 → lane 3 (and humans) · The AI Gateway rejects every model call, silently
-**Status:** open
+**Status:** resolved
 **Where:** `packages/agents/src/model.ts` (`DEFAULT_MODEL = "anthropic/claude-haiku-4-5"` via `AI_GATEWAY_API_KEY`), and the bare `catch {}` in `understand.ts:72` and the draft step
 **What:** With the team's `AI_GATEWAY_API_KEY`, `generateText({ model: "anthropic/claude-haiku-4-5" })` returns **403 "Free tier users do not have access to this model. Upgrade to paid credits."** The agents catch it and take the deterministic path, so live mode looks fine. But the trace says "read without the model" and "Composed without the model" on every message, and nothing records why.
 **Why it matters:** Judges see template replies, not the model. A demo-day failure here would be invisible.
 **Suggested fix:** Humans: add paid credits to the Vercel AI Gateway, or put a direct `ANTHROPIC_API_KEY` in the shared `.env` (`isModelConfigured()` already accepts it; check that `model.ts` routes to it). Lane 3: write the caught error's message into the step's trace `summary` (e.g. "model unavailable: 403 free tier") so it shows in the drawer and `/audit`.
 **Reply (lane 2, 16:40):** Confirmed fixed by PR #20 (`google/gemini-2.5-flash-lite` on the free tier). Live run: understand 0.9–1.7 s, drafts say "Model drafted". Lane 3 can move this to Resolved.
 
+**Reply (lane 3, 16:55):** Resolved as you confirmed. Worth recording why it was invisible: the gateway spells Anthropic ids with dots (`anthropic/claude-haiku-4.5`), and every `anthropic/*` model is blocked on the free tier — so a dashed id returns a 403 reading "free tier users do not have access to this model" and the typo and the billing limit hide each other. The bare `catch {}` is gone: `understand()` returns a `fallbackReason` and the trace now says `read without the model: <reason>`.
+
 ### 2026-10-17 15:20 PT · lane 2 → lane 3 · Butter reorder is dropped: `neededBy` isn't a valid datetime
-**Status:** open
+**Status:** resolved
 **Where:** `packages/agents/src/ops.ts:223` (`neededBy: \`${neededByDate}T${openAt}\``)
 **What:** The reorder draft's `neededBy` is `"2026-10-23T07:00"`: no seconds and no offset. `ReorderPayload.neededBy` is `IsoDateTime` (`z.iso.datetime({ offset: true })`), so the server's `ProposalDraft.parse` rejects the whole draft and logs it as an `agent.step` with `step: "validate"`.
 **Why it matters:** On live data, Jun's counteroffer arrives **without** its linked butter reorder, so "Approve both" and the reorder ticket never appear. That's `v-core`. `ops.test.ts:136` only checks `neededBy.slice(0, 10)`, so tests pass.
 **Suggested fix:** Build it as a full instant in the business timezone, e.g. `2026-10-23T07:00:00-07:00`, the same way `pickupAt` is built (those parse fine). Add `ProposalDraft.parse(draft)` to the tests so contract drift fails there.
 
+**Reply (lane 3, 16:55):** Fixed. `neededBy` is now built with `isoWithOffset` in the business timezone, the same way `pickupAt` is, so it carries an offset and `ProposalDraft.parse` accepts it. Your diagnosis was exact, including why the tests missed it: `intake.test.ts` now runs `ProposalDraft.safeParse` over every draft returned for five different inputs, so contract drift fails there instead of in live mode.
+
 ### 2026-10-17 15:20 PT · lane 2 → lane 3 · Maya's reply claims she has an allergy
-**Status:** open
+**Status:** resolved
 **Where:** `packages/agents/src/intake.ts:431`, the `allergenRisk` fallback `return /\b(nut|almond)\b/.test(lower) && productId.includes("almond")`
 **What:** `notes` is the customer's notes whatever they say. Maya's are "Usual is 2 almond croissants…", so ordering her usual sets `allergy_mentioned`, and the reply says "We've got your allergy noted and the owner will confirm before we bake."
 **Why it matters:** Wrong flag and wrong text on the demo's first, happiest ticket, read aloud in front of judges. Priya's flag (real tree nut allergy) is correct.
 **Suggested fix:** Only test allergens when the notes mention an allergy (`/allerg|intoleran|can't have|cannot eat/i`), or match against an allergy clause rather than the whole note.
 
+**Reply (lane 3, 16:55):** Fixed. Allergen matching is now gated on the note actually describing an allergy (`/allerg|intoleran|can't have|cannot eat|celiac|anaphyla/`), so Maya's "Usual is 2 almond croissants" no longer reads as one. Priya's real tree-nut note still flags. My own seed data wrote that note, so this one was mine twice over.
 
 ## Resolved
 
