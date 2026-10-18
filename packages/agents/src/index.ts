@@ -9,6 +9,10 @@
 export { handleInbound } from "./intake.ts";
 export { runWinbackScan } from "./winback.ts";
 
+// Voice: ElevenLabs runs the conversation over Photon's SIP line and calls into this.
+export { handleVoiceTurn, toVoiceResponse, normalizeTranscript, VoiceToolRequest } from "./voice.ts";
+export type { VoiceToolResponse } from "./voice.ts";
+
 // Deterministic pieces worth reusing and testing on their own.
 export { planFulfillment, planReorder, aggregateNeeds, lastOpenDayBefore } from "./ops.ts";
 export type { FulfillmentPlan, PlannedDay, PlannedReorder } from "./ops.ts";
