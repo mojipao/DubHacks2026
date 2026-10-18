@@ -81,7 +81,7 @@ export function AuditTable() {
             <h1 className="heading text-4xl text-fg">Every action, on the record</h1>
             <p className="mt-2 text-[15px] text-muted">{mode === "mock" ? "Demo data. " : ""}Every message, approval, and payment, in order.</p>
           </div>
-          <Link href="/" className="rounded-full bg-ticket px-4 py-2 text-[13px] font-semibold text-ink hover:bg-ticket/90">
+          <Link href="/shop" className="rounded-full bg-ticket px-4 py-2 text-[13px] font-semibold text-ink hover:bg-ticket/90">
             ← Control room
           </Link>
         </div>
