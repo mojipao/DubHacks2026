@@ -129,7 +129,6 @@ export function TicketDrawer({
   const edited = reply !== null && text !== reply.text;
   const trace = getTrace(proposal);
   const pending = proposal.status === "pending";
-  const children = state.proposals.filter((p) => p.parentProposalId === proposal.id && p.status === "pending");
   const canEdit = pending && reply !== null;
   const tooLong = text.length > MAX_TEXT;
   const empty = text.trim().length === 0;
