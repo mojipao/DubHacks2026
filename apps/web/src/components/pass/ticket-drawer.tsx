@@ -129,7 +129,6 @@ export function TicketDrawer({
   const edited = reply !== null && text !== reply.text;
   const trace = getTrace(proposal);
   const pending = proposal.status === "pending";
-  const children = state.proposals.filter((p) => p.parentProposalId === proposal.id && p.status === "pending");
   const canEdit = pending && reply !== null;
   const tooLong = text.length > MAX_TEXT;
   const empty = text.trim().length === 0;
@@ -303,23 +302,16 @@ export function TicketDrawer({
                     run(
                       approve(proposal.id, {
                         editedText: edited ? text : undefined,
-                        includeLinked: children.length > 0,
                       }),
-                      children.length > 0 ? "Approved both" : "Approved",
+                      edited ? "Approved edited" : "Approved",
                     )
                   }
                 >
-                  {children.length > 0 ? "Approve both" : edited ? "Approve edited" : "Approve"}
+                  {edited ? "Approve edited" : "Approve"}
                 </GlowButton>
-                <GlowButton
-                  tone="tomato"
-                  onClick={() => run(reject(proposal.id, { includeLinked: children.length > 0 }), "86'd")}
-                >
-                  {children.length > 0 ? "Reject both" : "Reject"}
+                <GlowButton tone="tomato" onClick={() => run(reject(proposal.id), "Skipped")}>
+                  Skip
                 </GlowButton>
-                {children.length > 0 && (
-                  <span className="text-[12px] text-muted">Includes the linked reorder.</span>
-                )}
               </>
             )}
             {proposal.status === "failed" && (

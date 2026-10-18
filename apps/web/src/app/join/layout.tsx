@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { BUSINESS } from "@/lib/business";
+import { SHOP_NAME } from "@/lib/business";
 
 export const metadata: Metadata = {
-  title: `Text ${BUSINESS.name}`,
+  title: `Text ${SHOP_NAME}`,
   description: "Text a demo coffee shop on iMessage. An AI drafts the reply; the owner approves it.",
 };
 

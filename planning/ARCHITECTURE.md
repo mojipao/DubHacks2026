@@ -328,6 +328,7 @@ The browser can read every table, including synthetic customer names and handles
 | `guard.flagged` | server, when a stored draft carries `injection_suspected`, `off_policy`, or `abusive` | proposal; `data.flags` |
 | `owner.notified` | server | proposal; the iMessage sent to the owner |
 | `owner.command` | server | proposal; `data.command` (`approve`, `reject`, `list`, `unknown`) |
+| `owner.message` | server | message; the owner's own message (`data.conversationId`, `data.supersededProposals`, `data.clientId`) |
 | `winback.scanned` | server | none; `data.candidates` |
 | `demo.reset` | reset script | none |
 
@@ -573,7 +574,8 @@ Owner routes require the header `x-owner-token: $OWNER_TOKEN`. The browser never
 | Method and path | Auth | Body | Result |
 | --- | --- | --- | --- |
 | `GET /health` | none | | `{ ok, photonInbound, squareMode, agentMode }` |
-| `POST /proposals/:id/approve` | owner | `{ editedText?: string, includeLinked?: boolean }` | `{ proposals }` after execution (the parent plus linked children when `includeLinked`), or `409` if not pending |
+| `POST /proposals/:id/approve` | owner | `{ editedText?: string, alternativeIndex?: 0-2, includeLinked?: boolean }` | `{ proposals }` after execution (the parent plus linked children when `includeLinked`), or `409` if not pending |
+| `POST /conversations/:id/send` | owner | `{ text: string, clientId?: string }` | `{ messageId, supersededProposals }`; the owner's own message, sent now; supersedes pending agent replies there; a repeated `clientId` sends once |
 | `POST /proposals/:id/reject` | owner | `{ reason?: string, includeLinked?: boolean }` | `{ proposals }` |
 | `POST /join` | none, rate-limited | `{ name: string, handle: string }` | `{ agentNumber: string, customerId: string }` |
 | `POST /dev/inbound` | owner | `{ handle: string, name?: string, text: string }` | `{ conversationId, messageId }`; uses platform `simulated` |

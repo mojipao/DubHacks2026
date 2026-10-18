@@ -56,9 +56,9 @@ describe("planFulfillment", () => {
 
     const butter = plan.needs.find((n) => n.ingredientId === "butter");
     expect(butter).toBeDefined();
-    // 24 + 24 croissants on top of both days' committed butter orders, against 1.86 kg.
-    expect(butter?.need).toBeCloseTo(2.395, 3);
-    expect(butter?.onHand).toBe(1.86);
+    // 24 + 24 croissants on top of both days' committed butter orders, against 1.66 kg.
+    expect(butter?.need).toBeCloseTo(2.195, 3);
+    expect(butter?.onHand).toBe(1.66);
     expect(butter?.shortfall).toBeCloseTo(0.535, 3);
   });
 
@@ -84,9 +84,9 @@ describe("planFulfillment", () => {
   it("caps the plan at two days and reports the rest as unfulfilled", async () => {
     const { port, business, weekend } = world();
 
-    // Capacity is 4 cakes a day with 1 committed Saturday, so 20 cannot fit in two days.
+    // Capacity is 4 coffee boxes a day with 1 committed Saturday, so 20 cannot fit in two days.
     const plan = await planFulfillment(
-      [{ productId: "birthday-cake-6", qty: 20 }],
+      [{ productId: "coffee-box", qty: 20 }],
       `${weekend.sat}T10:00`,
       port,
       business,

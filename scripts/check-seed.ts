@@ -1,5 +1,5 @@
 /**
- * Asserts that the synthetic bakery adds up. Run after any change to `data/seed/**`:
+ * Asserts that the synthetic coffee shop adds up. Run after any change to `data/seed/**`:
  *
  *   pnpm tsx scripts/check-seed.ts
  *
@@ -172,7 +172,7 @@ group("the capacity table in planning/LANE-3-AGENTS.md Phase 1", () => {
   check("Saturday remaining", capacity - sat === 24, `expected 24 left, found ${capacity - sat}`);
   check("Sunday remaining", capacity - sun === 30, `expected 30 left, found ${capacity - sun}`);
   check("almond croissant capacity", product("almond-croissant").dailyCapacity === 48, "expected 48 per day");
-  check("birthday cake capacity", product("birthday-cake-6").dailyCapacity === 4, "expected 4 per day");
+  check("coffee box capacity", product("coffee-box").dailyCapacity === 4, "expected 4 per day");
 
   notes.push(`butter croissants: Sat ${sat}/${capacity} committed (${capacity - sat} left) · Sun ${sun}/${capacity} (${capacity - sun} left)`);
 });
@@ -272,7 +272,7 @@ group("the demo prices the pitch says out loud", () => {
   );
   const mayaTotal = 2 * product("almond-croissant").priceCents + product("oat-latte").priceCents;
   check("Maya's usual is $18.50", mayaTotal === 1850, `found ${mayaTotal}c; the demo script says $18.50`);
-  check("sourdough is $9 a loaf", product("sourdough-loaf").priceCents === 900, "quoted in the Guard decline example");
+  check("cold brew is $5.25", product("cold-brew").priceCents === 525, "quoted in the Guard decline example");
 });
 
 group("personas", () => {

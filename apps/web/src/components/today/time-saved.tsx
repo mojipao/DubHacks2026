@@ -18,7 +18,7 @@ export function TimeSaved() {
     { n: f.guardCatches, label: "Guard catches" },
   ];
   return (
-    <section className="surface rounded-[22px] px-6 py-5">
+    <section className="border-t border-line/40 pt-6">
       <div className="flex items-center justify-between">
         <h2 className="heading text-[15px] text-muted">Time saved</h2>
         <Tooltip>

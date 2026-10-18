@@ -29,6 +29,60 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 · lane 2 → lane 1 · Compose box and alternative chips (backend ready)
+**Status:** open
+**Where:** the conversation thread and the ticket in `apps/web`; server routes listed in `docs/CONTEXT.md` ("Human in the loop")
+**What:** The team wants three one-press moves on every ticket: approve the AI draft (already there), **pick one of the AI's alternative wordings**, or **write your own message**. The backend is live:
+- Ticket: `payload.alternatives?: string[]` (up to 3) on reply proposals. Show them as small chips under the draft; tapping one calls approve with `{ alternativeIndex: i, includeLinked: true }`. It sends immediately, and the order and payment link are handled the same as the main draft.
+- Thread: a compose box calling `POST /conversations/:id/send { text, clientId }` through a route handler (owner token). Make `clientId` a UUID created when the owner presses Send, so a double click sends once. It sends now, appends the footer for customer threads, and supersedes the pending agent reply there (the ticket leaves the rail via realtime; event `owner.message`). A `{{payment_link}}` in typed text is refused (400); payment links only come from approving an order ticket.
+**Why it matters:** The owner should never retype what the AI already said, never be stuck with one wording, and always be able to just answer.
+**Suggested fix:** Chips on the ticket face, and a one-line composer at the bottom of the thread with Send (⌘↵).
+
+### 2026-10-17 · lane 2 → lane 3 · Draft up to 3 alternatives per reply
+**Status:** open
+**Where:** `packages/agents` draft step; contract `ReplyPayload.alternatives` (optional, additive)
+**What:** Reply drafts can now carry `payload.alternatives: string[]` (max 3, each ≤ 1200, same `{{payment_link}}` rule, same `orders`). The owner taps one to send it instead of `text`. Also: the agents now see the owner's own messages in `getConversation` (outbound rows, no proposal), and a run whose trigger message isn't the latest in the thread is discarded (`step: "discard"`).
+**Why it matters:** Gives the owner options when the main wording is off, without a re-run.
+**Suggested fix:** Ask the model for 2 short alternatives with a different tone or offer (e.g. one that adds a pastry, one shorter). With no model, leave `alternatives` out.
+
+### 2026-10-17 · lane 2 → DubHacks26 Vercel team owner (lane 1) · Set the production env vars on `dub-hacks2026`
+**Status:** open
+**Where:** Vercel → team **DubHacks26** → project **dub-hacks2026** (root `apps/web`, auto-deploys from this repo) → Settings → Environment Variables
+**What:** The project had **no environment variables**, so `https://dub-hacks2026.vercel.app` couldn't reach Supabase or the server. Lane 2 added all six for **Preview**, but Vercel refuses production ones from mojipao's role: "Additional permissions are required to create production environment variables." The team owner needs to either raise mojipao to Owner, or add these six for **Production** (values are in the shared `.env`; never paste them in chat):
+| Name | Value | Type |
+| - | - | - |
+| `NEXT_PUBLIC_SUPABASE_URL` | same as `.env` | plain |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | same as `.env` (publishable key) | plain |
+| `NEXT_PUBLIC_DATA_MODE` | `live` | plain |
+| `SERVER_URL` | `https://paging-dreamless-darkened.ngrok-free.dev` (the demo host's tunnel) | plain |
+| `OWNER_TOKEN` | same as `.env` | **sensitive** |
+| `NEXT_PUBLIC_SITE_URL` | `https://dub-hacks2026.vercel.app` (the QR encodes it; lane 1's 70a2222) | plain |
+
+Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows live tickets, and `/join/qr` opened **on the vercel.app URL** encodes `https://dub-hacks2026.vercel.app/join`, which fixes the localhost QR note below. The server must be running (`pnpm demo:host` on mojipao's laptop) for actions to work.
+**Why it matters:** Judges reach the shop through the QR → `/join`, which only works on a public URL.
+
+### 2026-10-17 · lane 2 → lane 1 · Lock the control room before the URL is public
+**Status:** open
+**Where:** `apps/web/src/app/api/**` route handlers and `/`, `/audit`
+**What:** The route handlers add `x-owner-token` server side and accept any caller. On a public Vercel URL, anyone who finds it can `POST /api/proposals/:id/approve` or `/reject`, `/api/dev/inbound` (fake customer texts, plus model usage), `/api/dev/square-pay/:id`, `/api/dev/mark-paid/:id`, and read `/api/contacts` (customers' phone numbers). `/join` and `/api/join` must stay public.
+**Why it matters:** A judge (or anyone) could approve, reject, or pay tickets mid-demo, or pull the leads list with handles.
+**Suggested fix:** A `src/proxy.ts` (Next 16 middleware) that requires HTTP Basic auth (`CONTROL_ROOM_PASSWORD` env, sensitive) for everything except `/join`, `/join/qr`, `/api/join`, static assets and the OG image. Or Vercel Password Protection (the team is on Pro), but that would also block `/join`, so the middleware is the better fit.
+
+### 2026-10-17 · lane 2 → lane 1 · The `/join/qr` code points at localhost on the demo laptop
+**Status:** resolved
+**Where:** `apps/web/src/app/join/qr/page.tsx` (`window.location.origin`)
+**What:** The QR encodes the origin the page was opened at. On the demo host that's `http://localhost:3000/join`, which a judge's phone can't open. The QR is now the documented way customers reach the shop (README, "How a customer texts the shop").
+**Why it matters:** Scanning the QR is the first thing a judge does, and it would fail on the spot.
+**Suggested fix:** Deploy `apps/web` to Vercel (your Phase 5 item: Root Directory `apps/web`, the web env vars, `SERVER_URL` = the demo host's ngrok URL `https://paging-dreamless-darkened.ngrok-free.dev`). Encode `NEXT_PUBLIC_SITE_URL` (the Vercel URL) when it's set and fall back to the origin. Print the QR once the URL is fixed. Lane 2's server already accepts requests through that ngrok domain; CORS only matters for browser calls, and yours go through route handlers.
+
+**Reply (lane 2):** Fixed by lane 1 in 70a2222: the QR encodes `NEXT_PUBLIC_SITE_URL` when set. Lane 2 set it in `.env.example` and on Vercel Preview; Production is in the env-var note above.
+### 2026-10-17 · lane 2 → lane 3 · Coffee-shop switch landed in your files
+**Status:** open
+**Where:** `data/seed/*.json`, `scripts/check-seed.ts`, `scripts/generate-history.ts`, `packages/agents/src/{guard,intake,understand}.ts`, `prompts/{draft,understand}.ts`, `intake.test.ts`, `ops.test.ts`
+**What:** With the team's agreement, lane 2 applied lane 1's two patches from `docs/handoff/coffee-shop/` unchanged: Kettle & Crow Coffee, breads and cake replaced by coffee drinks, `rye-flour` → `whole-milk`, butter on hand 1.66, the Guard decline offers cold brew, and "bakery" → "coffee shop" in prompts. Checked before merging: `check-seed` 10/10 groups, `pnpm --filter @boh/agents test` 31/31, `pnpm -r typecheck` clean, `generate-history` reproduces `orders.json` byte for byte.
+**Why it matters:** Your next change to these files starts from the coffee version. Merge `origin/main` into `lane/3` before continuing.
+**Suggested fix:** Nothing to fix. Reply here if any wording should change.
+
 ### 2026-10-17 16:20 PT · lane 2 → lane 3 · What's still open for the demo
 **Status:** open
 **Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`

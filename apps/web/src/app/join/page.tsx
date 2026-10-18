@@ -6,7 +6,7 @@ import { Check, Copy, MessageCircle, ShieldAlert } from "lucide-react";
 import { GlowButton } from "@/components/glow-button";
 import { Input } from "@/components/ui/input";
 import { ActionError, joinDemo } from "@/lib/actions";
-import { BUSINESS } from "@/lib/business";
+import { SHOP_NAME } from "@/lib/business";
 
 const TRY = [
   { text: "the usual for Saturday 9am", note: "it knows regulars" },
@@ -56,7 +56,7 @@ export default function JoinPage() {
     const sms = `sms:${result.agentNumber}&body=${encodeURIComponent("Hi! Can I order for Saturday?")}`;
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
-        <p className="badge-brand">{BUSINESS.name}</p>
+        <p className="badge-brand">{SHOP_NAME}</p>
         <h1 className="mt-2 heading text-[36px] leading-tight tracking-tight text-fg">
           You&apos;re in. Text the shop.
         </h1>
@@ -65,10 +65,10 @@ export default function JoinPage() {
           initial={reduce ? false : { y: -24, opacity: 0, rotate: -2 }}
           animate={{ y: 0, opacity: 1, rotate: -0.6 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="ticket-paper ticket-shadow relative mt-6 overflow-hidden rounded-[24px] text-ink"
+          className="ticket-paper ticket-strip relative mt-6 overflow-hidden rounded-[20px] text-ink"
         >
                     <div className="px-5 pt-3 pb-5">
-            <div className="font-mono text-[11px] tracking-[0.16em] text-ink/60 uppercase">{BUSINESS.name} · iMessage</div>
+            <div className="font-mono text-[11px] tracking-[0.16em] text-ink/60 uppercase">{SHOP_NAME} · iMessage</div>
             <div className="mt-2 font-mono text-[32px] leading-none font-bold tracking-tight tabular-nums">
               {prettyNumber(result.agentNumber)}
             </div>
@@ -125,7 +125,7 @@ export default function JoinPage() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
-      <p className="badge-brand w-fit">Welcome to {BUSINESS.name}!</p>
+      <p className="badge-brand w-fit">Welcome to {SHOP_NAME}!</p>
       <h1 className="mt-2 heading text-[40px] leading-[1.05] tracking-tight text-fg">Text the shop like a regular.</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">
         An AI drafts every reply from the shop&apos;s real orders and stock. Nothing reaches you until the owner approves

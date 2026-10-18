@@ -109,7 +109,7 @@ export function LeadsView({ onOpenConversation }: { onOpenConversation: (convers
         ))}
       </div>
 
-      <section className="surface min-h-0 flex-1 overflow-y-auto rounded-[22px]">
+      <section className="min-h-0 flex-1 overflow-y-auto">
         {error ? (
           <p className="p-6 text-[14px] text-tomato">Couldn&apos;t load customers: {error}</p>
         ) : contacts === null ? (

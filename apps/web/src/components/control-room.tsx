@@ -28,7 +28,6 @@ export function ControlRoom() {
     const t = new URLSearchParams(window.location.search).get("tab");
     return VIEWS.some((v) => v.id === t) ? (t as View) : "pass";
   });
-  // Keep the tab in the URL so a reload (or a link to ?tab=today) lands on the same view.
   const setView = (next: View) => {
     setViewState(next);
     const url = new URL(window.location.href);
@@ -41,12 +40,19 @@ export function ControlRoom() {
     return new URLSearchParams(window.location.search).get("sim") === "1";
   });
 
+  // When a ticket is focused, keep its conversation selected so the thread matches.
+  useEffect(() => {
+    const focused = state.proposals.find((p) => p.id === state.focusedProposalId);
+    if (focused?.conversationId && focused.conversationId !== state.selectedConversationId) {
+      selectConversation(focused.conversationId);
+    }
+  }, [state.focusedProposalId, state.proposals, state.selectedConversationId, selectConversation]);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target?.tagName === "INPUT" || target?.tagName === "TEXTAREA" || target?.isContentEditable) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      // Shortcuts act on the pass only; an open drawer or simulator owns the keyboard.
       if (drawer || simOpen || helpOpen) return;
 
       const pending = state.proposals.filter((p) => p.status === "pending");
@@ -67,19 +73,17 @@ export function ControlRoom() {
         setView(byKey.id);
         return;
       }
-      // Ticket shortcuts only act where the tickets are.
       if (view !== "pass" || !focused) return;
-      const hasChildren = pending.some((p) => p.parentProposalId === focused.id);
       if (e.key === "a" || e.key === "A") {
         e.preventDefault();
-        void approve(focused.id, { includeLinked: hasChildren })
-          .then(() => toast.success(hasChildren ? "Approved both" : "Approved"))
+        void approve(focused.id)
+          .then(() => toast.success("Approved"))
           .catch((err: Error) => toast.error(err.message));
       }
       if (e.key === "r" || e.key === "R") {
         e.preventDefault();
-        void reject(focused.id, { includeLinked: hasChildren })
-          .then(() => toast.message("86'd"))
+        void reject(focused.id)
+          .then(() => toast.message("Skipped"))
           .catch((err: Error) => toast.error(err.message));
       }
       if (e.key === "e" || e.key === "E") {
@@ -135,31 +139,49 @@ export function ControlRoom() {
 
   const openConversation = (conversationId: string) => {
     selectConversation(conversationId);
-    setView("conversations");
+    setView("pass");
   };
 
   return (
-    <div className="flex h-dvh min-h-[640px] flex-col gap-3 p-3">
-      <div className="surface sticky top-3 z-30 rounded-full bg-surface/90 backdrop-blur-md">
+    <div className="flex h-dvh min-h-[640px] flex-col px-4 pt-2 pb-4 md:px-8">
+      <div className="sticky top-0 z-30 border-b border-line bg-bg/90 backdrop-blur-md">
         <TopBar
           onOpenSim={() => setSimOpen(true)}
+          onOpenKeys={() => setHelpOpen(true)}
           tabs={<ViewTabs view={view} onChange={setView} counts={counts} />}
         />
       </div>
 
-      <div className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 flex-1 pt-5">
         {view === "pass" && (
-          <div id="view-pass" role="tabpanel" className="flex min-h-0 min-w-0 flex-1">
-            <PassRail onOpenSim={() => setSimOpen(true)} drawer={drawer} onDrawer={setDrawer} />
+          <div id="view-pass" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-0">
+            <aside className="flex w-[min(42%,420px)] shrink-0 flex-col overflow-hidden border-r border-line pr-5">
+              <div className="flex min-h-0 flex-1 flex-col gap-4">
+                <div className="max-h-[38%] min-h-[120px] overflow-hidden border-b border-line pb-3">
+                  <ConversationList />
+                </div>
+                <div className="min-h-0 flex-1 overflow-hidden">
+                  <ConversationThread standalone onOpenTicket={openTicketFor} />
+                </div>
+              </div>
+            </aside>
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col pl-6">
+              <PassRail
+                compact
+                onOpenSim={() => setSimOpen(true)}
+                drawer={drawer}
+                onDrawer={setDrawer}
+              />
+            </div>
           </div>
         )}
 
         {view === "conversations" && (
-          <div id="view-conversations" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-3">
-            <aside className="surface flex w-[330px] shrink-0 flex-col overflow-hidden rounded-[22px] min-[1400px]:w-[370px]">
+          <div id="view-conversations" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-8">
+            <aside className="flex w-[300px] shrink-0 flex-col overflow-hidden border-r border-line min-[1400px]:w-[340px]">
               <ConversationList />
             </aside>
-            <section className="surface flex min-w-0 flex-1 flex-col overflow-hidden rounded-[22px]">
+            <section className="flex min-w-0 flex-1 flex-col overflow-hidden">
               <ConversationThread standalone onOpenTicket={openTicketFor} />
             </section>
           </div>
@@ -173,21 +195,21 @@ export function ControlRoom() {
 
         {view === "today" && (
           <div id="view-today" role="tabpanel" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
-            <div className="mb-3 flex items-baseline justify-between px-1">
-              <h1 className="heading text-[30px] text-fg">Today</h1>
-              <span className="text-[15px] font-semibold text-muted">{dayLabel}</span>
+            <div className="mb-8 flex items-baseline justify-between">
+              <h1 className="heading text-[40px] text-fg">Today</h1>
+              <span className="text-[15px] text-muted">{dayLabel}</span>
             </div>
-            <div className="grid gap-3 lg:grid-cols-[1.15fr_1fr]">
-              <div className="flex flex-col gap-3">
-                <section className="surface rounded-[22px] px-6 py-5">
+            <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr]">
+              <div className="flex flex-col gap-10">
+                <section>
                   <PickupsBoard />
                 </section>
                 <Activity />
               </div>
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-10">
                 <TodayRevenue />
                 <TimeSaved />
-                <section className="surface rounded-[22px] px-6 py-5">
+                <section>
                   <StockBars />
                 </section>
               </div>

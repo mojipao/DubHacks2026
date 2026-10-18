@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Coffee, MoreHorizontal, QrCode, ScrollText, Smartphone, Sunrise, Truck, UserPlus } from "lucide-react";
+import { Keyboard, MoreHorizontal, QrCode, ScrollText, Smartphone, Sunrise, Truck, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import { GlowButton } from "@/components/glow-button";
 import { Button } from "@/components/ui/button";
@@ -12,35 +12,36 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BUSINESS } from "@/lib/business";
+import { BRAND_SHORT } from "@/lib/business";
 import { useStore } from "@/lib/data/store";
 import { cn } from "@/lib/utils";
 
 export function TopBar({
   onOpenSim,
+  onOpenKeys,
   tabs,
 }: {
   onOpenSim: () => void;
-  /** The view switcher, rendered in the same row so the header stays one line. */
+  onOpenKeys: () => void;
   tabs: React.ReactNode;
 }) {
   const { state, mode, winbackScan, receiveDelivery } = useStore();
 
   return (
-    <header className="flex flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5">
-      <div className="flex items-center gap-2.5">
-        <span className="flex size-9 items-center justify-center rounded-full bg-cherry text-white">
-          <Coffee className="size-[18px]" />
+    <header className="flex flex-wrap items-center gap-x-8 gap-y-3 px-2 py-4 md:px-4">
+      <div className="min-w-0 leading-tight">
+        <span className="heading block truncate text-[26px] text-fg md:text-[28px]">{BRAND_SHORT}</span>
+        <span className="mt-0.5 block text-[11px] font-medium tracking-[0.2em] text-crema uppercase">
+          Back of House
         </span>
-        <span className="heading text-[19px] text-fg">{BUSINESS.name}</span>
       </div>
 
       <div className="min-w-0 flex-1">{tabs}</div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full border border-line-strong px-3 py-1 text-[12px] font-semibold tracking-wide uppercase",
+            "mr-2 inline-flex items-center gap-1.5 text-[12px] font-medium tracking-[0.12em] uppercase",
             state.connection === "polling" ? "text-amber" : "text-basil",
           )}
           title={mode === "live" ? "Live data from the shop" : "Scripted demo data"}
@@ -54,15 +55,43 @@ export function TopBar({
           {state.connection === "mock" ? "Demo" : state.connection === "realtime" ? "Live" : "Reconnecting"}
         </span>
 
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onOpenSim}
+          className="rounded-none px-3 text-[13px] font-medium text-fg/85 hover:bg-transparent hover:text-fg"
+          title="Phone simulator (S)"
+        >
+          <Smartphone className="size-4" />
+          <span className="hidden sm:inline">Sim</span>
+        </Button>
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onOpenKeys}
+          className="rounded-none px-3 text-[13px] font-medium text-fg/85 hover:bg-transparent hover:text-fg"
+          title="Keyboard shortcuts (?)"
+        >
+          <Keyboard className="size-4" />
+          <span className="hidden sm:inline">Keys</span>
+        </Button>
+
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="icon-sm" variant="ghost" aria-label="More" className="rounded-full text-muted hover:bg-surface-2 hover:text-fg">
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              aria-label="More"
+              className="rounded-none text-muted hover:bg-transparent hover:text-fg"
+            >
               <MoreHorizontal className="size-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="rounded-[24px] border-line bg-surface text-fg">
+          <DialogContent className="rounded-[20px] border-line/60 bg-surface-2 text-fg">
             <DialogHeader>
-              <DialogTitle>Control room</DialogTitle>
+              <DialogTitle className="font-[family-name:var(--font-heading)] text-2xl font-semibold">
+                Control room
+              </DialogTitle>
             </DialogHeader>
             <div className="flex flex-col gap-4 pt-1">
               <GlowButton block tone="sky" onClick={onOpenSim}>
@@ -95,7 +124,13 @@ export function TopBar({
                 tone="cherry"
                 onClick={() =>
                   void winbackScan()
-                    .then((n) => toast.message(n > 0 ? `Morning scan drafted ${n} win-back${n === 1 ? "" : "s"}` : "Morning scan: no lapsed regulars"))
+                    .then((n) =>
+                      toast.message(
+                        n > 0
+                          ? `Morning scan drafted ${n} win-back${n === 1 ? "" : "s"}`
+                          : "Morning scan: no lapsed regulars",
+                      ),
+                    )
                     .catch((e: Error) => toast.error(e.message))
                 }
               >

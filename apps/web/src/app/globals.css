@@ -9,7 +9,7 @@
   --color-foreground: var(--fg);
   --font-sans: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-spectral), ui-serif, Georgia, serif;
   --color-bg: var(--bg);
   --color-panel: var(--panel);
   --color-surface: var(--surface);
@@ -56,29 +56,28 @@
 }
 
 :root {
-  /* Coffee house (Mercury's-inspired): espresso-dark rooms, crema-cream tickets, one cherry-red accent. */
-  --bg: #15110e;
-  --surface: #1e1814;
-  --surface-2: #2a221c;
-  --panel: #1e1814;
-  --line: #33291f;
-  --line-strong: #4a3c30;
-  --ticket: #f4ebdd;
-  --ink: #1d140f;
-  --muted: #a8998b;
-  --fg: #f6efe6;
-  --cherry: #e2352b;
-  --crema: #d9a066;
-  /* Status colors, readable on the espresso surfaces. */
-  --tomato: #f0603d;
-  --amber: #e0a35a;
-  --basil: #5cbf7f;
-  --sky: #7fb2e5;
+  /* Arwa-inspired: one warm cream room end-to-end — no dark/light split. */
+  --bg: #f6f0e6;
+  --surface: #f6f0e6;
+  --surface-2: #ebe3d6;
+  --panel: #f6f0e6;
+  --line: #d9cbb8;
+  --line-strong: #c4b29a;
+  --ticket: #f6f0e6;
+  --ink: #2a1f16;
+  --muted: #7a6856;
+  --fg: #2a1f16;
+  --cherry: #a84530;
+  --crema: #8f6f45;
+  --tomato: #c45a3a;
+  --amber: #b8893f;
+  --basil: #4f8a5e;
+  --sky: #5a7ea0;
   --background: var(--bg);
   --foreground: var(--fg);
   --card: var(--ticket);
   --card-foreground: var(--ink);
-  --popover: var(--surface);
+  --popover: #fffaf3;
   --popover-foreground: var(--fg);
   --primary: var(--cherry);
   --primary-foreground: #ffffff;
@@ -91,7 +90,7 @@
   --border: var(--line);
   --input: var(--line-strong);
   --ring: var(--crema);
-  --radius: 14px;
+  --radius: 12px;
 }
 
 @layer base {
@@ -101,73 +100,68 @@
 
   html {
     @apply font-sans h-full;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     @apply min-h-full bg-bg text-fg antialiased;
     background-image:
-      radial-gradient(ellipse 60% 45% at 15% -10%, rgba(217, 160, 102, 0.1), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(226, 53, 43, 0.06), transparent 55%);
+      radial-gradient(ellipse 80% 50% at 0% 0%, rgba(168, 69, 48, 0.06), transparent 55%),
+      radial-gradient(ellipse 60% 40% at 100% 10%, rgba(143, 111, 69, 0.07), transparent 50%);
     background-attachment: fixed;
   }
 
   ::selection {
-    background: var(--crema);
-    color: var(--fg);
+    background: color-mix(in srgb, var(--crema) 45%, white);
+    color: var(--ink);
   }
 
   :focus-visible {
     outline: 2px solid var(--crema);
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
 }
 
 @layer utilities {
-  .ticket-perforation {
-    background-image: radial-gradient(circle at 8px 0, transparent 5px, var(--ticket) 5.5px);
-    background-size: 16px 8px;
-    background-repeat: repeat-x;
-    background-position: top;
-  }
-
   .ticket-paper {
-    background-color: var(--ticket);
+    background-color: transparent;
   }
 
-  /* Cards on the gray pass: a hairline outline and a soft lift, Nova-style. */
-  .ticket-shadow {
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.6) inset,
-      0 2px 4px rgba(0, 0, 0, 0.35),
-      0 18px 40px -16px rgba(0, 0, 0, 0.7);
+  .ticket-strip {
+    border-bottom: 1px solid var(--line);
   }
 
-  /* A soft gray panel, like Nova's rounded sections. */
   .surface {
-    background-color: var(--surface);
-    border: 1px solid var(--line);
+    background-color: transparent;
+    border: none;
   }
 
-  /* Mercury-style heading: heavy, uppercase, a little tracking. */
   .heading {
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    line-height: 1;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    line-height: 1.1;
   }
 
-  /* Small cherry pill label. */
+  .heading-caps {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+
   .badge-brand {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     border-radius: 999px;
     background: var(--cherry);
-    padding: 2px 12px;
+    padding: 3px 14px;
     font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #ffffff;
   }
@@ -175,29 +169,32 @@
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--muted);
   }
 
   .pass-grain {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-image: none;
   }
 
   .ticket-executing {
-    background-image:
-      linear-gradient(100deg, transparent 20%, rgba(226, 53, 43, 0.25) 50%, transparent 80%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%);
-    background-size: 220% 100%, auto;
+    background-image: linear-gradient(
+      100deg,
+      transparent 20%,
+      rgba(168, 69, 48, 0.08) 50%,
+      transparent 80%
+    );
+    background-size: 220% 100%;
     animation: ticket-shimmer 1.1s linear infinite;
   }
 
   @keyframes ticket-shimmer {
     from {
-      background-position: 120% 0, 0 0;
+      background-position: 120% 0;
     }
     to {
-      background-position: -120% 0, 0 0;
+      background-position: -120% 0;
     }
   }
 
@@ -206,14 +203,12 @@
       -45deg,
       transparent,
       transparent 3px,
-      rgba(217, 160, 102, 0.7) 3px,
-      rgba(217, 160, 102, 0.7) 6px
+      rgba(143, 111, 69, 0.55) 3px,
+      rgba(143, 111, 69, 0.55) 6px
     );
   }
 }
 
-/* Glass glow button (adapted from a uiverse-style component): a frosted pill whose
-   colored "lamps" above and below swell into a glow on hover or keyboard focus. */
 @layer components {
   .glow-btn {
     --glow: var(--cherry);
@@ -292,13 +287,10 @@
     overflow: hidden;
     padding: 0 1.4rem;
     border-radius: 999px;
-    border-top: 1px solid rgba(255, 255, 255, 0.14);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.5);
-    -webkit-backdrop-filter: blur(15px);
-    backdrop-filter: blur(15px);
-    color: #ffffff;
+    border: 1px solid color-mix(in srgb, var(--cherry) 35%, transparent);
+    background: color-mix(in srgb, var(--cherry) 12%, white);
+    box-shadow: 0 8px 18px -10px rgba(42, 31, 22, 0.35);
+    color: var(--cherry);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.4px;
@@ -315,7 +307,6 @@
     font-size: 13px;
   }
 
-  /* The light sweep across the glass. */
   .glow-btn__face::before {
     content: "";
     position: absolute;
@@ -323,7 +314,7 @@
     left: 0;
     width: 50%;
     height: 100%;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.22), transparent);
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.35), transparent);
     transform: skewX(45deg) translateX(-120%);
     transition: transform 0.5s;
     pointer-events: none;
@@ -331,8 +322,8 @@
 
   .glow-btn:hover .glow-btn__face,
   .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face {
-    letter-spacing: 1.6px;
-    background: rgba(255, 255, 255, 0.1);
+    letter-spacing: 1.2px;
+    background: color-mix(in srgb, var(--cherry) 18%, white);
   }
 
   .glow-btn:hover .glow-btn__face::before,

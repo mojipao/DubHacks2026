@@ -57,7 +57,7 @@ export function Activity({ limit = 8 }: { limit?: number }) {
   }, [state.events, state.conversations, state.proposals, limit]);
 
   return (
-    <section className="surface rounded-[22px] px-6 py-5">
+    <section className="border-t border-line/40 pt-6">
       <h2 className="heading text-[15px] text-muted">What just happened</h2>
       {lines.length === 0 ? (
         <p className="mt-3 text-[14px] text-muted">Nothing yet today.</p>

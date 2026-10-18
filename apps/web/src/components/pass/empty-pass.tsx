@@ -19,7 +19,7 @@ export function EmptyPass({ onOpenSim }: { onOpenSim: () => void }) {
             transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut" }}
           >
             <div className="mx-auto mb-[-3px] h-2.5 w-6 rounded-sm bg-line-strong" />
-            <div className="ticket-paper ticket-shadow h-28 rounded-[16px] opacity-80">
+            <div className="ticket-paper ticket-strip h-28 rounded-[14px] opacity-80">
               <div className="mx-3 mt-3 space-y-2">
                 <div className="h-1.5 w-3/4 rounded bg-ink/25" />
                 <div className="h-1.5 w-1/2 rounded bg-ink/12" />

@@ -6,7 +6,7 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 
 - **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders, including counteroffers when a request can't be met as asked; nothing goes out until the owner approves it in the live control room or by replying to an iMessage.
 - **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-croissant counteroffer with a linked butter reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
-- **Demo business:** Larch & Rye, a fictional Seattle bakery. All data synthetic.
+- **Demo business:** Kettle & Crow Coffee, a fictional Seattle coffee shop (switched from the Larch & Rye bakery on 2026-10-17; see `docs/DECISIONS.md`). All data synthetic. Demo numbers unchanged: Sat 12/36 butter croissants committed, 48 → 24 Sat + 24 Sun with a 3 kg butter reorder ($38.40), Maya's usual $18.50, Jun's 48 = $216.00.
 - **Title track:** Cook Smarter
 - **Sponsored tracks:** Photon, VEYZL, SideShift
 - **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
@@ -94,6 +94,8 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
+- **Web on Vercel:** team DubHacks26, project `dub-hacks2026`, root `apps/web`, auto-deploys from this repo; production URL `https://dub-hacks2026.vercel.app`. Preview env vars are set; production ones need the team owner (see NOTES).
+- **Human in the loop:** approve sends immediately; `POST /proposals/:id/approve { alternativeIndex }` sends one of the agent's alternative wordings (`ReplyPayload.alternatives`, optional, up to 3); `POST /conversations/:id/send { text, clientId }` sends the owner's own message, closes pending agent replies there, and the agents read it on the next text. Owner token.
 - **Leads:** `GET /contacts` (stage, money, counts per conversation; `?format=csv` to export) and `GET /contacts/:conversationId/messages` (paged full history). Owner token.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.

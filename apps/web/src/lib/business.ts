@@ -6,8 +6,14 @@ import productsJson from "../../../../data/seed/products.json";
 /** Read from lane 3's seed at build time, so the UI and the agents agree on the shop. */
 export const BUSINESS = businessJson as BusinessProfile;
 
-/** "— Kettle & Crow": the name the shop signs texts with, without a trailing "Coffee". */
-export const BRAND_SHORT = BUSINESS.name.replace(/\s+(coffee|caf[eé]|bakery)$/i, "");
+/**
+ * Display name for chrome and join pages.
+ * Demo shop is Yemeni Coffee (UI brand). Seed may still say Kettle & Crow until data catches up.
+ */
+export const SHOP_NAME = "Yemeni Coffee";
+
+/** Short mark for the top bar — same as the shop name unless a longer legal form lands later. */
+export const BRAND_SHORT = SHOP_NAME;
 
 // The coffee menu lane 2 is landing in data/seed (docs/handoff/coffee-shop). Seed values win once they exist.
 const COFFEE_MENU: { id: string; name: string; priceCents: number }[] = [
