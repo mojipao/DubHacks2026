@@ -49,6 +49,8 @@ export const OrderDraft = z.object({
 export const ReplyPayload = z.object({
   text: z.string().min(1).max(1200),
   orders: z.array(OrderDraft).max(2).default([]),
+  /** Optional, additive: up to 3 other wordings the owner can pick instead of `text`. Same orders, same {{payment_link}} rule. */
+  alternatives: z.array(z.string().min(1).max(1200)).max(3).optional(),
 });
 
 export const ReorderPayload = z.object({

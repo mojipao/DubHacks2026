@@ -167,20 +167,23 @@ async function runAgents(conversationId: string, messageId: string) {
     return;
   }
   await flush();
-  if (await hasNewerInbound(conversationId, messageId)) {
-    await logEvent("system", "agent.step", subject, { agent: "intake", step: "discard", summary: "A newer message arrived; drafts dropped" });
+  if (await hasNewerMessage(conversationId, messageId)) {
+    await logEvent("system", "agent.step", subject, {
+      agent: "intake",
+      step: "discard",
+      summary: "The conversation moved on (a newer text, or the owner answered); drafts dropped",
+    });
     return;
   }
   await storeDrafts(drafts, conversationId, messageId);
 }
 
-/** A run that finishes after a newer text arrived would leave a stale ticket beside the new one. */
-async function hasNewerInbound(conversationId: string, messageId: string) {
+/** A run that finishes after a newer text, or after the owner already answered, would leave a stale ticket. */
+async function hasNewerMessage(conversationId: string, messageId: string) {
   const { data } = await db()
     .from("messages")
     .select("id")
     .eq("conversation_id", conversationId)
-    .eq("direction", "inbound")
     .order("created_at", { ascending: false })
     .limit(1)
     .single();

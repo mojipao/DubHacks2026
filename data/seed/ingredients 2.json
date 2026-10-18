@@ -1,0 +1,110 @@
+[
+  {
+    "id": "butter",
+    "name": "Cultured butter",
+    "unit": "kg",
+    "onHand": 1.86,
+    "reorderPoint": 2,
+    "supplier": "Rainier Dairy",
+    "unitCostCents": 1280
+  },
+  {
+    "id": "bread-flour",
+    "name": "Bread flour",
+    "unit": "kg",
+    "onHand": 48,
+    "reorderPoint": 20,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 180
+  },
+  {
+    "id": "rye-flour",
+    "name": "Rye flour",
+    "unit": "kg",
+    "onHand": 12,
+    "reorderPoint": 6,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 240
+  },
+  {
+    "id": "almond-flour",
+    "name": "Almond flour",
+    "unit": "kg",
+    "onHand": 9.5,
+    "reorderPoint": 4,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 1450
+  },
+  {
+    "id": "dark-chocolate",
+    "name": "Dark chocolate batons",
+    "unit": "kg",
+    "onHand": 6.2,
+    "reorderPoint": 3,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 1890
+  },
+  {
+    "id": "sugar",
+    "name": "Cane sugar",
+    "unit": "kg",
+    "onHand": 22,
+    "reorderPoint": 10,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 150
+  },
+  {
+    "id": "eggs",
+    "name": "Eggs",
+    "unit": "dozen",
+    "onHand": 14,
+    "reorderPoint": 6,
+    "supplier": "Rainier Dairy",
+    "unitCostCents": 540
+  },
+  {
+    "id": "oat-milk",
+    "name": "Barista oat milk",
+    "unit": "L",
+    "onHand": 18,
+    "reorderPoint": 8,
+    "supplier": "Rainier Dairy",
+    "unitCostCents": 320
+  },
+  {
+    "id": "coffee-beans",
+    "name": "Espresso beans",
+    "unit": "kg",
+    "onHand": 7.5,
+    "reorderPoint": 3,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 2400
+  },
+  {
+    "id": "cardamom",
+    "name": "Ground cardamom",
+    "unit": "kg",
+    "onHand": 0.9,
+    "reorderPoint": 0.4,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 6800
+  },
+  {
+    "id": "yeast",
+    "name": "Instant yeast",
+    "unit": "kg",
+    "onHand": 1.4,
+    "reorderPoint": 0.5,
+    "supplier": "Cascade Restaurant Supply",
+    "unitCostCents": 980
+  },
+  {
+    "id": "cream-cheese",
+    "name": "Cream cheese",
+    "unit": "kg",
+    "onHand": 4.5,
+    "reorderPoint": 2,
+    "supplier": "Rainier Dairy",
+    "unitCostCents": 890
+  }
+]
