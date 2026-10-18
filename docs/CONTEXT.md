@@ -110,6 +110,13 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Shop line and owner handle: see "Demo phones and personas" above.
 - Photon 2.0 beta only: dashboard `app.beta.photon.codes`, API `https://api.photon.codes/v1`, package `@photon-ai/api`. The `photon.co/beta` URL in `planning/LANE-3-AGENTS.md` step 1 is wrong.
 
+## Model and the AI Gateway
+
+- **Who serves what:** Photon carries iMessages and runs no model. The Vercel AI Gateway routes model calls and runs no model of its own; it resells providers at list price. The model id names the provider that actually serves it, so `google/gemini-2.5-flash-lite` is served by Google. Swapping models is a one-line `.env` change.
+- **Verified 2026-10-18: the gateway's free tier rate-limits us out of the model entirely.** After an eval run, every call returns `429 rate_limit_exceeded` with `retry-after: 60`. A single call still succeeds in about 700 ms, so the limit is on sustained use, not on the key.
+- What that costs: the agents fall back to the deterministic reader, which only knows English aliases. Typos, Spanish, and rambling messages stop resolving. `packages/agents/src/eval.ts` prints model participation for this reason — measured over 34 cases, both `deepseek/deepseek-v3.1` and `google/gemini-2.5-flash-lite` answered **0 of 34** while still scoring 88.2%, because the fallback caught every one. A pass rate alone hides a model that never answers.
+- **The fix is paid credits, not a better model.** Purchasing any amount moves the team to the paid tier, which raises the rate limits and unlocks the full catalog; no Anthropic model is on the free tier at all. The demo is a burst of messages (Maya, Jun, then judges), which is exactly the pattern that trips the limit.
+
 ## Photon facts verified
 
 **Observed on a real inbound iMessage (2026-10-17, project `dubhack`).** A text from a teammate's phone reached the project and came back from `listMessages` with:
