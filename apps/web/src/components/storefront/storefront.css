@@ -1,0 +1,84 @@
+/* The tower house's materials. Only what Tailwind can't say lives here. */
+
+/* Mud-brick courses: two staggered rows of bricks, barely darker than the wall. */
+.storefront-wall {
+  background-color: #6e3d1f;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='28'%3E%3Cg fill='none' stroke='%23000' stroke-opacity='0.17' stroke-width='1'%3E%3Cpath d='M0 13.5H44M0 27.5H44M22 0V13.5M0 14V28M44 14V28'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Lime plaster inside the house: the wall the menu board hangs on. */
+.storefront-plaster {
+  background-color: #f3e8d6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cg fill='%236e3d1f' fill-opacity='0.05'%3E%3Ccircle cx='14' cy='22' r='1.2'/%3E%3Ccircle cx='70' cy='9' r='0.9'/%3E%3Ccircle cx='101' cy='58' r='1.3'/%3E%3Ccircle cx='38' cy='81' r='1'/%3E%3Ccircle cx='86' cy='103' r='0.8'/%3E%3Ccircle cx='9' cy='112' r='1.1'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Dark wood planks with a column of brass studs down each edge. */
+.storefront-door {
+  background-color: #3a2215;
+  background-image:
+    radial-gradient(circle, #c9971f 0 2px, transparent 2.6px),
+    radial-gradient(circle, #c9971f 0 2px, transparent 2.6px),
+    repeating-linear-gradient(90deg, transparent 0 27px, rgba(0, 0, 0, 0.28) 27px 28px);
+  background-size: 12px 26px, 12px 26px, 100% 100%;
+  background-position: 6px 40%, calc(100% - 6px) 40%, 0 0;
+  background-repeat: repeat-y, repeat-y, no-repeat;
+  transition: background-color 200ms ease;
+}
+.storefront-door:hover,
+.storefront-door:focus-visible {
+  background-color: #452918;
+}
+
+/* Wooden lattice behind the window glass; it warms like a lit room on hover. */
+.storefront-lattice {
+  background-color: rgba(43, 26, 16, 0.88);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M0 7L7 0L14 7L7 14Z' fill='none' stroke='%23c9971f' stroke-opacity='0.16' stroke-width='1'/%3E%3C/svg%3E");
+}
+.storefront-window:hover .storefront-lattice,
+.storefront-window:focus-visible .storefront-lattice {
+  background-color: #5a3016;
+}
+
+/* The staff door swings ajar toward you, and the brown band behind it shows. */
+.storefront-staff {
+  perspective: 700px;
+}
+.storefront-staff-leaf {
+  transform-origin: left center;
+  transition: transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+.storefront-staff:hover .storefront-staff-leaf,
+.storefront-staff:focus-visible .storefront-staff-leaf {
+  transform: rotateY(-34deg);
+  box-shadow: 8px 0 18px -6px rgba(0, 0, 0, 0.55);
+}
+
+/* The fanlight warms up once on load, pane by pane, as if the sun just reached it. */
+.qamariya-glass {
+  animation: qamariya-light 1400ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes qamariya-light {
+  from {
+    filter: brightness(0.55) saturate(0.5);
+  }
+  to {
+    filter: none;
+  }
+}
+
+.storefront-window:focus-visible,
+.storefront-door:focus-visible,
+.storefront-staff:focus-visible {
+  outline: 2px solid #c9971f;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qamariya-glass {
+    animation: none;
+  }
+  .storefront-staff-leaf {
+    transition: none;
+  }
+}
