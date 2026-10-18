@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 
-export type View = "orders" | "today" | "people" | "calls" | "ask";
+export type View = "orders" | "today" | "people" | "calls" | "ask" | "ops";
 
 export const VIEWS: { id: View; label: string; key: string; hint: string }[] = [
   { id: "orders", label: "Orders", key: "1", hint: "Replies and restocks waiting for you" },
@@ -10,6 +10,7 @@ export const VIEWS: { id: View; label: string; key: string; hint: string }[] = [
   { id: "people", label: "People", key: "3", hint: "Everyone who has texted or called, and their messages" },
   { id: "calls", label: "Calls", key: "4", hint: "Call transcripts, tap-to-call-backs, approve or skip" },
   { id: "ask", label: "Ask", key: "5", hint: "Ask the agent about stock, text customers, or place a call" },
+  { id: "ops", label: "House", key: "6", hint: "Leads, Square-paid sales, stock replenish dates" },
 ];
 
 /** Plain text tabs on the brown band; waiting counts are the only colour. */

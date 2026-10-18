@@ -8,6 +8,7 @@ import { OrdersView } from "@/components/orders/orders-view";
 import { PeopleView } from "@/components/people/people-view";
 import { PhoneSimulator } from "@/components/phone-simulator";
 import { ShortcutHelp } from "@/components/shortcut-help";
+import { OpsView } from "@/components/ops/ops-view";
 import { TodayView } from "@/components/today/today-view";
 import { TopBar } from "@/components/top-bar";
 import { VIEWS, ViewTabs, type View } from "@/components/view-tabs";
@@ -96,6 +97,7 @@ export function ControlRoom() {
         {view === "people" && <PeopleView onOpenOrder={openOrder} />}
         {view === "calls" && <CallsView onOpenPerson={openPerson} />}
         {view === "ask" && <AssistantView />}
+        {view === "ops" && <OpsView />}
       </main>
 
       <PhoneSimulator open={simOpen} onOpenChange={setSimOpen} />

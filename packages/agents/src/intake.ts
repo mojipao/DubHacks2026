@@ -594,10 +594,13 @@ function composeReply(args: DraftArgs): string {
         return product ? `${product.name} is $${(product.priceCents / 100).toFixed(2)}` : null;
       })
       .filter((line): line is string => Boolean(line));
-    if (priced.length > 0) {
+    if (priced.length > 0 && !/\bmenu\b/i.test(args.text)) {
       return `${hi} — ${priced.join("; ")}. We take orders over this chat if you'd like one.`;
     }
-    return `${hi} — we take orders over this chat. What would you like, and when will you pick it up?${menuInvite(catalog)}`;
+    if (/\bdeliver/i.test(args.text)) {
+      return `${hi} — we don't deliver, pickup only. ${formatCatalogMenu(catalog)} What would you like, and when?`;
+    }
+    return `${hi} — ${formatCatalogMenu(catalog)} What would you like, and when will you pick it up?`;
   }
   if (!plan || plan.days.length === 0) {
     if (args.resolved.items.length > 0 && !args.resolved.pickupLocal) {
@@ -653,8 +656,13 @@ function factLines(args: {
     lines.push(`Cannot make at all in the next few days: ${missed.qty}x ${nameOf(missed.productId)}`);
   }
   if (perkApplies) lines.push("Perk: 10% off, welcome back (the customer has not ordered in over a month)");
-  if (reading.intent === "question_menu" || reading.intent === "question_hours") {
+  if (reading.intent === "question_hours") {
     lines.push(`Shop hours: Tue-Fri ${business.hours.tue?.open}-${business.hours.tue?.close}, Sat-Sun ${business.hours.sat?.open}-${business.hours.sat?.close}, closed Monday`);
+  }
+  if (reading.intent === "question_menu") {
+    lines.push(
+      `Full menu (quote these prices; do not give hours; do not mention a website or app): ${formatCatalogMenu(catalog, 900)}`,
+    );
   }
 
   // A price question only gets answered if the price is in the facts; the model is not
@@ -702,6 +710,22 @@ const menuInvite = (catalog: Product[]): string => {
   if (names.length === 1) return ` ${names[0]} is easy to start with.`;
   return ` ${names.slice(0, -1).join(", ")}, or ${names[names.length - 1]}?`;
 };
+
+/** A compact in-chat menu from the catalog. iMessage has no place for a link. */
+function formatCatalogMenu(catalog: Product[], budget = 360): string {
+  const active = catalog.filter((p) => p.active);
+  const price = (cents: number): string => `$${(cents / 100).toFixed(2).replace(/\.00$/, "")}`;
+  const short = (name: string): string => name.replace(/\s*\([^)]*\)/g, "").replace(/,.*/, "").trim();
+  const line = (items: Product[]): string => items.map((p) => `${short(p.name)} ${price(p.priceCents)}`).join(", ");
+  const drinks = active.filter((p) => p.category === "drink");
+  const food = active.filter((p) => p.category !== "drink");
+  const body = (d: Product[]): string => `Drinks: ${line(d)}. Case: ${line(food)}.`;
+  const full = body(drinks);
+  if (full.length <= budget) return full;
+  const core = drinks.filter((p) => p.id !== "coffee-box" && p.id !== "yemeni-beans");
+  const trimmed = body(core);
+  return trimmed.length <= budget ? trimmed : `${trimmed.slice(0, budget - 1)}…`;
+}
 
 // ---------------------------------------------------------------------------
 // Step 8: assembling the drafts

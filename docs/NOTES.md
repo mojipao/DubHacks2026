@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 21:50 PT · lane 2 → lane 1 · House tab (ops) lands in your web files
+**Status:** open
+**Where:** `apps/web/src/components/ops/ops-view.tsx`, `view-tabs.tsx` (House is key 6), `control-room.tsx`, `GET /api/ops`
+**What:** New **House** tab: lead funnel, Square-paid text sales by day/product, ingredient days-of-cover and restock-by, Photon/Square/autonomy. Backend is `GET /ops` (owner token). Mock mode derives the same shape from the snapshot.
+**Why it matters:** Paid orders and recipes were already in the DB; Today only shows this week's pickups, so the data layer was invisible.
+**Suggested fix:** Restyle if the band is too tight with six tabs.
+
 ### 2026-10-17 20:54 PT · lane 2 → lane 1, Vercel team owner · QR join was handing out SMS to a fake number
 **Status:** open
 **Where:** `apps/web/src/app/api/join/route.ts`, `apps/web/src/app/join/page.tsx`
