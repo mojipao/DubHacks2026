@@ -177,7 +177,7 @@ export const supabaseDataPort: AgentDataPort = {
   /** Cadence from past pickups only, so this weekend's upcoming orders don't count as "last order". */
   async getRegularCadences() {
     const now = new Date();
-    const [{ data: orders, error }, { data: customers }, { data: convs }] = await Promise.all([
+    const [{ data: orders, error }, { data: customers }, { data: convs }, { data: inbound, error: inErr }] = await Promise.all([
       db()
         .from("orders")
         .select("customer_id, pickup_at")
@@ -188,8 +188,23 @@ export const supabaseDataPort: AgentDataPort = {
         .limit(10_000),
       db().from("customers").select("id, name"),
       db().from("conversations").select("customer_id").eq("platform", "imessage").not("photon_space_id", "is", null),
+      // Simulated texts count as contact too, so a persona played from the simulator is skipped like a real phone.
+      db()
+        .from("messages")
+        .select("created_at, conversations!inner(customer_id)")
+        .eq("direction", "inbound")
+        .not("conversations.customer_id", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(5_000),
     ]);
     if (error) throw new Error(`getRegularCadences: ${error.message}`);
+    if (inErr) throw new Error(`getRegularCadences messages: ${inErr.message}`);
+
+    const lastContact = new Map<string, number>();
+    for (const m of inbound ?? []) {
+      const id = m.conversations.customer_id;
+      if (id && !lastContact.has(id)) lastContact.set(id, Date.parse(m.created_at));
+    }
 
     const byCustomer = new Map<string, number[]>();
     for (const o of orders ?? []) {
@@ -211,6 +226,9 @@ export const supabaseDataPort: AgentDataPort = {
         medianIntervalDays: Math.round(median(gaps) * 10) / 10,
         daysSinceLast: Math.floor((now.getTime() - times.at(-1)!) / DAY_MS),
         hasOpenConversation: reachable.has(customerId),
+        ...(lastContact.has(customerId)
+          ? { daysSinceLastContact: Math.floor((now.getTime() - lastContact.get(customerId)!) / DAY_MS) }
+          : {}),
       });
     }
     return cadences;
