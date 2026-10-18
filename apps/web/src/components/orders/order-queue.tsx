@@ -1,11 +1,13 @@
 "use client";
 
 import type { ReplyPayload, ReorderPayload } from "@boh/shared";
+import { useMemo } from "react";
 import { Shield, Smartphone } from "lucide-react";
+import { openHolds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import type { UiProposal } from "@/lib/data/types";
 import { flagMeta, isGuardFlag } from "@/lib/flags";
-import { money, shortRelativeTime } from "@/lib/format";
+import { maskHandle, money, shortRelativeTime } from "@/lib/format";
 import { groupTotals, orderSummary, reorderLines, type OrderGroup } from "@/lib/order-math";
 import { cn } from "@/lib/utils";
 
@@ -110,12 +112,14 @@ export function OrderQueue({
   settled,
   onSelect,
   onOpenSim,
+  onOpenPerson,
 }: {
   groups: OrderGroup[];
   selectedId: string | null;
   settled: Map<string, "sent" | "skipped">;
   onSelect: (p: UiProposal) => void;
   onOpenSim: () => void;
+  onOpenPerson: (conversationId: string) => void;
 }) {
   const waiting = groups.filter((g) => g.lead.status === "pending").length;
   return (
@@ -124,15 +128,15 @@ export function OrderQueue({
         <h1 className="heading text-[34px] text-ink">Orders</h1>
         <p className="mt-1 text-[15px] text-muted">
           {waiting > 0
-            ? `${waiting} waiting for you. Nothing goes out until you approve it.`
-            : "Nothing waiting. Nothing goes out until you approve it."}
+            ? `${waiting} waiting for you. No order or payment link goes out until you approve it.`
+            : "Nothing waiting. No order or payment link goes out until you approve it."}
         </p>
       </div>
       {groups.length === 0 ? (
         <div className="mx-6 mt-2 border-t border-line pt-8">
           <p className="text-[17px] font-semibold text-ink">All caught up.</p>
           <p className="mt-1 max-w-sm text-[15px] text-muted">
-            When a customer texts, the agents draft a reply and it waits here for you.
+            The agent answers simple questions on its own. When someone orders, it checks the order with them first, then it waits here for you.
           </p>
           <button
             type="button"
@@ -143,7 +147,7 @@ export function OrderQueue({
           </button>
         </div>
       ) : (
-        <ul className="min-h-0 flex-1 divide-y divide-line overflow-y-auto border-t border-line">
+        <ul className="min-h-0 flex-1 divide-y divide-line overflow-y-auto border-y border-line">
           {groups.map((g) => (
             <OrderRow
               key={g.lead.id}
@@ -155,6 +159,44 @@ export function OrderQueue({
           ))}
         </ul>
       )}
+      <WaitingOnCustomer onOpenPerson={onOpenPerson} />
     </div>
+  );
+}
+
+/**
+ * Orders the agent has read back to the customer (items, sizes, allergens, total) and is waiting
+ * on a YES for. A YES puts the order in the queue above; nothing is charged before you approve.
+ */
+function WaitingOnCustomer({ onOpenPerson }: { onOpenPerson: (conversationId: string) => void }) {
+  const { state } = useStore();
+  const holds = useMemo(() => openHolds(state.events, Date.parse(state.now)), [state.events, state.now]);
+  if (holds.length === 0) return null;
+  return (
+    <section aria-label="Waiting on the customer" className="shrink-0 px-6 pt-5 pb-6">
+      <h2 className="text-[15px] font-bold text-ink">Waiting on the customer</h2>
+      <p className="mt-0.5 text-[13px] text-muted">The agent read the order back and asked them to reply YES.</p>
+      <ul className="mt-2 max-h-48 divide-y divide-line overflow-y-auto">
+        {holds.map((h) => {
+          const conv = state.conversations.find((c) => c.id === h.conversationId);
+          const name = conv?.customerName ?? (conv ? maskHandle(conv.handle) : "Customer");
+          return (
+            <li key={h.eventId}>
+              <button
+                type="button"
+                onClick={() => onOpenPerson(h.conversationId)}
+                className="flex w-full items-baseline gap-3 py-2.5 text-left hover:text-brew"
+              >
+                <span className="min-w-0 flex-1 truncate text-[14px]">
+                  <span className="font-semibold text-ink">{name}</span>
+                  <span className="text-muted"> · {h.summary || h.title}</span>
+                </span>
+                <span className="shrink-0 text-[13px] text-qishr-ink">asked {shortRelativeTime(h.at)}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }

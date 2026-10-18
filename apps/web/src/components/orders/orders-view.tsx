@@ -114,6 +114,7 @@ export function OrdersView({
           settled={settled}
           onSelect={(p) => pick(p.id)}
           onOpenSim={onOpenSim}
+          onOpenPerson={onOpenPerson}
         />
       </section>
       <section ref={detailRef} className="flex min-h-[70dvh] min-w-0 flex-1 scroll-mt-0 border-t border-line lg:min-h-0 lg:border-t-0 lg:border-l">

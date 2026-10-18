@@ -2,12 +2,21 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PAYMENT_LINK_TOKEN } from "@boh/shared";
-import { Download, Search } from "lucide-react";
+import { Download, Phone, Search } from "lucide-react";
 import { toast } from "sonner";
+import { callConversationIds, callsByConversation, formatDuration, senders, type Sender } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import type { ContactStage, UiContact, UiMessage } from "@/lib/data/types";
 import { money, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
+
+// Who put an outbound message out: the agent answers and checks orders alone; orders need you.
+const SENT_BY: Record<Sender, string> = {
+  agent: "agent, on its own",
+  "agent-checkin": "agent checked the order",
+  owner: "you",
+  "owner-approved": "approved by you",
+};
 
 const STAGE: Record<Exclude<ContactStage, "owner">, { label: string; tone: string }> = {
   lead: { label: "New", tone: "text-muted" },
@@ -47,6 +56,7 @@ export function PeopleView({ onOpenOrder }: { onOpenOrder: (conversationId: stri
     ? state.selectedConversationId
     : rows[0]?.conversationId;
   const person = rows.find((r) => r.conversationId === selectedId);
+  const callIds = useMemo(() => callConversationIds(state.events), [state.events]);
 
   const exportCsv = () => {
     if (mode === "live") {
@@ -106,6 +116,7 @@ export function PeopleView({ onOpenOrder }: { onOpenOrder: (conversationId: stri
         ) : (
           <ul className="min-h-0 flex-1 divide-y divide-line overflow-y-auto border-t border-line">
             {rows.map((r) => {
+              const called = callIds.has(r.conversationId);
               const stage = r.stage === "owner" ? null : STAGE[r.stage];
               return (
                 <li key={r.conversationId}>
@@ -116,7 +127,10 @@ export function PeopleView({ onOpenOrder }: { onOpenOrder: (conversationId: stri
                     className={cn("block w-full px-6 py-3.5 text-left transition-colors duration-150", r.conversationId === selectedId ? "bg-paper" : "hover:bg-paper/60")}
                   >
                     <span className="flex items-baseline justify-between gap-3">
-                      <span className="truncate text-[16px] font-bold text-ink">{r.name ?? r.handleMasked}</span>
+                      <span className="flex min-w-0 items-center gap-1.5">
+                        <span className="truncate text-[16px] font-bold text-ink">{r.name ?? r.handleMasked}</span>
+                        {called && <Phone aria-label="Called the shop" className="size-3.5 shrink-0 text-muted" />}
+                      </span>
                       <span className="shrink-0 text-[13px] text-muted">{shortRelativeTime(r.lastMessageAt)}</span>
                     </span>
                     <span className="mt-0.5 flex items-baseline gap-2 text-[14px]">
@@ -160,6 +174,8 @@ function Thread({
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const calls = useMemo(() => callsByConversation(state.events).get(person.conversationId) ?? [], [state.events, person.conversationId]);
+  const sentBy = useMemo(() => senders(state.events), [state.events]);
 
   const messages = useMemo(() => {
     const byId = new Map<string, UiMessage>();
@@ -212,7 +228,7 @@ function Thread({
           <h2 className="heading truncate text-[30px] text-ink">{person.name ?? person.handleMasked}</h2>
           <p className="mt-1 text-[14px] text-muted">
             {person.name ? `${person.handleMasked} · ` : "No name yet · "}
-            first texted {shortRelativeTime(person.firstSeenAt)}
+            {calls.length > 0 ? "called" : "first texted"} {shortRelativeTime(person.firstSeenAt)}
           </p>
         </div>
         <p className="text-[14px] text-ink/85">
@@ -248,6 +264,17 @@ function Thread({
               </button>
             </div>
           )}
+          {calls.map((call) => (
+            <div key={call.callId} className="mb-4 border-y border-line py-3">
+              <p className="flex items-center gap-2 text-[15px] font-semibold text-ink">
+                <Phone className="size-4 text-muted" aria-hidden />
+                Phone call · {formatDuration(call.durationSecs)} · {call.turns} turns
+                <span className="ml-auto text-[13px] font-normal text-muted">{shortRelativeTime(call.startedAt)}</span>
+              </p>
+              {call.summary && <p className="mt-1 max-w-prose text-[15px] leading-snug text-ink/85">{call.summary}</p>}
+              <p className="mt-1 text-[13px] text-muted">The transcript is below: the caller on the left, the agent on the right.</p>
+            </div>
+          ))}
           {messages.map((m) => (
             <div key={m.id} className={cn("flex flex-col", m.direction === "inbound" ? "items-start" : "items-end")}>
               <p
@@ -258,7 +285,10 @@ function Thread({
               >
                 {m.body}
               </p>
-              <span className="mt-1 px-1 text-[12px] text-muted">{shortRelativeTime(m.createdAt)}</span>
+              <span className="mt-1 px-1 text-[12px] text-muted">
+                {shortRelativeTime(m.createdAt)}
+                {m.direction === "outbound" && sentBy.has(m.id) && ` · ${SENT_BY[sentBy.get(m.id)!]}`}
+              </span>
             </div>
           ))}
           <div ref={endRef} />

@@ -71,7 +71,8 @@ export class HttpError extends Error {
 export interface DecisionOptions {
   includeLinked?: boolean;
   actor?: Actor;
-  via?: "control_room" | "imessage";
+  /** "agent" when the agent sent it on its own (no order, nothing flagged); "voice" for a phone order. */
+  via?: "control_room" | "imessage" | "agent";
 }
 
 /** Approves and executes a pending proposal, then its linked children when asked. A failed child does not undo the parent. */
@@ -194,7 +195,12 @@ export async function sendAndRecord(conversation: Conversation, body: string, pr
     .single();
   if (error) throw new Error(`store outbound message: ${error.message}`);
   await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", conversation.id);
-  await logEvent("system", "message.sent", { type: "message", id: message.id }, { proposalId, platform: conversation.platform });
+  // `key` says why it went out (hold:, hold-yes:, campaign:, owner-message:, owner-reply:, notify:), for the owner's log.
+  await logEvent("system", "message.sent", { type: "message", id: message.id }, {
+    proposalId,
+    platform: conversation.platform,
+    key: idempotencyKey ?? null,
+  });
   return message.id;
 }
 
@@ -307,7 +313,7 @@ export async function retry(id: string, opts: DecisionOptions = {}): Promise<Pro
 const WELCOME_BACK_RATE = 0.1;
 
 /** The server, not the agent, decides perk eligibility: a returning customer whose last past pickup is old enough. */
-async function perkEligible(customerId: string | null): Promise<boolean> {
+export async function perkEligible(customerId: string | null): Promise<boolean> {
   if (!customerId) return false;
   const { data } = await db()
     .from("orders")

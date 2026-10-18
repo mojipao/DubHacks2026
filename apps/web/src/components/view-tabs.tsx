@@ -2,15 +2,16 @@
 
 import { cn } from "@/lib/utils";
 
-export type View = "orders" | "today" | "people";
+export type View = "orders" | "today" | "people" | "ask";
 
 export const VIEWS: { id: View; label: string; key: string; hint: string }[] = [
   { id: "orders", label: "Orders", key: "1", hint: "Replies and restocks waiting for you" },
   { id: "today", label: "Today", key: "2", hint: "Pickups, money, and anything running low" },
-  { id: "people", label: "People", key: "3", hint: "Everyone who has texted, and their messages" },
+  { id: "people", label: "People", key: "3", hint: "Everyone who has texted or called, and their messages" },
+  { id: "ask", label: "Ask", key: "4", hint: "Ask the agent about stock, text customers, or place a call" },
 ];
 
-/** Three plain text tabs on the brown band; the waiting count is the only colour. */
+/** Plain text tabs on the brown band; the waiting count is the only colour. */
 export function ViewTabs({
   view,
   onChange,
@@ -22,7 +23,7 @@ export function ViewTabs({
   waiting: number;
 }) {
   return (
-    <nav role="tablist" aria-label="Views" className="flex h-full items-stretch gap-1">
+    <nav role="tablist" aria-label="Views" className="flex h-full items-stretch gap-0.5 sm:gap-1">
       {VIEWS.map((v) => {
         const active = v.id === view;
         return (
@@ -35,7 +36,7 @@ export function ViewTabs({
             onClick={() => onChange(v.id)}
             title={`${v.hint} (${v.key})`}
             className={cn(
-              "relative flex items-center gap-1.5 px-2 text-[14px] font-semibold transition-colors duration-150 sm:gap-2 sm:px-4 sm:text-[15px]",
+              "relative flex items-center gap-1.5 px-1.5 text-[14px] font-semibold transition-colors duration-150 sm:gap-2 sm:px-4 sm:text-[15px]",
               active ? "text-shell-fg" : "text-shell-fg/60 hover:text-shell-fg",
             )}
           >

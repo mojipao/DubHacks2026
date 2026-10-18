@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { PAYMENT_LINK_TOKEN, type ReplyPayload, type ReorderPayload } from "@boh/shared";
 import { Phone, Shield } from "lucide-react";
 import { toast } from "sonner";
+import { callConversationIds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import { flagMeta, isGuardFlag } from "@/lib/flags";
 import { maskHandle, money, shortRelativeTime } from "@/lib/format";
@@ -65,6 +66,8 @@ export function OrderDetail({ group, onOpenPerson }: { group: OrderGroup; onOpen
   // One real risk at most in the header; the rest is already in the plan and the queue row.
   const risk = lead.riskFlags.find((f) => f === "allergy_mentioned" || f === "complaint");
   const conv = state.conversations.find((c) => c.id === lead.conversationId);
+  // A phone order: the call summary and transcript are in People.
+  const fromCall = Boolean(lead.conversationId && callConversationIds(state.events).has(lead.conversationId));
   const who = lead.kind === "reorder" && !lead.conversationId ? `Restock from ${(lead.payload as ReorderPayload).supplier}` : (lead.customerName ?? (conv ? maskHandle(conv.handle) : "New customer"));
 
   const [editing, setEditing] = useState(false);
@@ -152,8 +155,10 @@ export function OrderDetail({ group, onOpenPerson }: { group: OrderGroup; onOpen
             )}
           </div>
           <p className="mt-1 text-[14px] text-muted">
-            {lead.kind === "reorder" ? "Supplier order drafted by the agents" : `Texted ${shortRelativeTime(lead.createdAt)}`}
-            {conv?.platform === "imessage" ? " on iMessage" : ""}
+            {lead.kind === "reorder"
+              ? "Supplier order drafted by the agents"
+              : `${fromCall ? "Ordered on a phone call" : "Texted"} ${shortRelativeTime(lead.createdAt)}`}
+            {!fromCall && conv?.platform === "imessage" ? " on iMessage" : ""}
             {risk && <span className="font-semibold text-qamar"> · {flagMeta(risk).label}</span>}
           </p>
         </header>

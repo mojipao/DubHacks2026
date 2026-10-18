@@ -18,17 +18,26 @@ const QUICK_TYPES = [
   { label: "Stock", value: "inventory." },
 ];
 
-/** The trust claim, from events only: every outbound message must trace back to an owner approval. */
+/**
+ * The trust claim, from events only: the agent may answer and check orders on its own, but no order
+ * or payment link ever goes out without the owner. `sentWithoutApproval` counts orders created
+ * from a ticket the owner didn't approve, and must stay 0.
+ */
 export function trustSummary(events: UiEvent[]) {
   const approved = events.filter((e) => e.type === "proposal.approved" && !e.data.retry);
-  const approvedIds = new Set(approved.map((e) => e.subjectId));
+  const byOwner = approved.filter((e) => e.data.via !== "agent");
+  const byAgent = new Set(approved.filter((e) => e.data.via === "agent").map((e) => e.subjectId));
   const sends = events.filter((e) => e.type === "message.sent");
+  const agentSends = sends.filter(
+    (e) => byAgent.has(String(e.data.proposalId ?? "")) || String(e.data.key ?? "").startsWith("hold"),
+  ).length;
   return {
     executed: events.filter((e) => e.type === "proposal.executed").length,
-    approved: approved.length,
-    approvedByText: approved.filter((e) => e.data.via === "imessage").length,
+    approved: byOwner.length,
+    approvedByText: byOwner.filter((e) => e.data.via === "imessage").length,
     sent: sends.length,
-    sentWithoutApproval: sends.filter((e) => !approvedIds.has(String(e.data.proposalId ?? ""))).length,
+    sentByAgent: agentSends,
+    sentWithoutApproval: events.filter((e) => e.type === "order.created" && byAgent.has(String(e.data.proposalId ?? ""))).length,
   };
 }
 
@@ -88,7 +97,7 @@ export function AuditTable() {
               label: "approved by the owner",
               sub: trust.approvedByText > 0 ? `${trust.approvedByText} by text` : undefined,
             },
-            { n: trust.sent, label: "messages sent" },
+            { n: trust.sent, label: "messages sent", sub: trust.sentByAgent > 0 ? `${trust.sentByAgent} by the agent on its own` : undefined },
           ].map((s) => (
             <div key={s.label} className="bg-panel px-4 py-3">
               <div className="text-[28px] font-bold text-ink tabular-nums">{s.n}</div>
@@ -119,7 +128,7 @@ export function AuditTable() {
               >
                 {trust.sentWithoutApproval}
               </div>
-              <div className="text-[13px] text-fg/80">sent without approval</div>
+              <div className="text-[13px] text-fg/80">orders or payments sent without you</div>
             </div>
           </div>
         </section>

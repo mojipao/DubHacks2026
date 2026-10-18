@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AssistantView } from "@/components/assistant/assistant-view";
 import { Frieze } from "@/components/frieze";
 import { OrdersView } from "@/components/orders/orders-view";
 import { PeopleView } from "@/components/people/people-view";
@@ -11,7 +12,7 @@ import { TopBar } from "@/components/top-bar";
 import { VIEWS, ViewTabs, type View } from "@/components/view-tabs";
 import { useStore } from "@/lib/data/store";
 
-const LEGACY_TABS: Record<string, View> = { pass: "orders", conversations: "people", customers: "people" };
+const LEGACY_TABS: Record<string, View> = { pass: "orders", conversations: "people", customers: "people", assistant: "ask" };
 
 function initialView(): View {
   if (typeof window === "undefined") return "orders";
@@ -86,6 +87,7 @@ export function ControlRoom() {
         {view === "orders" && <OrdersView onOpenSim={() => setSimOpen(true)} onOpenPerson={openPerson} blocked={simOpen || helpOpen} />}
         {view === "today" && <TodayView />}
         {view === "people" && <PeopleView onOpenOrder={openOrder} />}
+        {view === "ask" && <AssistantView />}
       </main>
 
       <PhoneSimulator open={simOpen} onOpenChange={setSimOpen} />

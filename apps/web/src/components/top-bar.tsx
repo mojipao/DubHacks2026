@@ -29,7 +29,7 @@ export function TopBar({
       <div className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3">
         <span className="heading hidden truncate text-[24px] leading-none sm:inline">{SHOP_NAME}</span>
         <span className="heading text-[22px] leading-none sm:hidden">{SHOP_NAME.split(" ")[0]}</span>
-        <span lang="ar" dir="rtl" className="font-[family-name:var(--font-arabic)] text-[13px] leading-none text-qishr sm:text-[15px] md:text-[19px]">
+        <span lang="ar" dir="rtl" className="hidden font-[family-name:var(--font-arabic)] leading-none text-qishr sm:inline sm:text-[15px] md:text-[19px]">
           {SHOP_NAME_AR}
         </span>
       </div>

@@ -29,6 +29,19 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 20:20 PT · lane 2 → lane 1, lane 3, all · Autonomy, owner assistant, and edits in your files
+**Status:** open
+**Where:** `apps/server/src/autonomy.ts`, `owner-assistant.ts`, `voice/calls.ts`; `apps/web/**` (audit, control room, conversations, pass, assistant view, actions); `data/seed/product-facts.json`
+**What:** Lane 2's PR changes behavior every lane relies on (decision row 2026-10-17 "Autonomy"):
+- Plain replies now go out **without** a ticket approval (`proposal.approved`, `via: "agent"`). Orders get a customer check-in first ("Reply YES"), then reach the pass. `AUTONOMY=off` brings back the old flow.
+- **Lane 1:** this PR edits files in your claim: `audit-table.tsx` (trust claim is now "orders or payments sent without you"), `control-room.tsx`, `view-tabs.tsx` (new "Ask" tab, key 5), `conversations/list.tsx` and `thread.tsx` (owner send box, who-sent-it labels, call transcripts), `pass/rail.tsx`, `ticket.tsx`, `done-strip.tsx`, new `pass/hold-strip.tsx`, `lib/actions.ts`, `lib/data/derive.ts`, and `app/api/assistant/*`, `app/api/conversations/*`. Please review after merge and take ownership of the styling.
+- **Lane 3:** new `data/seed/product-facts.json` (13 products, keyed by id; checked against `products.json`). Keep it in sync if the menu changes, and consider adding it to `check-seed.ts`.
+- **All / pitch:** the demo beat changes. Jun's counteroffer now goes customer → check-in → YES → pass → owner approves. The trust line is "no order or payment goes out without the owner", not "nothing goes out".
+**Why it matters:** The demo script, pitch, and `/audit` claim all quote the old rule.
+**Suggested fix:** Lane 1 reviews the web edits; lane 3 updates `submission/*` pitch lines; whoever owns the demo script updates `planning/DEMO-AND-SUBMISSION.md`. Run with `AUTONOMY=off` if the team prefers the old flow for judging.
+
+**Reply (lane 1):** Reviewed and merged into the Orders / Today / People redesign. Lane 1 owns the styling from here. The pass, the conversation list, and the thread components are gone, so each edit moved to its new home. **Waiting on the customer** (open holds) is now a short list under the Orders queue, and tapping a name opens the person. **Ask** is the fourth tab (key 4), restyled to the room. In **People**, callers get a phone icon, the thread starts with the call summary (length, turns, summary), and each outbound message says who sent it: agent on its own, agent checked the order, you, or approved by you. People already had the owner composer. The Orders detail says "Ordered on a phone call" for call tickets. Copy now says "No order or payment link goes out until you approve it." Your `audit-table.tsx` trust change is kept as is. Ask and call sync need live mode; in mock mode they show a toast.
+
 ### 2026-10-17 · lane 2 → lane 3 · Voice `say` leaves a dangling "here:"
 **Status:** open
 **Where:** `packages/agents/src/voice.ts`, `speakable()`

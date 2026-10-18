@@ -91,6 +91,11 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 
 ## Server (lane 2, live on `main`)
 
+- **Autonomy is on by default** (`AUTONOMY=on|off`; see `docs/DECISIONS.md`). Plain answers go out without the owner (`via: "agent"`); orders get a data-only customer check-in ("Reply YES"), then land on the pass for the owner. Orders, payment links, and reorders always need the owner. Demo scripts and pitch lines that say "nothing goes out without the owner" should say "no order or payment goes out without the owner".
+- Product facts (size, ingredients, allergens) live in `data/seed/product-facts.json`, keyed by product id, read by the order check-in and the voice tools.
+- Owner assistant: `POST /assistant/ask` (stock, previewed customer texts, calls), `POST /assistant/campaigns/send`, `POST /assistant/calls/sync`; `POST /conversations/:id/send` for the owner's own message. Owner token. Owner texts that aren't Y/N/? go to the same assistant.
+- Finished ElevenLabs calls are polled every 20 s (needs `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`) and land as messages plus a `call.transcribed` event.
+
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
