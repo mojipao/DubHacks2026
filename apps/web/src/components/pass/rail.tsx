@@ -5,6 +5,8 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { Ticket } from "@/components/pass/ticket";
 import { TicketDrawer } from "@/components/pass/ticket-drawer";
 import { DoneStrip } from "@/components/pass/done-strip";
+import { HoldStrip } from "@/components/pass/hold-strip";
+import { agentSentProposalIds } from "@/lib/data/derive";
 import { EmptyPass } from "@/components/pass/empty-pass";
 import { useStore } from "@/lib/data/store";
 import type { UiProposal } from "@/lib/data/types";
@@ -121,7 +123,7 @@ export function PassRail({
             Waiting for you
           </h1>
           <p className="mt-2 max-w-[36ch] text-[15px] leading-relaxed text-muted">
-            Drafts from the thread on the left. Nothing goes out until you approve it.
+            The agent answers simple questions itself and checks each order with the customer first. Orders and payments wait for you.
           </p>
         </div>
         <span className="text-[13px] tracking-wide text-muted">
@@ -131,6 +133,7 @@ export function PassRail({
       </div>
 
       <div className="relative min-h-0 flex-1 overflow-y-auto">
+        <HoldStrip />
         {visible.length === 0 ? (
           state.loaded ? (
             <EmptyPass onOpenSim={onOpenSim} />
@@ -156,7 +159,7 @@ export function PassRail({
         )}
 
         <div className="mt-6">
-          <DoneStrip tickets={done} onOpen={(id) => setDrawerId(id)} />
+          <DoneStrip tickets={done} onOpen={(id) => setDrawerId(id)} agentSent={agentSentProposalIds(state.events)} />
         </div>
       </div>
 
