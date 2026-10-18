@@ -9,7 +9,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "chat": "tsx src/chat.ts"
+    "chat": "tsx src/chat.ts",
+    "eval": "tsx src/eval.ts"
   },
   "dependencies": {
     "@boh/shared": "workspace:*",

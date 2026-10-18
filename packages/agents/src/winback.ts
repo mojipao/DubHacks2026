@@ -36,7 +36,11 @@ export async function runWinbackScan(ctx: AgentContext): Promise<ProposalDraft[]
       c.orderCount >= business.winbackMinOrders &&
       c.medianIntervalDays > 0 &&
       c.daysSinceLast > business.winbackOverdueFactor * c.medianIntervalDays &&
-      c.daysSinceLast > RECENT_CONTACT_DAYS,
+      // Anyone mid-conversation is not a win-back candidate, however lapsed their
+      // orders look. `daysSinceLast` counts orders, so a customer texting right now
+      // still reads as maximally overdue — which is how the most frequent regular
+      // outranks the one who actually drifted away.
+      !(c.daysSinceLastContact !== undefined && c.daysSinceLastContact <= RECENT_CONTACT_DAYS),
   );
 
   // Most days overdue beyond their own rhythm, not the largest ratio.
@@ -55,21 +59,48 @@ export async function runWinbackScan(ctx: AgentContext): Promise<ProposalDraft[]
     flags: [],
   });
 
-  const candidate = ranked[0];
-  if (!candidate) return [];
+  // Walk the ranking rather than taking only the first: a win-back message is built
+  // from someone's usual, and the most overdue customer often turns out to be an
+  // occasional visitor with no habit to reference. Giving up on them means offering
+  // nothing at all, when the next name down has a usual we can be specific about.
+  let candidate: RegularCadence | undefined;
+  let usual: ReturnType<typeof computeUsual> = null;
+  const skipped: string[] = [];
 
-  const history = await port.getOrderHistory(candidate.customerId, 12);
-  const usual = computeUsual(history);
-  if (!usual) {
+  for (const option of ranked.slice(0, 5)) {
+    const theirUsual = computeUsual(await port.getOrderHistory(option.customerId, 12));
+    if (theirUsual) {
+      candidate = option;
+      usual = theirUsual;
+      break;
+    }
+    skipped.push(option.name);
+  }
+
+  if (!candidate || !usual) {
     ctx.trace("plan", {
       agent: "winback",
       step: "plan",
-      ms: 0,
-      summary: `${candidate.name} is overdue but has no clear usual, so there is nothing personal to offer`,
+      ms: Date.now() - startedAt,
+      summary:
+        ranked.length === 0
+          ? "nobody is overdue past their own cadence"
+          : `${ranked.length} overdue, but none of the top candidates has a clear usual to offer`,
       reads: port.reads(),
       flags: [],
     });
     return [];
+  }
+
+  if (skipped.length > 0) {
+    ctx.trace("resolve", {
+      agent: "winback",
+      step: "resolve",
+      ms: Date.now() - startedAt,
+      summary: `skipped ${skipped.join(", ")}: overdue but no clear usual to reference`,
+      reads: [],
+      flags: [],
+    });
   }
 
   const catalog = await port.getCatalog();

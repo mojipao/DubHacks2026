@@ -113,6 +113,12 @@ export interface RegularCadence {
   medianIntervalDays: number;
   daysSinceLast: number;
   hasOpenConversation: boolean;     // a Photon space exists, so the line can message them
+  /**
+   * Optional, additive: days since this customer last messaged the shop, or undefined
+   * when they never have. Win-back needs it — `daysSinceLast` counts orders, so someone
+   * mid-conversation still looks maximally lapsed.
+   */
+  daysSinceLastContact?: number;
 }
 
 export interface CustomerProfile {
