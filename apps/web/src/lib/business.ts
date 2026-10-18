@@ -8,15 +8,12 @@ export const BUSINESS = businessJson as BusinessProfile;
 
 /**
  * Display name for chrome and join pages.
- * PRODUCT.md / CONTEXT lock the demo to Kettle & Crow Coffee; this branch's seed may still
- * say Larch & Rye until lane 3's coffee handoff lands here. Prefer seed when it already matches.
+ * Demo shop is Yemeni Coffee (UI brand). Seed may still say Kettle & Crow until data catches up.
  */
-export const SHOP_NAME = /kettle|crow/i.test(BUSINESS.name)
-  ? BUSINESS.name
-  : "Kettle & Crow Coffee";
+export const SHOP_NAME = "Yemeni Coffee";
 
-/** "— Kettle & Crow": the name the shop signs texts with, without a trailing "Coffee". */
-export const BRAND_SHORT = SHOP_NAME.replace(/\s+(coffee|caf[eé]|bakery)$/i, "");
+/** Short mark for the top bar — same as the shop name unless a longer legal form lands later. */
+export const BRAND_SHORT = SHOP_NAME;
 
 // The coffee menu lane 2 is landing in data/seed (docs/handoff/coffee-shop). Seed values win once they exist.
 const COFFEE_MENU: { id: string; name: string; priceCents: number }[] = [

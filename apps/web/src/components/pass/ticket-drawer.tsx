@@ -303,28 +303,16 @@ export function TicketDrawer({
                     run(
                       approve(proposal.id, {
                         editedText: edited ? text : undefined,
-                        includeLinked: children.length > 0,
                       }),
-                      children.length > 0 ? "Approved both" : "Approved",
+                      edited ? "Approved edited" : "Approved",
                     )
                   }
                 >
-                  {children.length > 0 ? "Approve both" : edited ? "Approve edited" : "Approve"}
+                  {edited ? "Approve edited" : "Approve"}
                 </GlowButton>
-                <GlowButton
-                  tone="tomato"
-                  onClick={() =>
-                    run(
-                      reject(proposal.id, { includeLinked: children.length > 0 }),
-                      children.length > 0 ? "Skipped both" : "Skipped",
-                    )
-                  }
-                >
-                  {children.length > 0 ? "Skip both" : "Skip"}
+                <GlowButton tone="tomato" onClick={() => run(reject(proposal.id), "Skipped")}>
+                  Skip
                 </GlowButton>
-                {children.length > 0 && (
-                  <span className="text-[12px] text-muted">Includes the linked reorder.</span>
-                )}
               </>
             )}
             {proposal.status === "failed" && (

@@ -21,7 +21,7 @@ export function TodayRevenue() {
   }, [state.orders, today]);
 
   return (
-    <div className="overflow-hidden rounded-[22px] bg-ticket px-6 py-5 text-ink">
+    <div className="overflow-hidden border-t border-line pt-5 text-ink">
       <div className="heading text-[15px] text-ink/60">Paid today</div>
       <div className="mt-1 heading text-[52px] text-ink tabular-nums">{money(paidCents)}</div>
       <div className="mt-2 text-[14px] text-ink/60">

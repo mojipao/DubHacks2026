@@ -10,7 +10,7 @@ web
 
 Primary user of this surface: **hackathon judges** watching a short live demo of Back of House, plus the teammate operating the control room during that demo.
 
-Durable user the product is built for: the **owner of a small food business** (demo shop: **Kettle & Crow Coffee**, a fictional Seattle coffee shop). They are mid-service, clearing agent-drafted work before anything reaches a customer or supplier. Customers text the shop; they do not use this web UI as their primary surface.
+Durable user the product is built for: the **owner of a small food business** (demo shop: **Yemeni Coffee**). They are mid-service, clearing agent-drafted work before anything reaches a customer or supplier. Customers text the shop; they do not use this web UI as their primary surface.
 
 ## Product Purpose
 
@@ -45,13 +45,14 @@ The control room uses the kitchen **"pass"** metaphor: tickets hang on a rail; n
 
 - Owner token stays server-side; browser never sees `OWNER_TOKEN`.
 - Catalog prices and business rules come from shared seed / server — UI must not invent prices.
-- Product name stays **Back of House**. Demo business name is **Kettle & Crow Coffee** (CONTEXT); seed `data/seed/business.json` may still lag as Larch & Rye until lane 3 finishes the coffee-shop handoff — do not invent a third shop name.
+- Product name stays **Back of House**. Demo business display name is **Yemeni Coffee** (UI). Seed may still say Kettle & Crow until data is updated — chrome uses `SHOP_NAME` in `apps/web`.
 - Open product facts (not for this file to invent): who texts as Maya; multi-track entry rules with organizers.
 
 ## Brand Commitments
 
 - **Product:** Back of House. Customer texts may carry a powered-by footer (`Sent with Back of House · backofhouse.app` in seed).
-- **Demo shop:** Kettle & Crow Coffee (short brand in UI may drop trailing "Coffee").
+- **Demo shop:** Yemeni Coffee.
+- **Visual world:** Arwa-inspired — one warm cream room (no dark/light split), editorial type, messages beside tickets on the pass; reply and restock are separate items.
 - **Voice (shop outbound, from seed):** warm and brief, first name, state the real constraint plainly, at most one emoji, never all caps, sign with the shop name.
 - **Pass metaphor** is intentional product language for this UI, not decoration.
 

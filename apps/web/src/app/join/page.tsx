@@ -65,7 +65,7 @@ export default function JoinPage() {
           initial={reduce ? false : { y: -24, opacity: 0, rotate: -2 }}
           animate={{ y: 0, opacity: 1, rotate: -0.6 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="ticket-paper ticket-shadow relative mt-6 overflow-hidden rounded-[24px] text-ink"
+          className="ticket-paper ticket-strip relative mt-6 overflow-hidden rounded-[20px] text-ink"
         >
                     <div className="px-5 pt-3 pb-5">
             <div className="font-mono text-[11px] tracking-[0.16em] text-ink/60 uppercase">{SHOP_NAME} · iMessage</div>

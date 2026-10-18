@@ -35,7 +35,7 @@ export default function JoinQrPage() {
           owner.
         </p>
       </div>
-      <div className="ticket-paper ticket-shadow relative overflow-hidden rounded-[32px] p-8">
+      <div className="ticket-paper ticket-strip relative overflow-hidden rounded-[24px] p-8">
         {url ? (
           <QRCodeSVG value={url} size={320} bgColor="transparent" fgColor="#1B1714" level="M" marginSize={0} />
         ) : (
