@@ -52,7 +52,7 @@ Lane 3 holds the filled `.env`; ask in team chat for the numbers.
 
 The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env` (gitignored).
 
-**Secrets status (2026-10-17):** `PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, and `OWNER_HANDLE` are set in lane 3's private `.env`. **Square**, **AI Gateway / `AGENT_MODEL`**, `PHOTON_TEST_SENDER`, and `DEMO_PERSONAS` are not filled yet. Do not invent values.
+**Secrets status (2026-10-17, 16:20, demo host):** set: Photon (`PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, `PHOTON_TEST_SENDER`), `OWNER_HANDLE`, Square sandbox (`SQUARE_*`, verified live with a signed webhook), `AI_GATEWAY_API_KEY` (verified live), `SUPABASE_SERVICE_ROLE_KEY`. `AGENT_MODEL` is empty on purpose; the agents default to `google/gemini-2.5-flash-lite`. **Still not filled:** `DEMO_PERSONAS` (waiting on who texts as Maya). Do not invent values.
 
 ## Workspace (live on `main`)
 
@@ -101,6 +101,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Seed: `pnpm seed` (idempotent) and `pnpm reset --yes` (wipes proposals, messages, conversations, events, agent orders, and non-seed customers, then reseeds in ~6 s). `next_sun` resolves to the Sunday after `next_sat`.
 - Ingredient need = that day's committed units plus the requested items, against `on_hand + on_order`. This matches lane 3's `scripts/check-seed.ts`.
 - `inventory.received` is a new event type (simulated supplier delivery).
+- Before validating agent drafts, the server completes a zone-less `neededBy` or `pickupAt` (`"2026-10-23T07:00"`) in the business zone and logs an `agent.step` with `step: "normalize"`. A safety net, not the contract: agents should still emit full ISO times.
 
 ## Photon project (lane 3)
 
