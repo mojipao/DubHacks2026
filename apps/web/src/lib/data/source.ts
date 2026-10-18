@@ -2,6 +2,7 @@ import type {
   ConnectionMode,
   FrictionStats,
   StoreState,
+  UiContact,
   UiConversation,
   UiCustomer,
   UiEvent,
@@ -32,6 +33,11 @@ export type DataSource = {
   simulateInbound(input: { handle: string; name?: string; text: string }): Promise<void>;
   retry(id: string): Promise<void>;
   markPaid(orderId: string): Promise<void>;
+  /** "Customer pays (sandbox)": a real Square sandbox payment in live mode. */
+  customerPays(orderId: string): Promise<{ amountCents?: number }>;
+  listContacts(): Promise<UiContact[]>;
+  /** Older messages in one thread, oldest first, before `before` (a createdAt). */
+  loadHistory(conversationId: string, before?: string): Promise<{ messages: UiMessage[]; hasMore: boolean }>;
   winbackScan(): Promise<number>;
   receiveDelivery(): Promise<void>;
 };

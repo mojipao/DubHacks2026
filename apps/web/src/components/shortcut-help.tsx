@@ -15,7 +15,7 @@ const SHORTCUTS: [string, string][] = [
 export function ShortcutHelp({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="rounded-[28px] border-line bg-white text-fg sm:max-w-md">
+      <DialogContent className="rounded-[24px] border-line bg-surface text-fg sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Keyboard at the pass</DialogTitle>
           <DialogDescription className="text-muted">Nothing leaves the kitchen until you call it.</DialogDescription>

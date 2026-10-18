@@ -146,17 +146,18 @@ export function PassRail({
 
   return (
     <section className="surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[28px]">
-      <div className="relative flex items-center justify-between px-5 pt-3.5 pb-1">
-        <h2 className="text-[28px] leading-none font-medium tracking-[-0.03em] text-fg">The pass</h2>
-        <span className="font-mono text-[12px] text-muted">
-          {pendingCount} pending
-          {hiddenCount > 0 ? ` · +${hiddenCount} more` : ""}
+      <div className="relative flex flex-wrap items-end justify-between gap-2 px-6 pt-5 pb-1">
+        <div>
+          <h1 className="heading text-[30px] text-fg">Waiting for you</h1>
+          <p className="mt-1 text-[14px] text-muted">The agents drafted these. Nothing goes out until you approve it.</p>
+        </div>
+        <span className="text-[13px] font-semibold text-muted">
+          {pendingCount} waiting
+          {hiddenCount > 0 ? ` · ${hiddenCount} more below` : ""}
         </span>
       </div>
 
-      <div className="relative min-h-0 flex-1 overflow-y-auto px-5 pt-2 pb-4">
-        {/* The rail itself: a brushed steel bar the tickets hang from. */}
-        <div className="mt-2 mb-5 h-[5px] rounded-full bg-gradient-to-b from-[#d9d9d9] via-[#bdbdbd] to-[#a8a8a8] shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_2px_5px_rgba(23,23,23,0.15)]" />
+      <div className="relative min-h-0 flex-1 overflow-y-auto px-6 pt-4 pb-6">
 
         {visibleGroups.length === 0 ? (
           state.loaded ? (
@@ -175,14 +176,12 @@ export function PassRail({
                   {children.length > 0 ? (
                     <div className="relative">
                       <div className="mb-3 flex items-center gap-2">
-                        <span className="badge-lime gap-1.5">
+                        <span className="badge-brand">
                           <Link2 className="size-3.5" />
-                          Linked · one decision
+                          These go together
                         </span>
-                        <span className="h-px flex-1 bg-line-strong" />
+                        <span className="text-[13px] text-muted">Approve both and the reply and restock go out in one step.</span>
                       </div>
-                      {/* Rail clip: one bar spanning the pair, so they read as one decision. */}
-                      <div className="pointer-events-none absolute top-[38px] right-8 left-8 z-20 hidden h-[4px] rounded-full bg-lime ring-1 ring-ink/15 md:block" />
                       <div className="grid gap-3 md:grid-cols-2">
                         {ticket(parent, {
                           onApproveBoth: () =>
@@ -210,13 +209,6 @@ export function PassRail({
 
         <DoneStrip tickets={done} onOpen={(id) => setDrawerId(id)} />
 
-        <p className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] text-muted">
-          {[["A", "approve"], ["E", "edit"], ["R", "reject"], ["J/K", "focus"], ["S", "simulator"], ["?", "help"]].map(([k, v]) => (
-            <span key={k}>
-              <kbd className="rounded border border-line-strong bg-white px-1 text-fg/80">{k}</kbd> {v}
-            </span>
-          ))}
-        </p>
       </div>
 
       <TicketDrawer

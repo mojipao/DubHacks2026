@@ -1,9 +1,10 @@
 import { PAYMENT_LINK_TOKEN, type ReplyPayload, type ReorderPayload } from "@boh/shared";
 import recipesJson from "../../../../../data/seed/recipes.json";
-import { BUSINESS, PRODUCT_NAMES, PRODUCT_PRICES } from "@/lib/business";
+import { BRAND_SHORT, BUSINESS, PRODUCT_NAMES, PRODUCT_PRICES } from "@/lib/business";
 import { computeFriction } from "@/lib/data/friction";
 import type { DataSnapshot, DataSource } from "@/lib/data/source";
-import type { UiEvent, UiMessage, UiOrder, UiProposal } from "@/lib/data/types";
+import type { ContactStage, UiContact, UiEvent, UiMessage, UiOrder, UiProposal } from "@/lib/data/types";
+import { maskHandle } from "@/lib/format";
 import {
   FIXTURE_CONVERSATIONS,
   FIXTURE_CUSTOMER_LIST,
@@ -86,6 +87,8 @@ function priceOrder(order: ReplyPayload["orders"][number]) {
 export function createMockSource(): DataSource {
   const snap = cloneSnapshot();
   const listeners = new Set<(patch: Partial<DataSnapshot>) => void>();
+  /** order id → its proposal's payment link, so a split counteroffer pays as one, like on the server. */
+  const paymentLinkOf = new Map<string, string>();
 
   const log = (e: Omit<UiEvent, "id" | "at"> & { at?: string }) => {
     snap.events = [{ id: uid("evt"), at: e.at ?? new Date().toISOString(), ...e }, ...snap.events].slice(0, 500);
@@ -150,6 +153,7 @@ export function createMockSource(): DataSource {
           })),
         };
         snap.orders = [...snap.orders, order];
+        paymentLinkOf.set(order.id, link);
         log({ actor: "system", type: "order.created", subjectType: "order", subjectId: order.id, data: { proposalId: p.id } });
       }
       let text = editedText ?? payload.text;
@@ -219,6 +223,36 @@ export function createMockSource(): DataSource {
     return ids;
   };
 
+  /** Paid: flip the order (both halves of a split share a link, as on the server) and deduct stock. */
+  const settle = (orderId: string, actor: string, via: string) => {
+    const link = paymentLinkOf.get(orderId);
+    const paying = snap.orders.filter(
+      (o) => o.status === "awaiting_payment" && (o.id === orderId || (link !== undefined && paymentLinkOf.get(o.id) === link)),
+    );
+    if (paying.length === 0) return;
+    const at = new Date().toISOString();
+    const ids = new Set(paying.map((o) => o.id));
+    snap.orders = snap.orders.map((o) => (ids.has(o.id) ? { ...o, status: "paid" as const, paidAt: at } : o));
+    // Same deduction as the server's settle path, from the seed recipes.
+    const deduct = new Map<string, number>();
+    for (const order of paying) {
+      log({ actor, type: "order.paid", subjectType: "order", subjectId: order.id, data: { via } });
+      for (const item of order.items) {
+        for (const line of recipesJson.filter((r) => r.productId === item.productId)) {
+          deduct.set(line.ingredientId, (deduct.get(line.ingredientId) ?? 0) + item.qty * line.qtyPerUnit);
+        }
+      }
+    }
+    snap.ingredients = snap.ingredients.map((ing) => {
+      const amount = deduct.get(ing.id);
+      return amount ? { ...ing, onHand: Math.max(0, Math.round((ing.onHand - amount) * 1000) / 1000) } : ing;
+    });
+    for (const [ingredientId, amount] of deduct) {
+      log({ actor: "system", type: "inventory.deducted", subjectType: "ingredient", subjectId: ingredientId, data: { amount: Math.round(amount * 1000) / 1000, orderIds: [...ids] } });
+    }
+    commit("orders", "ingredients", "events");
+  };
+
   /** The owner texting the shop line: Y approves, N rejects, ? lists. Mirrors the server's parser. */
   const ownerCommand = async (conversationId: string, raw: string) => {
     const [verbRaw, code] = raw.trim().split(/\s+/);
@@ -285,27 +319,58 @@ export function createMockSource(): DataSource {
       commit("proposals", "events", "messages", "orders", "ingredients");
     },
     async markPaid(orderId) {
-      const order = snap.orders.find((o) => o.id === orderId);
-      if (!order || order.status !== "awaiting_payment") return;
-      const at = new Date().toISOString();
-      snap.orders = snap.orders.map((o) => (o.id === orderId ? { ...o, status: "paid" as const, paidAt: at } : o));
-      log({ actor: "owner", type: "order.paid", subjectType: "order", subjectId: orderId, data: { via: "dev/mark-paid" } });
-      // Same deduction as the server's settle path, from the seed recipes.
-      const deduct = new Map<string, number>();
-      for (const item of order.items) {
-        for (const line of recipesJson.filter((r) => r.productId === item.productId)) {
-          deduct.set(line.ingredientId, (deduct.get(line.ingredientId) ?? 0) + item.qty * line.qtyPerUnit);
-        }
-      }
-      snap.ingredients = snap.ingredients.map((ing) => {
-        const amount = deduct.get(ing.id);
-        return amount ? { ...ing, onHand: Math.max(0, Math.round((ing.onHand - amount) * 1000) / 1000) } : ing;
-      });
-      for (const [ingredientId, amount] of deduct) {
-        log({ actor: "system", type: "inventory.deducted", subjectType: "ingredient", subjectId: ingredientId, data: { amount: Math.round(amount * 1000) / 1000, orderIds: [orderId] } });
-      }
-      commit("orders", "ingredients", "events");
+      settle(orderId, "owner", "dev/mark-paid");
     },
+    async customerPays(orderId) {
+      const order = snap.orders.find((o) => o.id === orderId);
+      if (!order || order.status !== "awaiting_payment") {
+        throw Object.assign(new Error("This order is already paid"), { status: 409 });
+      }
+      await sleep(700);
+      settle(orderId, "square", "square-sandbox");
+      return { amountCents: order.totalCents - order.discountCents };
+    },
+    async listContacts() {
+      return snap.conversations.map((c): UiContact => {
+        const msgs = snap.messages.filter((m) => m.conversationId === c.id);
+        const last = msgs.at(-1);
+        const orders = snap.orders.filter((o) => c.customerId && o.customerId === c.customerId);
+        const agent = orders.filter((o) => o.source === "agent");
+        const paidCents = agent.filter((o) => o.status === "paid" || o.status === "fulfilled").reduce((n, o) => n + o.totalCents - o.discountCents, 0);
+        const awaitingCents = agent.filter((o) => o.status === "awaiting_payment").reduce((n, o) => n + o.totalCents - o.discountCents, 0);
+        // Mock regulars: the seeded personas with long histories.
+        const historyOrders = c.customerId === "cust-maya" ? 14 : c.customerId === "cust-elena" ? 7 : orders.filter((o) => o.source === "history").length;
+        const stage: ContactStage =
+          c.role === "owner" ? "owner" : paidCents > 0 ? "paid" : agent.length > 0 ? "ordered" : historyOrders >= 6 ? "regular" : "lead";
+        return {
+          conversationId: c.id,
+          customerId: c.customerId,
+          name: c.customerName,
+          handle: c.handle,
+          handleMasked: maskHandle(c.handle),
+          role: c.role,
+          platform: c.platform,
+          stage,
+          firstSeenAt: msgs[0]?.createdAt ?? c.lastMessageAt,
+          lastMessageAt: c.lastMessageAt,
+          lastMessage: last ? { direction: last.direction, body: last.body, at: last.createdAt } : null,
+          messages: {
+            inbound: msgs.filter((m) => m.direction === "inbound").length,
+            outbound: msgs.filter((m) => m.direction === "outbound").length,
+          },
+          pendingTickets: snap.proposals.filter((p) => p.conversationId === c.id && p.status === "pending").length,
+          orders: { agentOrders: agent.length, paidCents, awaitingCents, historyOrders },
+        };
+      });
+    },
+    async loadHistory(conversationId, before) {
+      // Mock mode already holds every message, so there is nothing earlier to page in.
+      const messages = snap.messages.filter(
+        (m) => m.conversationId === conversationId && (!before || Date.parse(m.createdAt) < Date.parse(before)),
+      );
+      return { messages, hasMore: false };
+    },
+
     async winbackScan() {
       const elena = snap.customers.find((c) => c.id === "cust-elena");
       if (!elena || snap.proposals.some((p) => p.agent === "winback" && p.status === "pending")) {
@@ -340,15 +405,15 @@ export function createMockSource(): DataSource {
         parentProposalId: null,
         title: "Win back Elena",
         summary: "Lapsed regular: her usual with the welcome-back perk.",
-        rationale: "Elena came every other Saturday for four months, then stopped. Offer her rye loaf, 10% off.",
+        rationale: "Elena came every other Saturday for four months, then stopped. Offer her usual cold brew, 10% off.",
         payload: {
-          text: `Hi Elena, it's been a while. Want a rye loaf set aside for Saturday? 10% off to welcome you back. ${PAYMENT_LINK_TOKEN}\n— Larch & Rye`,
-          orders: [{ items: [{ productId: "rye-loaf", qty: 1 }], pickupAt: FIXTURE_SAT_PICKUP, perk: "welcome_back_10" }],
+          text: `Hi Elena, it's been a while. Want your cold brew on us at 10% off this Saturday? ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+          orders: [{ items: [{ productId: "cold-brew", qty: 1 }, { productId: "cardamom-knot", qty: 1 }], pickupAt: FIXTURE_SAT_PICKUP, perk: "welcome_back_10" }],
         },
         evidence: [
           { label: "Cadence", value: "Every 14 days for four months", source: { table: "customers", id: elena.id } },
           { label: "Last order", value: "6 weeks ago (3× her usual gap)", source: { table: "orders", id: "elena-last" } },
-          { label: "Usual", value: "1× rye loaf", source: { table: "orders", id: "elena-last" } },
+          { label: "Usual", value: "1× cold brew, 1× cardamom knot", source: { table: "orders", id: "elena-last" } },
         ],
         reads: [
           { table: "customers", id: elena.id },
@@ -367,7 +432,7 @@ export function createMockSource(): DataSource {
       };
       const steps = [
         { step: "context", ms: 64, summary: "30 customers with history, 1 overdue past 2.5x their own cadence", reads: [{ table: "customers", id: elena.id }] },
-        { step: "plan", ms: 12, summary: "Elena: every 14 days for four months, last order 6 weeks ago; usual is a rye loaf", reads: [{ table: "orders", id: "elena-last" }] },
+        { step: "plan", ms: 12, summary: "Elena: every 14 days for four months, last order 6 weeks ago; usual is a cold brew", reads: [{ table: "orders", id: "elena-last" }] },
         { step: "draft", ms: 410, summary: "Personal note with her usual and the welcome-back 10%", reads: [] },
       ];
       for (const st of steps) {

@@ -1,18 +1,19 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { CalendarClock, MessagesSquare, ReceiptText } from "lucide-react";
+import { CalendarClock, ClipboardCheck, MessagesSquare, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type View = "pass" | "conversations" | "today";
+export type View = "pass" | "conversations" | "customers" | "today";
 
-export const VIEWS: { id: View; label: string; key: string; icon: typeof ReceiptText }[] = [
-  { id: "pass", label: "The pass", key: "1", icon: ReceiptText },
-  { id: "conversations", label: "Conversations", key: "2", icon: MessagesSquare },
-  { id: "today", label: "Today", key: "3", icon: CalendarClock },
+export const VIEWS: { id: View; label: string; key: string; icon: typeof ClipboardCheck; hint: string }[] = [
+  { id: "pass", label: "Approve", key: "1", icon: ClipboardCheck, hint: "Replies and restocks waiting for you" },
+  { id: "conversations", label: "Messages", key: "2", icon: MessagesSquare, hint: "Every text thread" },
+  { id: "customers", label: "Customers", key: "3", icon: Users, hint: "Everyone who has texted, and whether they ordered" },
+  { id: "today", label: "Today", key: "4", icon: CalendarClock, hint: "Pickups, money, stock, time saved" },
 ];
 
-/** Top-level switch between the pass, conversations, and the day's pickups and stock. */
+/** The four views. A cherry badge means something is waiting on the owner. */
 export function ViewTabs({
   view,
   onChange,
@@ -20,12 +21,11 @@ export function ViewTabs({
 }: {
   view: View;
   onChange: (view: View) => void;
-  /** Badge per tab; `alert` tints it saffron (something needs the owner). */
   counts: Record<View, { n: number; alert?: boolean }>;
 }) {
   const reduce = useReducedMotion();
   return (
-    <nav role="tablist" aria-label="Control room views" className="flex items-center gap-1 px-3 pb-2.5">
+    <nav role="tablist" aria-label="Views" className="flex items-center gap-1 overflow-x-auto">
       {VIEWS.map((v) => {
         const active = v.id === view;
         const c = counts[v.id];
@@ -37,16 +37,16 @@ export function ViewTabs({
             aria-selected={active}
             aria-controls={`view-${v.id}`}
             onClick={() => onChange(v.id)}
-            title={`${v.label} (${v.key})`}
+            title={`${v.hint} (${v.key})`}
             className={cn(
-              "relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors",
-              active ? "text-white" : "text-muted hover:bg-white hover:text-fg",
+              "relative flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[14px] font-semibold tracking-wide uppercase transition-colors",
+              active ? "text-ink" : "text-muted hover:text-fg",
             )}
           >
             {active && (
               <motion.span
                 layoutId="view-tab-pill"
-                className="absolute inset-0 rounded-full bg-ink"
+                className="absolute inset-0 rounded-full bg-ticket"
                 transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 38 }}
               />
             )}
@@ -55,8 +55,8 @@ export function ViewTabs({
             {c.n > 0 && (
               <span
                 className={cn(
-                  "relative min-w-5 rounded-full px-1.5 text-center font-mono text-[11px] leading-5 tabular-nums",
-                  c.alert ? "bg-lime text-ink" : active ? "bg-white/20 text-white" : "bg-white text-fg/80",
+                  "relative min-w-5 rounded-full px-1.5 text-center text-[12px] leading-5 font-bold tabular-nums",
+                  c.alert ? "bg-cherry text-white" : active ? "bg-ink/10 text-ink" : "bg-surface-2 text-fg/80",
                 )}
               >
                 {c.n}
@@ -65,11 +65,6 @@ export function ViewTabs({
           </button>
         );
       })}
-      <span className="ml-auto hidden font-mono text-[11px] text-muted lg:inline">
-        <kbd className="rounded border border-line-strong bg-white px-1 text-fg/80">1</kbd>
-        <kbd className="ml-0.5 rounded border border-line-strong bg-white px-1 text-fg/80">2</kbd>
-        <kbd className="ml-0.5 rounded border border-line-strong bg-white px-1 text-fg/80">3</kbd> switch views
-      </span>
     </nav>
   );
 }

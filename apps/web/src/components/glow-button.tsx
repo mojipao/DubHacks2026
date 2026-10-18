@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 // Bright lamp colors: these glow against a black pill, so they're lighter than the text-safe status tokens.
 const TONES = {
-  lime: "var(--lime)",
+  cherry: "#ff4a3d",
   amber: "#ffb53d",
   basil: "#3ee07f",
   tomato: "#ff5a36",
@@ -16,10 +16,10 @@ const TONES = {
 export type GlowTone = keyof typeof TONES;
 
 /**
- * Black Nova pill with colored glow lamps on hover and focus. `asChild` renders a Link or <a> as the face.
+ * Glass pill with colored glow lamps on hover and focus. `asChild` renders a Link or <a> as the face.
  */
 export function GlowButton({
-  tone = "lime",
+  tone = "cherry",
   size = "md",
   block = false,
   asChild = false,

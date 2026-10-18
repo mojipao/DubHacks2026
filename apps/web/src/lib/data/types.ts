@@ -133,3 +133,23 @@ export type StoreState = {
   focusedProposalId: string | null;
   now: string;
 };
+
+export type ContactStage = "owner" | "lead" | "ordered" | "paid" | "regular";
+
+/** One person who has texted the shop, as lane 2's GET /contacts returns it. */
+export type UiContact = {
+  conversationId: string;
+  customerId: string | null;
+  name: string | null;
+  handle: string;
+  handleMasked: string;
+  role: "customer" | "owner";
+  platform: "imessage" | "simulated";
+  stage: ContactStage;
+  firstSeenAt: string;
+  lastMessageAt: string;
+  lastMessage: { direction: "inbound" | "outbound"; body: string; at: string } | null;
+  messages: { inbound: number; outbound: number };
+  pendingTickets: number;
+  orders: { agentOrders: number; paidCents: number; awaitingCents: number; historyOrders: number };
+};

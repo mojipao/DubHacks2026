@@ -29,7 +29,7 @@ export function EmptyPass({ onOpenSim }: { onOpenSim: () => void }) {
           </motion.div>
         ))}
       </div>
-      <p className="max-w-sm text-[28px] leading-tight font-medium tracking-[-0.03em] text-fg">Quiet at the pass.</p>
+      <p className="max-w-sm text-[28px] leading-tight heading text-fg">All caught up.</p>
       <p className="mt-1 max-w-sm text-[14px] text-muted">
         Text the shop to see the agents work. Every reply waits here for your call.
       </p>

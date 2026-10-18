@@ -9,6 +9,9 @@ import type {
 } from "@boh/shared";
 import {
   approveProposal,
+  customerPays,
+  fetchContacts,
+  fetchHistory,
   markPaid,
   receiveDelivery,
   rejectProposal,
@@ -21,6 +24,7 @@ import { computeFriction } from "@/lib/data/friction";
 import type { DataSnapshot, DataSource } from "@/lib/data/source";
 import type {
   ConnectionMode,
+  UiContact,
   UiConversation,
   UiCustomer,
   UiEvent,
@@ -417,6 +421,32 @@ export function createLiveSource(): DataSource {
     async markPaid(orderId) {
       await markPaid(orderId);
       scheduleRefresh();
+    },
+    async customerPays(orderId) {
+      const res = await customerPays(orderId);
+      scheduleRefresh();
+      return { amountCents: res.amountCents };
+    },
+    async listContacts() {
+      return (await fetchContacts<UiContact>()).contacts;
+    },
+    async loadHistory(conversationId, before) {
+      const res = await fetchHistory<{ id: string; direction: UiMessage["direction"]; body: string; status: string; created_at: string }>(
+        conversationId,
+        before,
+      );
+      return {
+        hasMore: res.hasMore,
+        messages: res.messages.map((m) => ({
+          id: m.id,
+          conversationId,
+          direction: m.direction,
+          body: m.body,
+          status: m.status,
+          createdAt: m.created_at,
+          approvedByOwner: m.direction === "outbound",
+        })),
+      };
     },
     async winbackScan() {
       const { created } = await runWinbackScan();
