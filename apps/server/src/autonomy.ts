@@ -5,6 +5,7 @@ import { env } from "./env.ts";
 import { logEvent } from "./events.ts";
 import { approve, perkEligible, sendAndRecord } from "./execute.ts";
 import { contains, declaredAllergies, productFacts } from "./facts.ts";
+import { conversationNeedsName, isUnnamed, withNameAsk } from "./identity.ts";
 import { storeDrafts } from "./inbound.ts";
 
 /**
@@ -23,18 +24,28 @@ const HOLD_HOURS = 24;
 const agentMaySend = (d: ProposalDraft) =>
   d.kind === "reply" && d.payload.orders.length === 0 && d.parentIndex === undefined && !d.riskFlags.some((f) => OWNER_ONLY.has(f));
 
+async function askNameOnDrafts(raw: unknown[], conversationId: string): Promise<unknown[]> {
+  if (!(await conversationNeedsName(conversationId))) return raw;
+  return raw.map((r) => {
+    const p = ProposalDraft.safeParse(r);
+    if (!p.success || p.data.kind !== "reply" || p.data.payload.orders.length > 0) return r;
+    return { ...p.data, payload: { ...p.data.payload, text: withNameAsk(p.data.payload.text) } };
+  });
+}
+
 /** Decides what happens to one agent run's drafts. */
 export async function routeDrafts(raw: unknown[], conversationId: string, messageId: string) {
-  if (!autonomyOn()) return void (await storeDrafts(raw, conversationId, messageId));
+  const named = await askNameOnDrafts(raw, conversationId);
+  if (!autonomyOn()) return void (await storeDrafts(named, conversationId, messageId));
 
-  const parsed = raw.map((r) => ProposalDraft.safeParse(r));
+  const parsed = named.map((r) => ProposalDraft.safeParse(r));
   const drafts = parsed.flatMap((p) => (p.success ? [p.data] : []));
   const order = drafts.find((d) => d.kind === "reply" && d.payload.orders.length > 0 && d.parentIndex === undefined);
   const guarded = drafts.some((d) => d.riskFlags.some((f) => ["injection_suspected", "off_policy", "abusive"].includes(f)));
 
   if (order && order.kind === "reply" && !guarded) return holdOrder(raw, order, conversationId, messageId);
 
-  const ids = await storeDrafts(raw, conversationId, messageId, { quiet: agentMaySend });
+  const ids = await storeDrafts(named, conversationId, messageId, { quiet: agentMaySend });
   for (const [i, id] of ids.entries()) {
     const p = parsed[i];
     if (!id || !p?.success || !agentMaySend(p.data)) continue;
@@ -67,7 +78,8 @@ function pickupLabel(iso: string): string {
 /** Builds the check-in from data only: no model writes it, so nothing in it can be invented. */
 async function checkInText(order: Extract<ProposalDraft, { kind: "reply" }>, conversationId: string) {
   const { data: conv } = await db().from("conversations").select("customer_id, customers(name, notes)").eq("id", conversationId).single();
-  const name = conv?.customers?.name?.split(" ")[0];
+  const fullName = conv?.customers?.name;
+  const name = !isUnnamed(fullName) ? fullName?.split(" ")[0] : undefined;
   const ids = [...new Set(order.payload.orders.flatMap((o) => o.items.map((i) => i.productId)))];
   const { data: products } = await db().from("products").select("id, name, price_cents").in("id", ids);
   const byId = new Map((products ?? []).map((p) => [p.id, p]));
@@ -98,7 +110,7 @@ async function checkInText(order: Extract<ProposalDraft, { kind: "reply" }>, con
       : "";
 
   return [
-    `${name ? `Hi ${name}, b` : "B"}efore I send this over, here's what I have:`,
+    name ? `Hi ${name}, before I send this over, here's what I have:` : "What's your name? Before I send this over, here's what I have:",
     ...lines,
     order.payload.orders.length > 1 ? "That's split across two pickups because the first day is nearly full." : null,
     `Total ${money(total)}.${perk}`,

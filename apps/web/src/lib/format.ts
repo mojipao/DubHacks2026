@@ -8,6 +8,15 @@ export function money(cents: number): string {
   }).format(cents / 100);
 }
 
+/** Orders, Calls, and People show a person — never a raw phone number. */
+export function personLabel(name: string | null | undefined, fallback = "New customer"): string {
+  if (!name) return fallback;
+  const n = name.trim();
+  if (!n || /^(new customer|guest|unknown|caller|customer)$/i.test(n)) return fallback;
+  if (/^\+?\d/.test(n) || /••••/.test(n)) return fallback;
+  return n;
+}
+
 export function maskHandle(handle: string | null | undefined): string {
   if (!handle) return "Unknown";
   if (handle.includes("@")) {

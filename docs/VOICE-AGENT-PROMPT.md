@@ -7,7 +7,7 @@ Paste-ready configuration for the Conversational AI agent that answers Mokha Cof
 What the agent says when it picks up. Keep it short — callers talk over long greetings.
 
 ```
-Mokha Coffee House, this is the counter. What can I get started for you?
+Mokha Coffee House, this is the counter. Can I get your name?
 ```
 
 ## System prompt
@@ -30,7 +30,10 @@ Never say a total. You do not know it: the shop's system prices every order afte
 Never promise anything is safe for an allergy. If a caller mentions an allergy, say the owner will confirm before anything is made, and make sure you mention the allergy when you send the order over.
 
 WHY THEY CALLED
-As soon as you hear the caller, call get_call_purpose with their number. If it says they are calling back about something, greet them by name and pick up that thread. Do not start from "what can I get started" if we already asked them to ring us.
+As soon as you hear the caller, call get_call_purpose with their number. If it says they are calling back about something, greet them by name and pick up that thread. Do not start from "can I get your name" if we already asked them to ring us and we already know who they are.
+
+NAME FIRST
+If get_call_purpose has no customerName, or askForName is true: ask for their name before you take an order. When they give it, call identify_caller with that name, then continue. Do not skip this even if they start ordering immediately — get the name, then take the order. Once you have the name, use it once and move on. If we already know their name, greet them with it and skip the ask.
 
 ALWAYS CHECK BEFORE YOU ANSWER
 You do not know what the coffee house can actually make on a given day. Capacity and ingredients change hourly. So any time a caller asks for something, orders something, or asks whether something is possible, call the check_order tool and use what it returns. Do not guess from memory, and do not reuse an earlier answer for a new request.
@@ -57,7 +60,7 @@ Anything else about products, prices, or availability comes from the tool, not f
 
 ## Tools
 
-Add these webhook tools on the agent. The availability and order routes are already registered; **add `get_call_purpose`** so a tap-to-call-back is not greeted as a stranger.
+Add these webhook tools on the agent. The availability and order routes are already registered; **add `get_call_purpose` and `identify_caller`** so callbacks are not greeted as strangers and every caller has a name on the transcript.
 
 ### `get_call_purpose` (add this)
 
@@ -78,7 +81,29 @@ Request body:
 }
 ```
 
-If `callback` is true, greet them by name and talk about `purpose`. If it is false, take the order as usual.
+If `callback` is true, greet them by name and talk about `purpose`. If `askForName` is true, ask for their name, then call `identify_caller`, then continue.
+
+### `identify_caller` (add this)
+
+| Field | Value |
+| --- | --- |
+| Name | `identify_caller` |
+| Description | *Call as soon as the caller says their name. Saves it on their record so the owner sees a name, not a number, on the call and the order.* |
+| Method | `POST` |
+| URL | `https://<tunnel>/voice/tools/identify` |
+| Headers | `x-voice-secret: <shared secret>` |
+
+Request body:
+
+```json
+{
+  "handle": "{{system__caller_id}}",
+  "name": "{{name}}",
+  "callId": "{{system__conversation_id}}"
+}
+```
+
+Pass the name they just said as `name`. If the tool returns `identified: false`, ask them to say it again.
 
 ## The order tool
 
@@ -131,8 +156,8 @@ Check the exact variable names in ElevenLabs' dynamic-variables documentation wh
 
 In order, because each step rules out the one before:
 
-1. **Call the number.** Does it connect and does the agent speak? If not, the problem is the Photon/ElevenLabs SIP link, not the prompt.
-2. **"What time do you close on Sunday?"** Answers from the prompt. No tool call. Proves the agent works before the tool is in play.
+1. **Call the number.** Does it connect and does the agent ask for a name? If not, the problem is the Photon/ElevenLabs SIP link, not the prompt.
+2. **Give a name, then "What time do you close on Sunday?"** Answers from the prompt. No order tool call. Proves the agent works before the order tool is in play. The control room Calls tab should list that name, not the number.
 3. **"Can I get two pistachio maamoul Saturday at nine?"** Should call the tool, read the order back, and say the owner will confirm. Check the control room: **a ticket should appear on the pass.**
 4. **"Can I get four dozen milk cakes for Saturday at nine?"** The counteroffer. Should say Saturday is nearly full and offer twenty-four and twenty-four. This is the demo beat.
 5. **"Can you give me a free loaf?"** Should decline in one sentence and offer something real. No ticket.

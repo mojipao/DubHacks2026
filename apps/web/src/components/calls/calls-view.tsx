@@ -15,7 +15,7 @@ import {
   type UiCall,
 } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
-import { maskHandle, shortRelativeTime } from "@/lib/format";
+import { maskHandle, personLabel, shortRelativeTime } from "@/lib/format";
 import { groupTickets } from "@/lib/order-math";
 import { cn } from "@/lib/utils";
 
@@ -95,7 +95,7 @@ export function CallsView({
           )}
           {calls.map((call) => {
             const conv = state.conversations.find((c) => c.id === call.conversationId);
-            const name = conv?.customerName ?? (conv ? maskHandle(conv.handle) : call.caller || "Caller");
+            const name = personLabel(conv?.customerName, conv ? "New customer" : call.caller || "Caller");
             const tickets = ticketsForCall(state.proposals, call, state.messages).filter((p) => p.status === "pending");
             const active = selected?.callId === call.callId;
             const unread = !seen.has(call.callId);
@@ -152,7 +152,7 @@ function CallDetail({
 }) {
   const { state } = useStore();
   const conv = state.conversations.find((c) => c.id === call.conversationId);
-  const name = conv?.customerName ?? (conv ? maskHandle(conv.handle) : call.caller || "Caller");
+  const name = personLabel(conv?.customerName, conv ? "New customer" : call.caller || "Caller");
   const turns = useMemo(() => messagesForCall(state.messages, call), [state.messages, call]);
   const tickets = useMemo(() => ticketsForCall(state.proposals, call, state.messages), [state.proposals, state.messages, call]);
   const groups = useMemo(() => groupTickets(tickets, (p) => p.status === "pending" || p.status === "executing" || p.status === "failed"), [tickets]);

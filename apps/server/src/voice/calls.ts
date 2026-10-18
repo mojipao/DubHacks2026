@@ -2,6 +2,7 @@ import { db } from "../db.ts";
 import { env } from "../env.ts";
 import { HttpError } from "../execute.ts";
 import { logEvent } from "../events.ts";
+import { ensureCustomer, nameFromCallTurns, rememberCustomerName } from "../identity.ts";
 import { maskHandle, normalizeHandle } from "../inbound.ts";
 
 /**
@@ -65,11 +66,11 @@ async function callConversation(caller: string): Promise<string> {
     .eq("role", "customer")
     .maybeSingle();
   if (existing) return existing.id;
-  const { data: customer } = await db().from("customers").select("id").eq("handle", handle).maybeSingle();
+  const customerId = await ensureCustomer(handle);
   // Calls are a customer channel, even when a teammate tests from the owner's phone.
   const { data, error } = await db()
     .from("conversations")
-    .insert({ handle, customer_id: customer?.id ?? null, platform: "simulated", role: "customer" })
+    .insert({ handle, customer_id: customerId, platform: "simulated", role: "customer" })
     .select("id")
     .single();
   if (error) throw new Error(`create call conversation: ${error.message}`);
@@ -100,6 +101,8 @@ async function importCall(callId: string): Promise<boolean> {
   }
   const endedAt = new Date(startedAt + call.metadata.call_duration_secs * 1000).toISOString();
   await db().from("conversations").update({ last_message_at: endedAt }).eq("id", conversationId);
+  const guessed = nameFromCallTurns(turns);
+  if (guessed) await rememberCustomerName(caller, guessed, conversationId);
   await logEvent("system", "call.transcribed", { type: "conversation", id: conversationId }, {
     callId,
     caller: maskHandle(caller),

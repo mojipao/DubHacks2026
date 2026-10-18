@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 20:50 PT · lane 2 → lane 3 · Ask for a name first (voice + text)
+**Status:** open
+**Where:** `docs/VOICE-AGENT-PROMPT.md`; `POST /voice/tools/identify`; `POST /voice/tools/purpose` now returns `askForName`
+**What:** The phone agent must ask for a name before taking an order, then call `identify_caller`. Paste the updated first message and system prompt. Add webhook tool `identify_caller` → `POST <tunnel>/voice/tools/identify` with `{ handle: "{{system__caller_id}}", name: "<what they said>", callId: "{{system__conversation_id}}" }`. `get_call_purpose` now includes `askForName` / `customerName`. Text already prepends "What's your name?" in `apps/server/src/autonomy.ts` when the customer is unnamed — no agent package change required, though `DRAFT_SYSTEM` may also say to ask if you want the model to do it itself.
+**Why it matters:** Orders and Calls were listing a phone number because unnamed inbound never created a `customers.name`.
+**Suggested fix:** Register `identify_caller`, paste the new first message ("Can I get your name?"), and call `get_call_purpose` then `identify_caller` as the prompt says.
+
 ### 2026-10-17 20:40 PT · lane 2 → lane 1, lane 3 · Calls tab + tap-to-call-back
 **Status:** open
 **Where:** `apps/web/src/components/calls/calls-view.tsx`, `view-tabs.tsx` (Calls is key 4; Ask is 5), `control-room.tsx`, `people/people-view.tsx`; `POST /voice/tools/purpose`; `docs/VOICE-AGENT-PROMPT.md`

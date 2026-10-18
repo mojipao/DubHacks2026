@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useStore } from "@/lib/data/store";
 import type { UiEvent } from "@/lib/data/types";
-import { maskHandle, shortRelativeTime } from "@/lib/format";
+import { personLabel, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type Line = { id: string; at: string; text: string; tone: "fg" | "basil" | "cherry" | "sky" | "crema" };
@@ -17,7 +17,7 @@ export function Activity({ limit = 8 }: { limit?: number }) {
       const c = state.conversations.find((x) => x.id === id);
       if (!c) return "A customer";
       if (c.role === "owner") return "You";
-      return c.customerName?.split(" ")[0] ?? maskHandle(c.handle);
+      return personLabel(c.customerName).split(" ")[0];
     };
     const kindOf = (id: string | null) => state.proposals.find((p) => p.id === id)?.kind;
     const say = (e: UiEvent): Omit<Line, "id" | "at"> | null => {

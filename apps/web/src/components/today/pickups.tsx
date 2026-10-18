@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/data/store";
 import { BUSINESS } from "@/lib/business";
-import { addDaysKey, localDateKey, money } from "@/lib/format";
+import { addDaysKey, localDateKey, money, personLabel } from "@/lib/format";
 import { usePay } from "@/lib/use-pay";
 import { cn } from "@/lib/utils";
 
@@ -84,7 +84,7 @@ export function PickupsBoard() {
                 <span className="pt-0.5 text-[15px] font-bold text-ink tabular">{time}</span>
                 <div className="min-w-0">
                   <div className="flex items-baseline text-[15px]">
-                    <span className="min-w-0 truncate font-semibold text-ink">{o.customerName ?? "Guest"}</span>
+                    <span className="min-w-0 truncate font-semibold text-ink">{personLabel(o.customerName)}</span>
                     <span className="leader" aria-hidden />
                     {o.status === "paid" ? (
                       <span className="shrink-0 font-semibold text-terrace tabular">Paid {money(due)}</span>

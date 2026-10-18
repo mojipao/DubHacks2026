@@ -12,6 +12,7 @@ import { logEvent } from "../events.ts";
 import { agentContext, ingestInbound, storeDrafts } from "../inbound.ts";
 import { localDateOf, resolveSpokenDay, weekdayOf } from "../time.ts";
 import { productFacts } from "../facts.ts";
+import { isUnnamed, parseGivenName, rememberCustomerName } from "../identity.ts";
 import { consumeCallback, phoneKeys } from "../voice/callback.ts";
 import { linkCall } from "../voice/calls.ts";
 import { maskHandle, normalizeHandle } from "../inbound.ts";
@@ -220,24 +221,53 @@ voice.post("/tools/purpose", async (c) => {
   const pending = await consumeCallback(handle, body.data.callId);
   const name = pending?.name ?? customer?.name ?? null;
   const purpose = pending?.purpose ?? null;
+  const known = !isUnnamed(name);
 
   if (pending) {
     return c.json({
-      say: `This is ${name ?? "our customer"} calling back about ${purpose}. Greet them by name and pick up that thread; don't start from scratch.`,
+      say: known
+        ? `This is ${name} calling back about ${purpose}. Greet them by name and pick up that thread; don't start from scratch.`
+        : `They are calling back about ${purpose}. Ask for their name first, then call identify_caller, then pick up that thread.`,
       purpose,
-      customerName: name,
+      customerName: known ? name : null,
+      askForName: !known,
       callback: true,
       notes: customer?.notes ?? null,
     });
   }
   return c.json({
-    say: name
-      ? `This is ${name} calling in. Take the order as usual.`
-      : "Inbound call, no callback waiting. Take the order as usual.",
+    say: known
+      ? `This is ${name} calling in. Greet them by name and take the order.`
+      : "Ask for their name first, then call identify_caller with it, then take the order.",
     purpose: null,
-    customerName: name,
+    customerName: known ? name : null,
+    askForName: !known,
     callback: false,
     notes: customer?.notes ?? null,
     caller: maskHandle(handle),
+  });
+});
+
+const IdentifyRequest = z.object({
+  handle: z.string().min(1).optional(),
+  callerHandle: z.string().min(1).optional(),
+  name: z.string().min(1).max(80),
+  callId: z.string().optional(),
+});
+
+/** Saves the name the caller just said so the transcript, Orders, and People list them as a person. */
+voice.post("/tools/identify", async (c) => {
+  const body = IdentifyRequest.safeParse(await c.req.json().catch(() => ({})));
+  if (!body.success) return c.json({ error: z.prettifyError(body.error) }, 400);
+  const raw = body.data.handle ?? body.data.callerHandle ?? "";
+  if (!raw) return c.json({ say: "I don't have the caller's number. Ask for the name anyway and keep going.", identified: false });
+
+  const handle = normalizeHandle(raw);
+  const name = parseGivenName(body.data.name, { theyWereAsked: true }) ?? body.data.name;
+  const saved = await rememberCustomerName(handle, name, null, { trusted: true });
+  return c.json({
+    say: saved ? `Got it, ${saved.name.split(" ")[0]}.` : "I didn't catch that name — ask them to say it again.",
+    customerName: saved?.name ?? null,
+    identified: Boolean(saved),
   });
 });

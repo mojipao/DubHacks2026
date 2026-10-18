@@ -7,6 +7,7 @@ import { db } from "./db.ts";
 import { env } from "./env.ts";
 import { logEvent, type Actor, type Subject } from "./events.ts";
 import { answerHold, routeDrafts } from "./autonomy.ts";
+import { ensureCustomer, parseGivenName, rememberCustomerName, weAskedForName } from "./identity.ts";
 import { handleOwnerCommand, notifyOwner } from "./owner.ts";
 
 export interface InboundMessage {
@@ -58,6 +59,11 @@ export async function ingestInbound(input: InboundMessage): Promise<{ conversati
     .single();
   if (error?.code === "23505") return null;
   if (error) throw new Error(`insert message: ${error.message}`);
+  if (!isOwner) {
+    const asked = await weAskedForName(conversationId);
+    const parsed = parseGivenName(input.text, { theyWereAsked: asked });
+    if (parsed) await rememberCustomerName(handle, parsed, conversationId);
+  }
   // Arm the debounce before the slower bookkeeping so a burst of texts collapses into one run.
   // A YES or NO to the agent's order check-in is answered here, without another agent run.
   const answeredHold = !isOwner && input.runAgents !== false && (await answerHold(conversationId, message.id, input.text));
@@ -80,12 +86,11 @@ export async function ingestInbound(input: InboundMessage): Promise<{ conversati
 }
 
 async function findOrCreateCustomer(handle: string, name?: string): Promise<string | null> {
-  const { data: existing } = await db().from("customers").select("id").eq("handle", handle).maybeSingle();
-  if (existing) return existing.id;
-  if (!name) return null;
-  const { data, error } = await db().from("customers").insert({ name, handle }).select("id").single();
-  if (error) throw new Error(`insert customer: ${error.message}`);
-  return data.id;
+  if (name) {
+    const saved = await rememberCustomerName(handle, name);
+    if (saved) return saved.customerId;
+  }
+  return ensureCustomer(handle);
 }
 
 async function upsertConversation(input: InboundMessage, handle: string, customerId: string | null, isOwner: boolean) {
