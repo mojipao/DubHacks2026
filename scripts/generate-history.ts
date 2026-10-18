@@ -134,7 +134,7 @@ const MAYA_VARIATIONS: Record<number, SeedItem[]> = {
   13: [
     { productId: "almond-croissant", qty: 2 },
     { productId: "oat-latte", qty: 1 },
-    { productId: "sourdough-loaf", qty: 1 },
+    { productId: "cappuccino", qty: 1 },
   ],
 };
 
@@ -191,7 +191,7 @@ orders.push({
   daysAgo: 70,
   pickupLocalTime: "10:00",
   items: [
-    { productId: "sourdough-loaf", qty: 1 },
+    { productId: "cappuccino", qty: 1 },
     { productId: "oat-latte", qty: 1 },
   ],
 });
@@ -211,7 +211,7 @@ for (let i = 0; i < 7; i++) {
     kind: "history",
     daysAgo: 42 + i * 14,
     pickupLocalTime: "09:30",
-    items: [{ productId: "rye-loaf", qty: 1 }, { productId: "drip-coffee", qty: 1 }, ...extras],
+    items: [{ productId: "cold-brew", qty: 1 }, { productId: "drip-coffee", qty: 1 }, ...extras],
   });
 }
 
@@ -241,10 +241,10 @@ const COMMON: readonly string[] = [
   "morning-bun",
   "cardamom-knot",
   "quiche-slice",
-  "sourdough-loaf",
-  "sourdough-loaf",
-  "rye-loaf",
-  "baguette",
+  "cappuccino",
+  "cappuccino",
+  "cold-brew",
+  "mocha",
   "drip-coffee",
   "drip-coffee",
   "oat-latte",
@@ -252,10 +252,10 @@ const COMMON: readonly string[] = [
 ];
 
 const MAX_QTY: Record<string, number> = {
-  "birthday-cake-6": 1,
-  "sourdough-loaf": 2,
-  "rye-loaf": 2,
-  "baguette": 3,
+  "coffee-box": 1,
+  "cappuccino": 2,
+  "cold-brew": 2,
+  "mocha": 3,
   "quiche-slice": 2,
   "oat-latte": 2,
   "drip-coffee": 3,
@@ -272,8 +272,8 @@ for (let n = 0; n < TARGET_HISTORY_ORDERS; n++) {
   const items = new Map<string, number>();
 
   for (let i = 0; i < lineCount; i++) {
-    // A cake is a rare, deliberate purchase, so it never joins the random pastry mix.
-    const productId = rng() < 0.01 ? "birthday-cake-6" : pick(COMMON);
+    // A coffee box is a rare, deliberate purchase, so it never joins the random pastry mix.
+    const productId = rng() < 0.01 ? "coffee-box" : pick(COMMON);
     const cap = MAX_QTY[productId] ?? 4;
     items.set(productId, Math.min(cap, (items.get(productId) ?? 0) + intBetween(1, cap)));
   }
@@ -328,15 +328,15 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     pickupDay: "next_sat",
     at: "11:00",
     items: [
-      { productId: "sourdough-loaf", qty: 2 },
-      { productId: "baguette", qty: 1 },
+      { productId: "cappuccino", qty: 2 },
+      { productId: "mocha", qty: 1 },
     ],
   },
   {
     customer: "Linnea Sorensen",
     pickupDay: "next_sat",
     at: "12:00",
-    items: [{ productId: "birthday-cake-6", qty: 1 }],
+    items: [{ productId: "coffee-box", qty: 1 }],
   },
   {
     customer: "Marcus Ruiz",
@@ -353,7 +353,7 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
     at: "10:30",
     items: [
       { productId: "butter-croissant", qty: 2 },
-      { productId: "sourdough-loaf", qty: 1 },
+      { productId: "cappuccino", qty: 1 },
     ],
   },
   {

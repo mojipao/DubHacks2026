@@ -170,15 +170,14 @@ const USUAL_WORDS = /\b(the\s+usual|my\s+usual|usual\b|same\s+as\s+(last|always)
 const SMALLTALK_WORDS = /^\s*(thanks?|thank\s+you|thx|ty|cool|great|awesome|perfect|ok|okay|sounds\s+good|👍|🙏)[\s!.…]*$/i;
 const DELIVERY_WORDS = /\b(deliver|delivery|doordash|uber\s*eats|ship)\b/i;
 const OFF_TOPIC_WORDS = /\b(what'?s\s+\d+\s*[+\-*/]\s*\d+|weather|capital\s+of|who\s+won|tell\s+me\s+a\s+joke)\b/i;
-const ABUSIVE_WORDS = /\b(fuck|shit|bitch|asshole|idiot|stupid\s+(bakery|shop)|moron)\b/i;
+const ABUSIVE_WORDS = /\b(fuck|shit|bitch|asshole|idiot|stupid\s+(bakery|caf[eé]|coffee\s+shop|shop)|moron)\b/i;
 
 /** Emoji the demo personas actually use. "🥐🥐☕️ sat?" has to resolve to something. */
 const EMOJI_PRODUCTS: Record<string, string> = {
   "🥐": "butter-croissant",
   "☕": "drip-coffee",
-  "🥖": "baguette",
-  "🍞": "sourdough-loaf",
-  "🎂": "birthday-cake-6",
+  "🧋": "cold-brew",
+  "🍫": "mocha",
   "🧁": "morning-bun",
 };
 
@@ -228,7 +227,7 @@ function resolvePickup(text: string, todayLocal: string, timezone: string): stri
     const meridiem = explicit[3];
     if (meridiem === "pm" && hour < 12) hour += 12;
     if (meridiem === "am" && hour === 12) hour = 0;
-    // No am/pm on a bakery order means the morning, unless that would be before opening.
+    // No am/pm on a coffee shop order means the morning, unless that would be before opening.
     if (!meridiem && hour < 7) hour += 12;
     time = `${String(hour).padStart(2, "0")}:${minute}`;
   } else if (/\bmorning\b/.test(lower)) time = "09:00";

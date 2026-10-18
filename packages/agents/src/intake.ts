@@ -62,7 +62,7 @@ const ALLERGEN_KEYWORDS: Record<string, readonly string[]> = {
   "cream-cheese": ["dairy", "milk", "lactose"],
   eggs: ["egg"],
   "bread-flour": ["gluten", "wheat"],
-  "rye-flour": ["gluten", "rye"],
+  "whole-milk": ["dairy", "milk", "lactose"],
 };
 
 export async function handleInbound(input: InboundInput, ctx: AgentContext): Promise<ProposalDraft[]> {
@@ -519,15 +519,15 @@ function composeReply(args: DraftArgs): string {
     `${line.qty} ${(catalog.find((p) => p.id === line.productId)?.name ?? line.productId).toLowerCase()}`;
 
   if (flags.has("injection_suspected") || flags.has("off_policy")) {
-    const sourdough = catalog.find((p) => p.id === "sourdough-loaf");
-    const offer = sourdough ? ` Our ${sourdough.name.toLowerCase()} is $${(sourdough.priceCents / 100).toFixed(2)} a loaf if you'd like one.` : "";
+    const coldBrew = catalog.find((p) => p.id === "cold-brew");
+    const offer = coldBrew ? ` Our ${coldBrew.name.toLowerCase()} is $${(coldBrew.priceCents / 100).toFixed(2)} if you'd like one.` : "";
     return `${hi} — we can't do that one, sorry.${offer}`;
   }
   if (flags.has("abusive") || reading.abusive) {
     return "We'd rather keep things friendly here. Happy to help if you'd like to order something.";
   }
   if (reading.offTopic) {
-    return "We're just the bakery, so that one's outside our wheelhouse. Can we get you anything from the case?";
+    return "We're just the coffee shop, so that one's outside our wheelhouse. Can we get you a coffee or something from the case?";
   }
   if (reading.intent === "complaint") {
     return `${hi} — sorry that happened. The owner will take a look and get back to you today.`;
