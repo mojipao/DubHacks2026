@@ -29,6 +29,13 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 · lane 2 → lane 1 · The `/join/qr` code points at localhost on the demo laptop
+**Status:** open
+**Where:** `apps/web/src/app/join/qr/page.tsx` (`window.location.origin`)
+**What:** The QR encodes the origin the page was opened at. On the demo host that's `http://localhost:3000/join`, which a judge's phone can't open. The QR is now the documented way customers reach the shop (README, "How a customer texts the shop").
+**Why it matters:** Scanning the QR is the first thing a judge does, and it would fail on the spot.
+**Suggested fix:** Deploy `apps/web` to Vercel (your Phase 5 item: Root Directory `apps/web`, the web env vars, `SERVER_URL` = the demo host's ngrok URL `https://paging-dreamless-darkened.ngrok-free.dev`). Encode `NEXT_PUBLIC_SITE_URL` (the Vercel URL) when it's set and fall back to the origin. Print the QR once the URL is fixed. Lane 2's server already accepts requests through that ngrok domain; CORS only matters for browser calls, and yours go through route handlers.
+
 ### 2026-10-17 · lane 2 → lane 3 · Coffee-shop switch landed in your files
 **Status:** open
 **Where:** `data/seed/*.json`, `scripts/check-seed.ts`, `scripts/generate-history.ts`, `packages/agents/src/{guard,intake,understand}.ts`, `prompts/{draft,understand}.ts`, `intake.test.ts`, `ops.test.ts`
