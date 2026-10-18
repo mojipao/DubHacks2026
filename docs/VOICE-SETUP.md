@@ -21,18 +21,33 @@ That is the point of doing this at all. A voice bot that recites opening hours i
 - Area code **206** is available, which is the right area code for a Seattle bakery.
 - Photon's free plan covers iMessage sends; **a purchased SMS number may bill**. Check the price in the dialog before confirming, and say so in the team chat.
 
-## Part 1 — Photon (about 5 minutes)
+## Part 1 — Photon
 
-1. **Buy the number.** Dashboard at `app.beta.photon.codes` → project `dubhack` → **SMS** → purchase a number, country **US**, area code **206**. Note the number in E.164 (`+1206…`).
-2. **Create the Voice profile.** Go to **Voice**, select the new number, choose a **SIP** profile. Create the default profile if prompted.
-3. **Enable outbound.** Open **Outbound calls** → digest algorithm **SHA-256 (recommended)** → **Enable outbound**.
-   **Copy the generated password immediately — it is shown once.** Put it straight in `.env` as `PHOTON_SIP_PASSWORD`, never in git or chat. Also note the SIP connection host, `sip.photon.codes:5061`, and the username shown.
-4. **Configure inbound.** Under **Inbound calls**:
-   - SIP destination: `sips:sip.rtc.elevenlabs.io:5061`
-   - Transport: **TLS**
-   - Credentials: leave empty
-   - Enable inbound
-5. **Media encryption:** set to **Auto**.
+### Already done via the API (2026-10-18)
+
+- **Voice profile created:** `pho_vpf_01m568099cfvhrce1c00vckf7y`, protocol `sip`, media encryption `auto`, currently version 2.
+- **Inbound SIP configured and pointing at ElevenLabs:** `sips:sip.rtc.elevenlabs.io:5061`, no credentials, per the Photon cookbook. Photon will hand an incoming call straight to ElevenLabs.
+
+Nothing above needs redoing. Confirm any time with:
+
+```bash
+node --env-file=.env -e 'const P=process.env.PHOTON_PROJECT_ID,K=process.env.PHOTON_API_KEY;fetch(`https://api.photon.codes/v1/projects/${P}/platforms/voice/profiles`,{headers:{authorization:`Bearer ${K}`}}).then(r=>r.json()).then(j=>console.log(JSON.stringify(j,null,1)))'
+```
+
+### Blocked on a payment method — needs a human
+
+The project has **no phone number** (`lineCount: 0`), and Photon will not provision one without a card on the organization. Enabling outbound SIP returns:
+
+```
+402 ENTITLEMENT_REQUIRED
+"Outbound calling requires a payment method on the project's organization"
+```
+
+1. **Add a payment method.** `app.beta.photon.codes` → organization settings → billing.
+2. **Buy the number.** **SMS** → purchase, country **US**, area code **206** (Seattle, which suits the bakery). **Check the price in the dialog before confirming** and say what it was in the team chat — the free plan covers iMessage sends but not numbers, and the docs do not publish the SMS number price. Voice itself is **$0.013 per minute** for US/Canada, which is negligible for a demo.
+3. Tell me the number and I will assign it to the voice profile by API.
+
+**Outbound SIP is not needed for the demo.** Photon's own docs say outbound credentials are "not required for incoming-only setup", and our demo is a judge calling the bakery. Skip ElevenLabs' outbound section too unless the agent needs to place calls.
 
 ## Part 2 — ElevenLabs (about 15 minutes)
 
@@ -40,12 +55,7 @@ That is the point of doing this at all. A voice bot that recites opening hours i
 7. **Create the agent.** Conversational AI → new agent. Give it the bakery's voice and the hard rules below.
 8. **Import the number.** Phone Numbers → **Deploy** → **Import number** → **From SIP Trunk**, and enter the Photon number in international format (`+1206…`).
 9. **Inbound config:** Media Encryption **Allowed**. Leave allowed numbers, IPs, domains and credentials empty for now.
-10. **Outbound config:**
-    - Address: `sip.photon.codes:5061`
-    - Transport: **TLS**
-    - Media Encryption: **Allowed**
-    - SIP Trunk Username and Password: from step 3
-    - Keep the **G.722, PCMU, PCMA** codecs selected
+10. **Outbound config: skip it.** It needs SIP credentials that require a payment method, and an incoming-only setup does not use them. Come back to this only if the agent must place outbound calls.
 11. **Assign the agent** to the imported number from the Agent dropdown.
 
 ## Part 3 — Test before wiring anything
