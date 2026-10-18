@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import { BUSINESS } from "@/lib/business";
+import { SHOP_NAME } from "@/lib/business";
 
 const subscribe = () => () => {};
 
@@ -15,7 +15,7 @@ export default function JoinQrPage() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-10 px-6 py-10 text-center">
       <div>
-        <p className="badge-brand !text-[15px]">{BUSINESS.name} · Back of House</p>
+        <p className="badge-brand !text-[15px]">{SHOP_NAME} · Back of House</p>
         <h1 className="mt-3 heading text-7xl tracking-tight text-fg">Text the shop.</h1>
         <p className="mx-auto mt-3 max-w-xl text-[19px] leading-relaxed text-muted">
           Scan, get the shop&apos;s number, and text it like a regular. Try to trick it, too: every reply waits for the

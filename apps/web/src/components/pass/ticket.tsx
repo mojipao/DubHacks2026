@@ -2,7 +2,7 @@
 
 import type { ReplyPayload, ReorderPayload } from "@boh/shared";
 import { motion, useReducedMotion } from "motion/react";
-import { Shield } from "lucide-react";
+import { ChevronRight, Shield } from "lucide-react";
 import { RiskChip } from "@/components/pass/risk-chip";
 import { Stamp } from "@/components/pass/stamp";
 import { INGREDIENT_COSTS, INGREDIENT_NAMES, PRODUCT_NAMES, PRODUCT_PRICES } from "@/lib/business";
@@ -55,6 +55,7 @@ export function Ticket({
   proposal,
   focused,
   rotation,
+  linkedChild,
   onFocus,
   onOpen,
   onApprove,
@@ -66,6 +67,8 @@ export function Ticket({
   proposal: UiProposal;
   focused: boolean;
   rotation: number;
+  /** Linked restock/child: Details only — Approve both lives on the parent. */
+  linkedChild?: boolean;
   onFocus: () => void;
   onOpen: () => void;
   onApprove: () => void;
@@ -75,7 +78,7 @@ export function Ticket({
   onRetry?: () => void;
 }) {
   const reduce = useReducedMotion();
-  const { state } = useStore();
+  const { state, getTrace } = useStore();
   const reply = proposal.kind === "reply" ? (proposal.payload as ReplyPayload) : null;
   const reorder = proposal.kind === "reorder" ? (proposal.payload as ReorderPayload) : null;
   const guardFlags = proposal.riskFlags.filter(isGuardFlag);
@@ -85,6 +88,19 @@ export function Ticket({
   const keyFlags = FLAG_PRIORITY.filter((f) => proposal.riskFlags.includes(f as never) && !isGuardFlag(f)).slice(0, 2);
   const kind = KIND_LABEL[proposal.agent] ?? KIND_LABEL.intake;
   const who = proposal.customerName ?? "New customer";
+  const steps = getTrace(proposal);
+  const stepMs = steps.reduce((n, s) => n + (s.ms || 0), 0);
+  const readTables = [
+    ...new Set(steps.flatMap((s) => (s.reads ?? []).map((r) => r.table)).filter(Boolean)),
+  ].slice(0, 3);
+  const traceTeaser =
+    steps.length > 0
+      ? `${steps.length} agent step${steps.length === 1 ? "" : "s"}${stepMs ? ` · ${(stepMs / 1000).toFixed(1)} s` : ""}${
+          readTables.length ? ` · ${readTables.join(" · ")}` : ""
+        }`
+      : proposal.reads.length > 0
+        ? `Read ${[...new Set(proposal.reads.map((r) => r.table))].slice(0, 3).join(" · ")}`
+        : null;
 
   const summary = reply
     ? reply.orders.length > 0
@@ -112,7 +128,7 @@ export function Ticket({
       onDoubleClick={onOpen}
       className={cn(
         "ticket-paper ticket-shadow relative w-full overflow-hidden rounded-[18px] text-ink",
-        focused && "ring-2 ring-crema ring-offset-4 ring-offset-surface",
+        focused && "ring-[3px] ring-crema ring-offset-4 ring-offset-surface shadow-[0_0_0_1px_var(--crema)]",
         proposal.status === "executing" && "ticket-executing",
         proposal.status === "failed" && "ring-2 ring-tomato",
       )}
@@ -133,14 +149,14 @@ export function Ticket({
               <span className={cn("size-1.5 rounded-full", guardFlags.length ? "bg-tomato" : kind.dot)} />
               {kind.label}
             </span>
-            <span className="truncate text-[16px] font-bold">{who}</span>
+            <span className="truncate text-[17px] font-bold">{who}</span>
           </span>
-          <span className="shrink-0 text-[12px] text-ink/50">{shortRelativeTime(proposal.createdAt)}</span>
+          <span className="shrink-0 text-[13px] font-medium text-ink/55">{shortRelativeTime(proposal.createdAt)}</span>
         </div>
 
-        {asked && <p className="line-clamp-2 text-[14px] text-ink/60 italic">&ldquo;{asked}&rdquo;</p>}
+        {asked && <p className="line-clamp-2 text-[15px] text-ink/65 italic">&ldquo;{asked}&rdquo;</p>}
 
-        <p className="text-[18px] leading-snug font-bold tracking-[-0.01em]">{proposal.rationale}</p>
+        <p className="text-[20px] leading-snug font-bold tracking-[-0.01em]">{proposal.rationale}</p>
 
         {guardFlags.length > 0 && (
           <div className="flex gap-2 rounded-xl bg-ink px-3 py-2.5 text-[13px] leading-snug text-ticket">
@@ -150,15 +166,15 @@ export function Ticket({
         )}
 
         {summary && (
-          <div className="flex items-end justify-between gap-3 rounded-xl bg-ink/[0.05] px-3.5 py-2.5">
-            <ul className="min-w-0 space-y-0.5 text-[14px] text-ink/85">
+          <div className="flex items-end justify-between gap-3 rounded-xl bg-ink/[0.05] px-3.5 py-3">
+            <ul className="min-w-0 space-y-0.5 text-[15px] text-ink/90">
               {summary.lines.map((l) => (
                 <li key={l} className="truncate">
                   {l}
                 </li>
               ))}
             </ul>
-            <span className="shrink-0 text-[18px] font-extrabold tabular-nums">{money(summary.total)}</span>
+            <span className="shrink-0 text-[20px] font-extrabold tabular-nums">{money(summary.total)}</span>
           </div>
         )}
 
@@ -168,6 +184,23 @@ export function Ticket({
               <RiskChip key={f} flag={f} />
             ))}
           </div>
+        )}
+
+        {traceTeaser && proposal.status === "pending" && !linkedChild && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen();
+            }}
+            className="flex w-full items-center justify-between gap-2 rounded-xl border border-ink/10 bg-ink/[0.03] px-3.5 py-2.5 text-left transition-colors hover:bg-ink/[0.07]"
+          >
+            <span className="min-w-0 text-[13px] font-semibold text-ink/70">
+              <span className="text-ink/45">How they got here · </span>
+              {traceTeaser}
+            </span>
+            <ChevronRight className="size-4 shrink-0 text-ink/40" />
+          </button>
         )}
 
         {proposal.status === "executing" && <p className="text-[13px] font-semibold text-ink/60">Sending…</p>}
@@ -188,15 +221,23 @@ export function Ticket({
 
         {proposal.status === "pending" && (
           <div className="flex flex-wrap items-center gap-2 pt-1" onClick={(e) => e.stopPropagation()}>
-            <button type="button" onClick={onApproveBoth ?? onApprove} className={TICKET_APPROVE}>
-              {onApproveBoth ? "Approve both" : "Approve"}
-            </button>
-            <button type="button" onClick={onOpen} className={TICKET_SECONDARY}>
-              Details
-            </button>
-            <button type="button" onClick={onRejectBoth ?? onReject} className={TICKET_SKIP}>
-              {onRejectBoth ? "Skip both" : "Skip"}
-            </button>
+            {linkedChild ? (
+              <button type="button" onClick={onOpen} className={TICKET_SECONDARY}>
+                Details
+              </button>
+            ) : (
+              <>
+                <button type="button" onClick={onApproveBoth ?? onApprove} className={TICKET_APPROVE}>
+                  {onApproveBoth ? "Approve both" : "Approve"}
+                </button>
+                <button type="button" onClick={onOpen} className={TICKET_SECONDARY}>
+                  Details
+                </button>
+                <button type="button" onClick={onRejectBoth ?? onReject} className={TICKET_SKIP}>
+                  {onRejectBoth ? "Skip both" : "Skip"}
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -206,7 +247,7 @@ export function Ticket({
 
 // Cream paper, so its buttons use ink and cherry rather than the dark-room defaults.
 const TICKET_APPROVE =
-  "rounded-full bg-cherry px-5 py-2 text-[13px] font-bold tracking-wide text-white uppercase hover:bg-cherry/90";
+  "rounded-full bg-cherry px-5 py-2.5 text-[14px] font-bold tracking-wide text-white uppercase hover:bg-cherry/90";
 const TICKET_SECONDARY =
-  "rounded-full border border-ink/20 px-4 py-2 text-[13px] font-bold tracking-wide text-ink uppercase hover:bg-ink/5";
-const TICKET_SKIP = "rounded-full px-3 py-2 text-[13px] font-bold tracking-wide text-ink/50 uppercase hover:text-ink";
+  "rounded-full border border-ink/20 px-4 py-2.5 text-[14px] font-bold tracking-wide text-ink uppercase hover:bg-ink/5";
+const TICKET_SKIP = "rounded-full px-3 py-2.5 text-[14px] font-bold tracking-wide text-ink/55 uppercase hover:text-ink";

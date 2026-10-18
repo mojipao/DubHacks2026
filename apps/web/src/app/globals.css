@@ -65,9 +65,11 @@
   --line-strong: #4a3c30;
   --ticket: #f4ebdd;
   --ink: #1d140f;
-  --muted: #a8998b;
+  /* Projector-readable muted (was ~3.3:1 on bg; target ≥4.5:1). */
+  --muted: #c9b8a6;
   --fg: #f6efe6;
-  --cherry: #e2352b;
+  /* Slightly deeper cherry so white label text clears AA on Approve. */
+  --cherry: #d62820;
   --crema: #d9a066;
   /* Status colors, readable on the espresso surfaces. */
   --tomato: #f0603d;

@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 export type View = "pass" | "conversations" | "customers" | "today";
 
 export const VIEWS: { id: View; label: string; key: string; icon: typeof ClipboardCheck; hint: string }[] = [
-  { id: "pass", label: "Approve", key: "1", icon: ClipboardCheck, hint: "Replies and restocks waiting for you" },
+  { id: "pass", label: "Pass", key: "1", icon: ClipboardCheck, hint: "Replies and restocks waiting for you" },
   { id: "conversations", label: "Messages", key: "2", icon: MessagesSquare, hint: "Every text thread" },
-  { id: "customers", label: "Customers", key: "3", icon: Users, hint: "Everyone who has texted, and whether they ordered" },
+  { id: "customers", label: "Leads", key: "3", icon: Users, hint: "Everyone who has texted, and whether they ordered" },
   { id: "today", label: "Today", key: "4", icon: CalendarClock, hint: "Pickups, money, stock, time saved" },
 ];
 
@@ -39,7 +39,7 @@ export function ViewTabs({
             onClick={() => onChange(v.id)}
             title={`${v.hint} (${v.key})`}
             className={cn(
-              "relative flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-[14px] font-semibold tracking-wide uppercase transition-colors",
+              "relative flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-[15px] font-semibold tracking-wide uppercase transition-colors",
               active ? "text-ink" : "text-muted hover:text-fg",
             )}
           >
@@ -50,13 +50,13 @@ export function ViewTabs({
                 transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 38 }}
               />
             )}
-            <v.icon className="relative size-4" />
+            <v.icon className="relative size-[18px]" />
             <span className="relative">{v.label}</span>
             {c.n > 0 && (
               <span
                 className={cn(
-                  "relative min-w-5 rounded-full px-1.5 text-center text-[12px] leading-5 font-bold tabular-nums",
-                  c.alert ? "bg-cherry text-white" : active ? "bg-ink/10 text-ink" : "bg-surface-2 text-fg/80",
+                  "relative min-w-5 rounded-full px-1.5 text-center text-[13px] leading-5 font-bold tabular-nums",
+                  c.alert ? "bg-cherry text-white" : active ? "bg-ink/10 text-ink" : "bg-surface-2 text-fg",
                 )}
               >
                 {c.n}
