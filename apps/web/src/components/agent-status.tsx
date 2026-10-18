@@ -31,7 +31,7 @@ export function AgentStatus() {
   }, [state.events, state.now]);
 
   return (
-    <div className="hidden items-center gap-0.5 rounded-full border border-line bg-bg/60 p-0.5 md:flex">
+    <div className="hidden items-center gap-0.5 rounded-full border border-line-strong bg-white/70 p-0.5 md:flex">
       {statuses.map((s) => (
         <div
           key={s.key}

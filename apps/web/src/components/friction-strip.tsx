@@ -24,17 +24,17 @@ export function FrictionStrip() {
 
   return (
     <div className="flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-line px-4 py-2 text-[13px] text-muted">
-      <span className="eyebrow mr-2 !text-amber">Friction saved</span>
+      <span className="badge-lime mr-2">Friction saved</span>
       {stats.map((s, i) => (
         <span key={s.label} className="inline-flex items-baseline gap-1.5 px-2">
           {i > 0 && <span className="mr-2 h-3 w-px self-center bg-line-strong" aria-hidden />}
-          <CountUp value={s.n} className="font-mono text-[15px] font-semibold text-fg" />
+          <CountUp value={s.n} className="text-[16px] font-semibold text-fg" />
           {s.label}
         </span>
       ))}
       <span className="ml-auto inline-flex items-baseline gap-1.5 rounded-full bg-basil/10 px-3 py-0.5 text-basil">
         ≈
-        <CountUp value={f.ownerMinutesSaved} className="font-mono text-[15px] font-semibold" />
+        <CountUp value={f.ownerMinutesSaved} className="text-[16px] font-semibold" />
         owner minutes saved
         <Tooltip>
           <TooltipTrigger asChild>

@@ -69,19 +69,19 @@ export function AuditTable() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="font-mono text-[12px] tracking-[0.18em] text-amber uppercase">
+            <p className="badge-lime mb-2">
               Audit {mode === "mock" ? "· fixtures" : ""}
             </p>
-            <h1 className="font-serif text-4xl text-fg">Every action, on the record</h1>
+            <h1 className="font-medium tracking-[-0.03em] text-4xl text-fg">Every action, on the record</h1>
           </div>
-          <Link href="/" className="text-[13px] text-amber hover:underline">
+          <Link href="/" className="rounded-full bg-ink px-4 py-2 text-[13px] text-white hover:bg-ink/85">
             ← Control room
           </Link>
         </div>
 
         <section
           aria-label="Trust summary"
-          className="mb-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-4"
+          className="mb-6 grid gap-px overflow-hidden rounded-[28px] border border-line bg-line sm:grid-cols-4"
         >
           {[
             { n: trust.executed, label: "actions executed" },
@@ -136,7 +136,7 @@ export function AuditTable() {
               className={cn(
                 "rounded-full border px-3 py-1 text-[12px] transition-colors",
                 type === q.value
-                  ? "border-amber bg-amber/15 text-amber"
+                  ? "border-ink bg-ink text-white"
                   : "border-line text-muted hover:text-fg",
               )}
             >
@@ -157,7 +157,7 @@ export function AuditTable() {
               onChange={(e) => f.set(e.target.value)}
               placeholder={f.label}
               aria-label={f.label}
-              className="h-9 rounded-md border border-line bg-panel px-3 text-[13px] text-fg placeholder:text-muted"
+              className="h-9 rounded-full border border-line-strong bg-white px-4 text-[13px] text-fg placeholder:text-muted"
             />
           ))}
           <span className="self-center font-mono text-[12px] text-muted">
@@ -165,7 +165,7 @@ export function AuditTable() {
           </span>
         </div>
 
-        <div className="surface overflow-x-auto rounded-xl">
+        <div className="overflow-x-auto rounded-[24px] border border-line bg-white">
           <table className="w-full text-left text-[13px]">
             <thead className="bg-panel font-mono text-[11px] tracking-wider text-muted uppercase">
               <tr>

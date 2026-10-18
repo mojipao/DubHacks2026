@@ -133,7 +133,7 @@ export function ControlRoom() {
 
   return (
     <div className="flex h-dvh min-h-[640px] flex-col gap-2.5 p-2.5">
-      <div className="surface rounded-xl">
+      <div className="sticky top-2 z-30 rounded-[28px] border border-black/5 bg-[rgba(248,248,248,0.82)] backdrop-blur-md">
         <TopBar onOpenSim={() => setSimOpen(true)} />
         <ViewTabs view={view} onChange={setView} counts={counts} />
         <FrictionStrip />
@@ -148,10 +148,10 @@ export function ControlRoom() {
 
         {view === "conversations" && (
           <div id="view-conversations" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-2.5">
-            <aside className="surface flex w-[340px] shrink-0 flex-col overflow-hidden rounded-xl min-[1400px]:w-[380px]">
+            <aside className="surface flex w-[340px] shrink-0 flex-col overflow-hidden rounded-[28px] min-[1400px]:w-[380px]">
               <ConversationList />
             </aside>
-            <section className="surface flex min-w-0 flex-1 flex-col overflow-hidden rounded-xl">
+            <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-line bg-white">
               <ConversationThread standalone onOpenTicket={openTicketFor} />
             </section>
           </div>
@@ -160,16 +160,16 @@ export function ControlRoom() {
         {view === "today" && (
           <div id="view-today" role="tabpanel" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
             <div className="grid gap-2.5 lg:grid-cols-[1.1fr_1fr]">
-              <section className="surface rounded-xl px-5 py-4">
+              <section className="surface rounded-[28px] px-6 py-5">
                 <div className="mb-3 flex items-baseline justify-between">
-                  <h2 className="eyebrow">Today</h2>
+                  <h2 className="badge-lime">Today</h2>
                   <span className="font-mono text-[12px] text-fg/80">{dayLabel}</span>
                 </div>
                 <PickupsBoard />
               </section>
               <div className="flex flex-col gap-2.5">
                 <TodayRevenue />
-                <section className="surface rounded-xl px-5 py-4">
+                <section className="surface rounded-[28px] px-6 py-5">
                   <StockBars />
                 </section>
               </div>

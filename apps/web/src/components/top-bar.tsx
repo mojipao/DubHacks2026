@@ -30,13 +30,14 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
     <header className="flex flex-wrap items-center justify-between gap-3 px-4 pt-3 pb-2.5">
       <div className="flex min-w-0 items-center gap-5">
         <div className="flex items-baseline gap-2.5">
-          <span className="font-serif text-[26px] leading-none tracking-tight text-fg">
+          <span className="rounded-full bg-ink px-4 py-1.5 text-[22px] leading-none font-medium tracking-[-0.03em] text-lime">
             {BUSINESS.name.split("&").map((part, i) => (
               <span key={i}>
-                {i > 0 && <span className="text-amber italic">&amp;</span>}
+                {i > 0 && "&"}
                 {part}
               </span>
             ))}
+            <span className="text-white">.</span>
           </span>
           <span className="rounded-full border border-line-strong px-2 py-0.5 font-mono text-[10px] tracking-[0.16em] text-muted uppercase">
             Back of House
@@ -46,15 +47,15 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-[13px]">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber px-2.5 py-1 font-mono text-[12px] font-semibold text-ink">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-lime px-3 py-1 text-[13px] font-medium text-ink">
           <span className="tabular-nums">{pending}</span> pending
         </span>
-        <span className="rounded-full border border-line px-2.5 py-1 font-mono text-[12px] text-fg">
+        <span className="rounded-full border border-line-strong px-3 py-1 text-[13px] text-fg">
           <span className="tabular-nums">{money(paidToday)}</span> <span className="text-muted">paid today</span>
         </span>
         <span
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 font-mono text-[12px]",
+            "inline-flex items-center gap-1.5 rounded-full border border-line-strong px-3 py-1 text-[13px]",
             state.connection === "polling" ? "text-amber" : "text-basil",
           )}
           title={mode === "live" ? "Supabase realtime" : "Scripted demo data"}
@@ -75,7 +76,7 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
               <MoreHorizontal className="size-4" />
             </Button>
           </DialogTrigger>
-          <DialogContent className="border-line bg-surface text-fg">
+          <DialogContent className="rounded-[28px] border-line bg-white text-fg">
             <DialogHeader>
               <DialogTitle>Control room</DialogTitle>
             </DialogHeader>
@@ -85,13 +86,13 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
                 Phone simulator
               </GlowButton>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <GlowButton block tone="amber" asChild>
+                <GlowButton block tone="lime" asChild>
                   <Link href="/join/qr">
                     <QrCode className="size-4" />
                     Join QR
                   </Link>
                 </GlowButton>
-                <GlowButton block tone="amber" asChild>
+                <GlowButton block tone="lime" asChild>
                   <Link href="/join">
                     <UserPlus className="size-4" />
                     Join page
@@ -107,7 +108,7 @@ export function TopBar({ onOpenSim }: { onOpenSim: () => void }) {
               <div className="eyebrow mt-2 border-t border-line pt-4">Demo controls</div>
               <GlowButton
                 block
-                tone="amber"
+                tone="lime"
                 onClick={() =>
                   void winbackScan()
                     .then((n) => toast.message(n > 0 ? `Morning scan drafted ${n} win-back${n === 1 ? "" : "s"}` : "Morning scan: no lapsed regulars"))

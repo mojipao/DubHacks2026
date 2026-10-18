@@ -40,7 +40,7 @@ export function ConversationThread({
     <div className={cn("flex min-h-0 flex-1 flex-col", !standalone && "border-t border-line")}>
       <div className={cn("flex items-center justify-between gap-3 px-4 pt-3 pb-2", standalone && "border-b border-line px-6 pt-4 pb-3")}>
         <div className="min-w-0">
-          <div className={cn("truncate font-medium text-fg", standalone ? "font-serif text-[24px] leading-tight font-normal" : "text-[14px]")}>
+          <div className={cn("truncate font-medium text-fg", standalone ? "font-medium tracking-[-0.03em] text-[24px] leading-tight font-normal" : "text-[14px]")}>
             {conv.role === "owner" ? "Owner" : (conv.customerName ?? maskHandle(conv.handle))}
           </div>
           <div className="font-mono text-[11px] text-muted">
@@ -48,7 +48,7 @@ export function ConversationThread({
           </div>
         </div>
         {onOpenTicket && conv.hasPendingTicket && (
-          <GlowButton tone="amber" size="sm" className="shrink-0" onClick={() => onOpenTicket(conv.id)}>
+          <GlowButton tone="lime" size="sm" className="shrink-0" onClick={() => onOpenTicket(conv.id)}>
             Ticket waiting · open in the pass
           </GlowButton>
         )}
@@ -62,8 +62,8 @@ export function ConversationThread({
             className={cn(
               "max-w-[90%] rounded-2xl px-3 py-2 text-[13.5px] leading-snug",
               m.direction === "inbound"
-                ? "rounded-bl-md bg-[#1d2836] text-[#e6efff]"
-                : "ml-auto rounded-br-md border border-line-strong bg-surface-2 text-fg",
+                ? "rounded-bl-md bg-surface-2 text-fg"
+                : "ml-auto rounded-br-md bg-ink text-white",
             )}
           >
             <p className="whitespace-pre-wrap">{m.body}</p>

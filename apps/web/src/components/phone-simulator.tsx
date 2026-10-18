@@ -154,9 +154,9 @@ export function PhoneSimulator({
                 "rounded-full px-3 py-1 text-[12px] font-semibold transition-colors",
                 personaId === p.id
                   ? p.id === "owner"
-                    ? "bg-basil text-[#0b0a09]"
-                    : "bg-sky text-[#0b0a09]"
-                  : "bg-[#1c1a18] text-muted hover:text-fg",
+                    ? "bg-lime text-ink"
+                    : "bg-ink text-white"
+                  : "border border-line-strong bg-white text-muted hover:text-fg",
               )}
             >
               {p.label}

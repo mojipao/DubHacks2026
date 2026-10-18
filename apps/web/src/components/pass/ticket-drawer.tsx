@@ -157,7 +157,7 @@ export function TicketDrawer({
         onOpenChange(o);
       }}
     >
-      <SheetContent side="right" className="flex w-full flex-col gap-0 border-line bg-panel p-0 text-fg sm:max-w-xl">
+      <SheetContent side="right" className="flex w-full flex-col gap-0 border-line bg-white p-0 text-fg sm:max-w-xl">
         <SheetHeader className="border-b border-line px-6 pt-5 pb-4">
           <div className="mb-1 flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase">
             <span className={cn("size-2 rounded-full", AGENT_DOT[proposal.agent] ?? "bg-muted")} />
@@ -186,7 +186,7 @@ export function TicketDrawer({
           <div>
             <p className="text-[17px] leading-snug font-semibold text-fg">{proposal.rationale}</p>
             {proposal.riskFlags.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1 rounded-md bg-ticket p-1.5">
+              <div className="mt-2 flex flex-wrap gap-1">
                 {proposal.riskFlags.map((f) => (
                   <RiskChip key={f} flag={f} />
                 ))}
@@ -293,7 +293,7 @@ export function TicketDrawer({
         </div>
 
         {(pending || proposal.status === "failed") && (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-4 border-t border-line bg-surface px-6 py-4">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-4 border-t border-line bg-white px-6 py-4">
             {pending && (
               <>
                 <GlowButton
@@ -323,7 +323,7 @@ export function TicketDrawer({
               </>
             )}
             {proposal.status === "failed" && (
-              <GlowButton tone="amber" onClick={() => run(retry(proposal.id), "Retried")}>
+              <GlowButton tone="lime" onClick={() => run(retry(proposal.id), "Retried")}>
                 Retry
               </GlowButton>
             )}

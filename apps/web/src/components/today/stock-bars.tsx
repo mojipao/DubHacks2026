@@ -35,9 +35,9 @@ export function StockBars() {
   return (
     <div>
       <div className="mb-2 flex items-baseline justify-between">
-        <h3 className="eyebrow">Stock</h3>
+        <h3 className="badge-lime">Stock</h3>
         <span className="flex items-center gap-2 font-mono text-[10px] text-muted">
-          <span className="inline-block h-2 w-3 rounded-full bg-[#8f877e]" /> on hand
+          <span className="inline-block h-2 w-3 rounded-full bg-[#b5b5b5]" /> on hand
           <span className="stock-hatch inline-block h-2 w-3 rounded-full" /> on order
         </span>
       </div>
@@ -67,9 +67,9 @@ export function StockBars() {
                   {ing.onOrder > 0 && <span className="text-amber"> +{fmt(ing.onOrder)}</span>} {ing.unit}
                 </span>
               </div>
-              <div className="relative flex h-2 overflow-hidden rounded-full bg-bg ring-1 ring-line">
+              <div className="relative flex h-2 overflow-hidden rounded-full bg-white ring-1 ring-line">
                 <motion.div
-                  className={cn("h-full rounded-full", low ? "bg-tomato" : "bg-[#8f877e]")}
+                  className={cn("h-full rounded-full", low ? "bg-tomato" : "bg-[#b5b5b5]")}
                   initial={false}
                   animate={{ width: `${handPct}%` }}
                   transition={{ type: "spring", stiffness: 160, damping: 22 }}
@@ -82,7 +82,7 @@ export function StockBars() {
                 />
                 {/* Reorder point tick */}
                 <span
-                  className="absolute top-0 h-full w-px bg-fg/60"
+                  className="absolute top-0 h-full w-0.5 bg-ink"
                   style={{ left: `${reorderPct}%` }}
                   aria-hidden
                 />

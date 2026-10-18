@@ -40,13 +40,13 @@ export function ViewTabs({
             title={`${v.label} (${v.key})`}
             className={cn(
               "relative flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors",
-              active ? "text-ink" : "text-muted hover:bg-surface-2 hover:text-fg",
+              active ? "text-white" : "text-muted hover:bg-white hover:text-fg",
             )}
           >
             {active && (
               <motion.span
                 layoutId="view-tab-pill"
-                className="absolute inset-0 rounded-full bg-ticket"
+                className="absolute inset-0 rounded-full bg-ink"
                 transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 38 }}
               />
             )}
@@ -56,7 +56,7 @@ export function ViewTabs({
               <span
                 className={cn(
                   "relative min-w-5 rounded-full px-1.5 text-center font-mono text-[11px] leading-5 tabular-nums",
-                  c.alert ? "bg-amber text-ink" : active ? "bg-ink/10 text-ink" : "bg-surface-2 text-fg/80",
+                  c.alert ? "bg-lime text-ink" : active ? "bg-white/20 text-white" : "bg-white text-fg/80",
                 )}
               >
                 {c.n}
@@ -66,9 +66,9 @@ export function ViewTabs({
         );
       })}
       <span className="ml-auto hidden font-mono text-[11px] text-muted lg:inline">
-        <kbd className="rounded border border-line-strong bg-surface-2 px-1 text-fg/80">1</kbd>
-        <kbd className="ml-0.5 rounded border border-line-strong bg-surface-2 px-1 text-fg/80">2</kbd>
-        <kbd className="ml-0.5 rounded border border-line-strong bg-surface-2 px-1 text-fg/80">3</kbd> switch views
+        <kbd className="rounded border border-line-strong bg-white px-1 text-fg/80">1</kbd>
+        <kbd className="ml-0.5 rounded border border-line-strong bg-white px-1 text-fg/80">2</kbd>
+        <kbd className="ml-0.5 rounded border border-line-strong bg-white px-1 text-fg/80">3</kbd> switch views
       </span>
     </nav>
   );
