@@ -2,7 +2,7 @@
  * Ops: capacity, stock, and the counteroffer.
  *
  * All deterministic. No model runs in this file, which is the point — "we can do 24
- * Saturday and 24 Sunday, and that needs 3 kg more butter" is arithmetic over the
+ * Saturday and 24 Sunday, and that needs 3 kg more ghee" is arithmetic over the
  * shop's own records, and a judge can check it against the ticket's evidence.
  */
 import type {
@@ -223,7 +223,7 @@ export function planReorder(
         // A full instant with an offset. `ReorderPayload.neededBy` is IsoDateTime
         // (offset required), so a bare "2026-10-23T07:00" makes the server's
         // ProposalDraft.parse reject the whole reorder draft — and Jun's counteroffer
-        // then arrives with no butter reorder, which is the demo's second beat.
+        // then arrives with no ghee reorder, which is the demo's second beat.
         neededBy: isoWithOffset(`${neededByDate}T${openAt}`, business.timezone),
       },
       title: `Reorder ${lines.map((l) => l.name.toLowerCase()).join(" and ")} from ${supplier}`,

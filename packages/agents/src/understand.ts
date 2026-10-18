@@ -106,7 +106,11 @@ function sanitize(value: Understanding, input: UnderstandInput): Understanding {
   const items = value.items.filter((i) => known.has(i.productId));
   const dropped = items.length !== value.items.length;
 
-  const pickupLocal = normalizeLocalDateTime(value.pickupLocal);
+  // Models disagree about which date "Saturday" means when today is a Saturday. The day a
+  // message names is a rule, not a judgment, so the rule decides the date; the model keeps the time.
+  let pickupLocal = normalizeLocalDateTime(value.pickupLocal);
+  const namedDay = dayFromText(input.text, input.todayLocal, input.timezone);
+  if (pickupLocal && namedDay && pickupLocal.slice(0, 10) !== namedDay) pickupLocal = `${namedDay}${pickupLocal.slice(10)}`;
 
   // "🥐🥐☕️ sat?" is a real order that a model will often return no items for, and the
   // alias table already knows what those glyphs mean. Only ever fills an empty list.
@@ -170,15 +174,15 @@ const USUAL_WORDS = /\b(the\s+usual|my\s+usual|usual\b|same\s+as\s+(last|always)
 const SMALLTALK_WORDS = /^\s*(thanks?|thank\s+you|thx|ty|cool|great|awesome|perfect|ok|okay|sounds\s+good|👍|🙏)[\s!.…]*$/i;
 const DELIVERY_WORDS = /\b(deliver|delivery|doordash|uber\s*eats|ship)\b/i;
 const OFF_TOPIC_WORDS = /\b(what'?s\s+\d+\s*[+\-*/]\s*\d+|weather|capital\s+of|who\s+won|tell\s+me\s+a\s+joke)\b/i;
-const ABUSIVE_WORDS = /\b(fuck|shit|bitch|asshole|idiot|stupid\s+(bakery|caf[eé]|coffee\s+shop|shop)|moron)\b/i;
+const ABUSIVE_WORDS = /\b(fuck|shit|bitch|asshole|idiot|stupid\s+(coffee house|caf[eé]|coffee\s+shop|shop)|moron)\b/i;
 
 /** Emoji the demo personas actually use. "🥐🥐☕️ sat?" has to resolve to something. */
 const EMOJI_PRODUCTS: Record<string, string> = {
-  "🥐": "butter-croissant",
-  "☕": "drip-coffee",
+  "🥐": "milk-cake",
+  "☕": "qishr",
   "🧋": "cold-brew",
-  "🍫": "mocha",
-  "🧁": "morning-bun",
+  "🍫": "mokha-latte",
+  "🧁": "sabaya",
 };
 
 /** Quantity immediately before a product mention: "4 dozen", "two", "a couple of", "48". */
@@ -202,22 +206,23 @@ function quantityBefore(text: string, matchStart: number): number | null {
   return null;
 }
 
+/** The day a message names ("tomorrow", "Saturday"), by the same rule everywhere. Null when it names none. */
+export function dayFromText(text: string, todayLocal: string, timezone: string): string | null {
+  const lower = text.toLowerCase();
+  if (/\btomorrow\b/.test(lower)) return addDays(todayLocal, 1);
+  if (/\btoday\b|\bthis\s+(morning|afternoon)\b/.test(lower)) return todayLocal;
+  // The weekend of the counteroffer: "Saturday" is the next one, "Sunday" the day after it.
+  const weekend = nextSaturdayAndSunday(todayLocal, timezone);
+  const weekdayHit = /\b(sunday|sun|monday|mon|tuesday|tues|tue|wednesday|wed|thursday|thurs|thu|friday|fri|saturday|sat)\b/.exec(lower);
+  if (!weekdayHit) return null;
+  const key = WEEKDAY_WORDS[weekdayHit[1] as string] as WeekdayKey;
+  return key === "sat" ? weekend.sat : key === "sun" ? weekend.sun : nextWeekday(todayLocal, key, timezone);
+}
+
 /** Resolves a day and time from the message, in the business timezone. */
 function resolvePickup(text: string, todayLocal: string, timezone: string): string | null {
   const lower = text.toLowerCase();
-  let date: string | null = null;
-
-  if (/\btomorrow\b/.test(lower)) date = addDays(todayLocal, 1);
-  else if (/\btoday\b|\bthis\s+(morning|afternoon)\b/.test(lower)) date = todayLocal;
-  else {
-    // The weekend of the counteroffer: "Saturday" is the next one, "Sunday" the day after it.
-    const weekend = nextSaturdayAndSunday(todayLocal, timezone);
-    const weekdayHit = /\b(sunday|sun|monday|mon|tuesday|tues|tue|wednesday|wed|thursday|thurs|thu|friday|fri|saturday|sat)\b/.exec(lower);
-    if (weekdayHit) {
-      const key = WEEKDAY_WORDS[weekdayHit[1] as string] as WeekdayKey;
-      date = key === "sat" ? weekend.sat : key === "sun" ? weekend.sun : nextWeekday(todayLocal, key, timezone);
-    }
-  }
+  const date = dayFromText(text, todayLocal, timezone);
 
   const explicit = /\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/.exec(lower) ?? /\bat\s+(\d{1,2})(?::(\d{2}))?\b/.exec(lower);
   let time: string | null = null;
@@ -227,7 +232,7 @@ function resolvePickup(text: string, todayLocal: string, timezone: string): stri
     const meridiem = explicit[3];
     if (meridiem === "pm" && hour < 12) hour += 12;
     if (meridiem === "am" && hour === 12) hour = 0;
-    // No am/pm on a coffee shop order means the morning, unless that would be before opening.
+    // No am/pm on a coffee house order means the morning, unless that would be before opening.
     if (!meridiem && hour < 7) hour += 12;
     time = `${String(hour).padStart(2, "0")}:${minute}`;
   } else if (/\bmorning\b/.test(lower)) time = "09:00";
@@ -239,7 +244,7 @@ function resolvePickup(text: string, todayLocal: string, timezone: string): stri
 }
 
 /**
- * Longest alias first, so "almond croissant" wins over "croissant".
+ * Longest alias first, so "pistachio maamoul" wins over "milk cake".
  *
  * Exported because the deterministic reading is useful even on the model path: it
  * answers "which product is this question about?" for a price query, and it catches

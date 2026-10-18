@@ -6,7 +6,7 @@ Sponsored side tracks (source of truth for prizes and eligibility): [’26 Spons
 
 ## Current project
 
-**Back of House**: customers text a small coffee shop (Kettle & Crow Coffee) on iMessage, agents draft replies, Square payment links, and supplier reorders from the shop's data, and the owner approves each one in a live control room. Title track Cook Smarter; sponsored tracks Photon, VEYZL, and SideShift.
+**Back of House**: customers text a small coffee house (Mokha Coffee House) on iMessage, agents draft replies, Square payment links, and supplier reorders from the shop's data, and the owner approves each one in a live control room. Title track Cook Smarter; sponsored tracks Photon, VEYZL, and SideShift.
 
 ### How a customer texts the shop: scan a QR code (a workaround)
 

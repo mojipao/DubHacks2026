@@ -8,7 +8,7 @@ export const BUSINESS = businessJson as BusinessProfile;
 
 /**
  * Display name for chrome and join pages.
- * Demo shop is Yemeni Coffee (UI brand). Seed may still say Kettle & Crow until data catches up.
+ * Demo shop is Yemeni Coffee (UI brand). Seed may still say Mokha Coffee House until data catches up.
  */
 export const SHOP_NAME = "Yemeni Coffee";
 
@@ -17,11 +17,11 @@ export const BRAND_SHORT = SHOP_NAME;
 
 // The coffee menu lane 2 is landing in data/seed (docs/handoff/coffee-shop). Seed values win once they exist.
 const COFFEE_MENU: { id: string; name: string; priceCents: number }[] = [
-  { id: "cappuccino", name: "Cappuccino", priceCents: 575 },
+  { id: "yemeni-coffee", name: "Yemeni coffee", priceCents: 575 },
   { id: "cold-brew", name: "Cold brew", priceCents: 525 },
-  { id: "mocha", name: "Mocha", priceCents: 625 },
-  { id: "coffee-box", name: "Coffee box (serves 12)", priceCents: 3600 },
-  { id: "house-beans", name: "House espresso beans, 12 oz bag", priceCents: 1800 },
+  { id: "mokha-latte", name: "Mokha latte", priceCents: 625 },
+  { id: "coffee-box", name: "Yemeni coffee box (serves 12)", priceCents: 3600 },
+  { id: "yemeni-beans", name: "Yemeni coffee beans, 250 g bag", priceCents: 1800 },
 ];
 
 export const PRODUCT_NAMES: Record<string, string> = Object.fromEntries([

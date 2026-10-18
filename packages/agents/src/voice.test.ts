@@ -30,8 +30,8 @@ function harness(transcript: string, handle: string) {
 
 describe("normalizeTranscript", () => {
   it("turns spoken quantities into digits the parser can see", () => {
-    expect(normalizeTranscript("can I get four dozen croissants")).toContain("4 dozen");
-    expect(normalizeTranscript("A dozen croissants please")).toContain("1 dozen");
+    expect(normalizeTranscript("can I get four dozen milk cakes")).toContain("4 dozen");
+    expect(normalizeTranscript("A dozen milk cakes please")).toContain("1 dozen");
     expect(normalizeTranscript("two lattes")).toContain("2 lattes");
   });
 
@@ -43,9 +43,9 @@ describe("normalizeTranscript", () => {
 
 describe("handleVoiceTurn", () => {
   it("puts a phone counteroffer on the pass, same as a text", async () => {
-    const { ctx } = harness("can I get four dozen croissants for saturday at nine", JUN);
+    const { ctx } = harness("can I get four dozen milk cakes for saturday at nine", JUN);
     const { response, drafts } = await handleVoiceTurn(
-      { callId: "call-1", callerHandle: JUN, transcript: "can I get four dozen croissants for saturday at nine" },
+      { callId: "call-1", callerHandle: JUN, transcript: "can I get four dozen milk cakes for saturday at nine" },
       ctx,
       async () => ({ conversationId: "call-1", messageId: "u-1" }),
     );
@@ -58,9 +58,9 @@ describe("handleVoiceTurn", () => {
   });
 
   it("never reads a payment link aloud, and promises a text instead", async () => {
-    const { ctx } = harness("four dozen croissants saturday nine am", JUN);
+    const { ctx } = harness("four dozen milk cakes saturday nine am", JUN);
     const { response } = await handleVoiceTurn(
-      { callId: "call-1", callerHandle: JUN, transcript: "four dozen croissants saturday nine am" },
+      { callId: "call-1", callerHandle: JUN, transcript: "four dozen milk cakes saturday nine am" },
       ctx,
       async () => ({ conversationId: "call-1", messageId: "u-1" }),
     );
@@ -71,9 +71,9 @@ describe("handleVoiceTurn", () => {
   });
 
   it("says the owner still has to confirm, never that the order is placed", async () => {
-    const { ctx } = harness("four dozen croissants saturday nine am", JUN);
+    const { ctx } = harness("four dozen milk cakes saturday nine am", JUN);
     const { response } = await handleVoiceTurn(
-      { callId: "call-1", callerHandle: JUN, transcript: "four dozen croissants saturday nine am" },
+      { callId: "call-1", callerHandle: JUN, transcript: "four dozen milk cakes saturday nine am" },
       ctx,
       async () => ({ conversationId: "call-1", messageId: "u-1" }),
     );
@@ -109,9 +109,9 @@ describe("handleVoiceTurn", () => {
 
 describe("toVoiceResponse", () => {
   it("passes evidence through as facts the agent must not contradict", async () => {
-    const { ctx } = harness("four dozen croissants saturday nine am", JUN);
+    const { ctx } = harness("four dozen milk cakes saturday nine am", JUN);
     const { drafts } = await handleVoiceTurn(
-      { callId: "call-1", callerHandle: JUN, transcript: "four dozen croissants saturday nine am" },
+      { callId: "call-1", callerHandle: JUN, transcript: "four dozen milk cakes saturday nine am" },
       ctx,
       async () => ({ conversationId: "call-1", messageId: "u-1" }),
     );

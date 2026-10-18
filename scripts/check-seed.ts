@@ -1,10 +1,10 @@
 /**
- * Asserts that the synthetic coffee shop adds up. Run after any change to `data/seed/**`:
+ * Asserts that the synthetic coffee house adds up. Run after any change to `data/seed/**`:
  *
  *   pnpm tsx scripts/check-seed.ts
  *
  * The demo's second beat ("we can't do 48 Saturday: 24 Sat + 24 Sun, and here's the
- * butter reorder") only lands if the capacity and stock numbers are exactly right.
+ * ghee reorder") only lands if the capacity and stock numbers are exactly right.
  * Every number the pitch says out loud is checked here, so a later tweak to a recipe
  * or an upcoming order fails loudly instead of quietly flattening the counteroffer.
  *
@@ -89,9 +89,9 @@ const persona = (key: string): Customer => {
 const history = orders.filter((o): o is Extract<SeedOrder, { kind: "history" }> => o.kind === "history");
 const upcoming = orders.filter((o): o is Extract<SeedOrder, { kind: "upcoming" }> => o.kind === "upcoming");
 
-const BUTTER_CROISSANT = "butter-croissant";
-const butterPerCroissant = recipes.find(
-  (r) => r.productId === BUTTER_CROISSANT && r.ingredientId === "butter",
+const MILK_CAKE = "milk-cake";
+const gheePerMilkCake = recipes.find(
+  (r) => r.productId === MILK_CAKE && r.ingredientId === "ghee",
 )?.qtyPerUnit;
 
 /** Units of one product committed on one of the two upcoming days. */
@@ -162,19 +162,19 @@ group("referential integrity", () => {
 });
 
 group("the capacity table in planning/LANE-3-AGENTS.md Phase 1", () => {
-  const capacity = product(BUTTER_CROISSANT).dailyCapacity;
-  const sat = committedUnits(BUTTER_CROISSANT, "next_sat");
-  const sun = committedUnits(BUTTER_CROISSANT, "next_sun");
+  const capacity = product(MILK_CAKE).dailyCapacity;
+  const sat = committedUnits(MILK_CAKE, "next_sat");
+  const sun = committedUnits(MILK_CAKE, "next_sun");
 
-  check("butter croissant capacity", capacity === 36, `expected 36 per day, found ${capacity}`);
+  check("milk cake capacity", capacity === 36, `expected 36 per day, found ${capacity}`);
   check("Saturday committed", sat === 12, `expected 12, found ${sat}`);
   check("Sunday committed", sun === 6, `expected 6, found ${sun}`);
   check("Saturday remaining", capacity - sat === 24, `expected 24 left, found ${capacity - sat}`);
   check("Sunday remaining", capacity - sun === 30, `expected 30 left, found ${capacity - sun}`);
-  check("almond croissant capacity", product("almond-croissant").dailyCapacity === 48, "expected 48 per day");
+  check("pistachio maamoul capacity", product("pistachio-maamoul").dailyCapacity === 48, "expected 48 per day");
   check("coffee box capacity", product("coffee-box").dailyCapacity === 4, "expected 4 per day");
 
-  notes.push(`butter croissants: Sat ${sat}/${capacity} committed (${capacity - sat} left) · Sun ${sun}/${capacity} (${capacity - sun} left)`);
+  notes.push(`milk cakes: Sat ${sat}/${capacity} committed (${capacity - sat} left) · Sun ${sun}/${capacity} (${capacity - sun} left)`);
 });
 
 group("no upcoming day is already over capacity", () => {
@@ -190,54 +190,54 @@ group("no upcoming day is already over capacity", () => {
   }
 });
 
-group("butter is the binding constraint on 4 dozen croissants", () => {
-  const butter = ingredient("butter");
-  check("butter recipe line exists", butterPerCroissant !== undefined, "no butter line for butter-croissant");
-  if (butterPerCroissant === undefined) return;
+group("ghee is the binding constraint on 4 dozen milk cakes", () => {
+  const ghee = ingredient("ghee");
+  check("ghee recipe line exists", gheePerMilkCake !== undefined, "no ghee line for milk-cake");
+  if (gheePerMilkCake === undefined) return;
 
-  const committedBoth = ingredientNeed(committedItems(), "butter");
-  const headroom = butter.onHand - committedBoth;
-  const headroomCroissants = headroom / butterPerCroissant;
+  const committedBoth = ingredientNeed(committedItems(), "ghee");
+  const headroom = ghee.onHand - committedBoth;
+  const headroomMilkCakes = headroom / gheePerMilkCake;
 
-  // "Butter on hand: enough for about 30 more croissants across both days, on top of committed orders."
+  // "Ghee on hand: enough for about 30 more milk cakes across both days, on top of committed orders."
   check(
-    "headroom is about 30 croissants",
-    headroomCroissants >= 29 && headroomCroissants <= 32,
-    `${headroomCroissants.toFixed(1)} croissants of headroom (${headroom.toFixed(3)} ${butter.unit})`,
+    "headroom is about 30 milk cakes",
+    headroomMilkCakes >= 29 && headroomMilkCakes <= 32,
+    `${headroomMilkCakes.toFixed(1)} milk cakes of headroom (${headroom.toFixed(3)} ${ghee.unit})`,
   );
 
   // Step 4 of the pipeline checks the request *as asked*: 48 on Saturday, plus Saturday's committed load.
-  const asAsked = ingredientNeed([{ productId: BUTTER_CROISSANT, qty: 48 }], "butter") +
-    ingredientNeed(committedItems("next_sat"), "butter");
+  const asAsked = ingredientNeed([{ productId: MILK_CAKE, qty: 48 }], "ghee") +
+    ingredientNeed(committedItems("next_sat"), "ghee");
   check(
     "48 on Saturday trips ingredient_shortfall",
-    asAsked > butter.onHand,
-    `needs ${asAsked.toFixed(3)} ${butter.unit}, on hand ${butter.onHand}`,
+    asAsked > ghee.onHand,
+    `needs ${asAsked.toFixed(3)} ${ghee.unit}, on hand ${ghee.onHand}`,
   );
 
   // Step 5 keeps the 24 + 24 plan and covers the gap with a reorder, measured across both days.
-  const splitPlan = committedBoth + ingredientNeed([{ productId: BUTTER_CROISSANT, qty: 48 }], "butter");
-  const shortfall = splitPlan - butter.onHand;
-  check("the 24 + 24 plan still needs a reorder", shortfall > 0, `shortfall ${shortfall.toFixed(3)} ${butter.unit}`);
-  check("butter comes from Rainier Dairy", butter.supplier === "Rainier Dairy", `supplier is ${butter.supplier}`);
+  const splitPlan = committedBoth + ingredientNeed([{ productId: MILK_CAKE, qty: 48 }], "ghee");
+  const shortfall = splitPlan - ghee.onHand;
+  check("the 24 + 24 plan still needs a reorder", shortfall > 0, `shortfall ${shortfall.toFixed(3)} ${ghee.unit}`);
+  check("ghee comes from Rainier Dairy", ghee.supplier === "Rainier Dairy", `supplier is ${ghee.supplier}`);
 
   // planReorder: shortfall + topping back to the reorder point, rounded up to a whole supplier unit.
-  const reorderQty = Math.ceil(shortfall + butter.reorderPoint);
-  const reorderCents = reorderQty * butter.unitCostCents;
+  const reorderQty = Math.ceil(shortfall + ghee.reorderPoint);
+  const reorderCents = reorderQty * ghee.unitCostCents;
   check(
     "the reorder is the $38.40 in planning/ARCHITECTURE.md",
     reorderCents === 3840,
-    `${reorderQty} ${butter.unit} x ${butter.unitCostCents}c = ${reorderCents}c`,
+    `${reorderQty} ${ghee.unit} x ${ghee.unitCostCents}c = ${reorderCents}c`,
   );
 
-  notes.push(`butter: ${butter.onHand} ${butter.unit} on hand, ${committedBoth.toFixed(3)} committed, ${headroomCroissants.toFixed(1)} croissants of headroom`);
-  notes.push(`48 croissants short by ${shortfall.toFixed(3)} ${butter.unit} → reorder ${reorderQty} ${butter.unit} ($${(reorderCents / 100).toFixed(2)})`);
+  notes.push(`ghee: ${ghee.onHand} ${ghee.unit} on hand, ${committedBoth.toFixed(3)} committed, ${headroomMilkCakes.toFixed(1)} milk cakes of headroom`);
+  notes.push(`48 milk cakes short by ${shortfall.toFixed(3)} ${ghee.unit} → reorder ${reorderQty} ${ghee.unit} ($${(reorderCents / 100).toFixed(2)})`);
 });
 
 group("Maya's usual is comfortably in stock and does not rescue Jun", () => {
   const usual: SeedItem[] = [
-    { productId: "almond-croissant", qty: 2 },
-    { productId: "oat-latte", qty: 1 },
+    { productId: "pistachio-maamoul", qty: 2 },
+    { productId: "adeni-chai", qty: 1 },
   ];
 
   for (const item of usual) {
@@ -250,11 +250,11 @@ group("Maya's usual is comfortably in stock and does not rescue Jun", () => {
     check(`${ing.id} covers Maya's usual`, need <= ing.onHand, `needs ${need.toFixed(3)}, on hand ${ing.onHand}`);
   }
 
-  // planning/LANE-3-AGENTS.md warns that butter is shared, so Maya's order must not flip Jun's shortfall.
-  if (butterPerCroissant !== undefined) {
-    const butter = ingredient("butter");
-    const afterMaya = butter.onHand - ingredientNeed([...committedItems(), ...usual], "butter");
-    const junNeeds = ingredientNeed([{ productId: BUTTER_CROISSANT, qty: 48 }], "butter");
+  // planning/LANE-3-AGENTS.md warns that ghee is shared, so Maya's order must not flip Jun's shortfall.
+  if (gheePerMilkCake !== undefined) {
+    const ghee = ingredient("ghee");
+    const afterMaya = ghee.onHand - ingredientNeed([...committedItems(), ...usual], "ghee");
+    const junNeeds = ingredientNeed([{ productId: MILK_CAKE, qty: 48 }], "ghee");
     check(
       "Jun is still short after Maya's order",
       afterMaya < junNeeds,
@@ -264,13 +264,13 @@ group("Maya's usual is comfortably in stock and does not rescue Jun", () => {
 });
 
 group("the demo prices the pitch says out loud", () => {
-  check("butter croissant is $4.50", product(BUTTER_CROISSANT).priceCents === 450, "48 of them must total $216.00");
+  check("milk cake is $4.50", product(MILK_CAKE).priceCents === 450, "48 of them must total $216.00");
   check(
-    "48 butter croissants total $216.00",
-    48 * product(BUTTER_CROISSANT).priceCents === 21600,
+    "48 milk cakes total $216.00",
+    48 * product(MILK_CAKE).priceCents === 21600,
     "planning/ARCHITECTURE.md quotes $216.00 in the owner notification",
   );
-  const mayaTotal = 2 * product("almond-croissant").priceCents + product("oat-latte").priceCents;
+  const mayaTotal = 2 * product("pistachio-maamoul").priceCents + product("adeni-chai").priceCents;
   check("Maya's usual is $18.50", mayaTotal === 1850, `found ${mayaTotal}c; the demo script says $18.50`);
   check("cold brew is $5.25", product("cold-brew").priceCents === 525, "quoted in the Guard decline example");
 });
@@ -290,9 +290,9 @@ group("personas", () => {
 
   // The evidence chip claims "9 of last 12" are the usual, so the data has to back it.
   const isUsual = (o: (typeof mayaOrders)[number]): boolean => {
-    const almond = o.items.find((i) => i.productId === "almond-croissant");
-    const latte = o.items.find((i) => i.productId === "oat-latte");
-    return o.items.length === 2 && almond?.qty === 2 && latte?.qty === 1;
+    const pistachio = o.items.find((i) => i.productId === "pistachio-maamoul");
+    const latte = o.items.find((i) => i.productId === "adeni-chai");
+    return o.items.length === 2 && pistachio?.qty === 2 && latte?.qty === 1;
   };
   const usualInLast12 = mayaOrders.slice(0, 12).filter(isUsual).length;
   check("Maya's usual is 9 of her last 12", usualInLast12 === 9, `found ${usualInLast12} of 12`);
@@ -314,10 +314,10 @@ group("personas", () => {
 
   const priya = persona("priya");
   check("Priya's allergy is on her record", /allergy/i.test(priya.notes ?? ""), "notes do not mention an allergy");
-  const priyaAlmond = history
+  const priyaPistachio = history
     .filter((o) => o.customerId === priya.id)
-    .some((o) => o.items.some((i) => i.productId.includes("almond")));
-  check("Priya has never ordered almond", !priyaAlmond, "her history contains an almond item");
+    .some((o) => o.items.some((i) => i.productId.includes("pistachio")));
+  check("Priya has never ordered pistachio", !priyaPistachio, "her history contains a pistachio item");
 });
 
 group("Elena qualifies for the win-back scan", () => {

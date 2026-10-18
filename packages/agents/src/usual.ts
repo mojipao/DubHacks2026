@@ -2,7 +2,7 @@
  * "The usual": the most frequent exact basket in a customer's recent orders.
  *
  * Deliberately exact-match rather than per-item frequency. A customer who orders
- * two almond croissants and a latte nine times out of twelve has a usual; someone
+ * two pistachio maamoul and a latte nine times out of twelve has a usual; someone
  * whose items overlap loosely does not, and guessing one for them is how an agent
  * puts words in the shop's mouth. When there is no clear usual, the caller flags
  * `needs_clarification` and asks.
@@ -17,7 +17,7 @@ export interface Usual {
   of: number;
   /** The most recent order with this basket, for the evidence chip's source. */
   sourceOrderId: string;
-  /** Human-readable, built by the caller from the catalog: "2x Almond croissant, 1x Oat latte". */
+  /** Human-readable, built by the caller from the catalog: "2x Pistachio maamoul, 1x Adeni chai". */
   label?: string;
 }
 

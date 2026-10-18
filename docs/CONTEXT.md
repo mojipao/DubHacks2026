@@ -5,8 +5,8 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 ## Status
 
 - **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders, including counteroffers when a request can't be met as asked; nothing goes out until the owner approves it in the live control room or by replying to an iMessage.
-- **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-croissant counteroffer with a linked butter reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
-- **Demo business:** Kettle & Crow Coffee, a fictional Seattle coffee shop (switched from the Larch & Rye bakery on 2026-10-17; see `docs/DECISIONS.md`). All data synthetic. Demo numbers unchanged: Sat 12/36 butter croissants committed, 48 → 24 Sat + 24 Sun with a 3 kg butter reorder ($38.40), Maya's usual $18.50, Jun's 48 = $216.00.
+- **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-milk-cake counteroffer with a linked ghee reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
+- **Demo business:** **Mokha Coffee House**, a fictional Seattle Yemeni coffee house (2026-10-17: Larch & Rye bakery → Kettle & Crow Coffee → Mokha Coffee House; see `docs/DECISIONS.md`). Menu: milk cake, pistachio maamoul, bint al-sahn, sabaya, sesame kaak, malawah; Yemeni coffee (Haraz), Adeni chai, qishr, Mokha latte, cold brew, coffee box, beans. All data synthetic. Demo numbers unchanged: Sat 12/36 milk cakes committed, 48 → 24 Sat + 24 Sun with a 3 kg ghee reorder ($38.40), Maya's usual $18.50 (2 pistachio maamoul + Adeni chai), Jun's 48 = $216.00.
 - **Title track:** Cook Smarter
 - **Sponsored tracks:** Photon, VEYZL, SideShift
 - **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
@@ -80,7 +80,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - `SeedOrder` carries no status, as specced. Seed `kind: "history"` as `fulfilled` and `kind: "upcoming"` as `paid`; the committed load the counteroffer reads comes from the upcoming orders.
 - `daysAgo` and `pickupDay` resolve at **seed time**, in the business timezone. `next_sun` is **`next_sat` + 1 day**, not the first Sunday after the seed date, which for a Saturday seed would be demo day itself.
 - History orders are placed by offset from the seed day assuming a **Saturday seed**, so no pickup lands on a closed Monday. Seeding on another day rotates the pattern harmlessly.
-- The numbers the demo depends on: butter croissant capacity 36/day, 12 committed Saturday and 6 Sunday, butter on hand covering about 30 more croissants. So 4 dozen for Saturday splits into 24 Saturday + 24 Sunday with a 3 kg butter reorder from Rainier Dairy ($38.40). Maya's usual totals $18.50 and 48 butter croissants total $216.00, which is where `planning/ARCHITECTURE.md`'s example numbers come from.
+- The numbers the demo depends on: milk cake capacity 36/day, 12 committed Saturday and 6 Sunday, ghee on hand covering about 30 more milk cakes. So 4 dozen for Saturday splits into 24 Saturday + 24 Sunday with a 3 kg ghee reorder from Rainier Dairy ($38.40). Maya's usual totals $18.50 and 48 milk cakes total $216.00, which is where `planning/ARCHITECTURE.md`'s example numbers come from.
 - Phone numbers never appear in `data/`; demo personas are matched by `personaKey` against `DEMO_PERSONAS` at seed time. `check-seed.ts` fails if a number or email ever lands there.
 
 ## Interfaces other agents must not break
@@ -125,7 +125,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 **Unprompted sends work (2026-10-18, verified on a handset).** A message sent into an existing space **2 minutes after** the customer's last inbound, with nothing triggering it, was **delivered to the phone**. So a shared line *can* message an open conversation on its own.
 
 What that unblocks, both previously at risk:
-- **Owner approval by iMessage.** The server can push "Jun wants 48 croissants… Reply Y K7" to the owner's space. The owner must have texted the line once first, so that space exists.
+- **Owner approval by iMessage.** The server can push "Jun wants 48 milk cakes… Reply Y K7" to the owner's space. The owner must have texted the line once first, so that space exists.
 - **The win-back scan.** A drafted win-back can actually reach a customer who has an open conversation.
 
 Still true: a shared line **cannot start** a conversation. The other party must have texted first. So win-back reaches customers with an existing space and nobody else, and `RegularCadence.hasOpenConversation` is the field that decides which. A 15-minute gap is under test; if it fails, the owner channel falls back to pull mode (the owner texts `?` and gets the pending list as a reply).

@@ -1,8 +1,8 @@
 /**
- * The voice channel's entry point into the bakery brain.
+ * The voice channel's entry point into the coffee house brain.
  *
  * ElevenLabs runs the live conversation over Photon's SIP line. It does not know
- * Saturday's croissant capacity, so mid-call it calls a tool on our server, and that
+ * Saturday's milk cake capacity, so mid-call it calls a tool on our server, and that
  * tool lands here. Everything after this point is the pipeline the texts already use,
  * which is the whole idea: a phone order produces the same ticket on the same pass,
  * waiting on the same owner approval.
@@ -73,7 +73,7 @@ const SPOKEN_NUMBERS: Record<string, string> = {
 export function normalizeTranscript(raw: string): string {
   let text = raw.trim().toLowerCase();
   for (const [word, digit] of Object.entries(SPOKEN_NUMBERS)) {
-    text = text.replace(new RegExp(`\\b${word}\\b(?=\\s+(dozen|of|croissants?|loaves|lattes?|coffees?))`, "g"), digit);
+    text = text.replace(new RegExp(`\\b${word}\\b(?=\\s+(dozen|of|milk cakes?|loaves|lattes?|coffees?))`, "g"), digit);
   }
   // "a dozen" reads as one dozen; the quantity parser already understands "1 dozen".
   text = text.replace(/\ba dozen\b/g, "1 dozen");
