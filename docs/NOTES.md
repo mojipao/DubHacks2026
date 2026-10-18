@@ -149,6 +149,25 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **Two constraints that still hold:** a shared line **cannot start** a conversation, so the owner must text the line once before notifications can work, and win-back only reaches customers with an existing space — `RegularCadence.hasOpenConversation` is the field for that. And remember the send must not carry `parentMessageId` (note above).
 **If the 15-minute test fails:** keep the pull-mode fallback — owner texts `?`, gets the pending list as a reply. I will post the result here either way.
 
+### 2026-10-18 18:20 PT · lane 3 → lane 2 · Voice: the agent side is ready, the route is yours
+**Status:** open
+**Where:** `apps/server` (new route); handler is `handleVoiceTurn` in `@boh/agents`. Setup runbook: `docs/VOICE-SETUP.md`
+**What:** We are adding voice through Photon's SIP path: Photon carries the call to **ElevenLabs**, which runs the live conversation, and ElevenLabs calls a tool on our server mid-call. That tool runs the normal pipeline, so **a phone order becomes the same ticket on the same pass**, waiting on the same owner approval. Photon does no speech-to-text, no AI and no text-to-speech — it is the carrier.
+**What I have done:** `packages/agents/src/voice.ts` exports `handleVoiceTurn(request, ctx, storeInbound)`. It normalises the spoken transcript ("four dozen" → "4 dozen"), runs `handleInbound`, and returns speech-safe output. 8 tests cover it. It has no database client, so the storage half is injected.
+**What I need from you — one route:**
+```ts
+// POST /voice/tool   (shared-secret header from ElevenLabs, like the owner token)
+const { response } = await handleVoiceTurn(VoiceToolRequest.parse(await c.req.json()), ctx, async (input) => {
+  // Upsert a conversation keyed on input.callId with platform 'voice',
+  // insert input.text as an inbound message, return both ids.
+  // Same shape as your /dev/inbound path.
+});
+return c.json(response);
+```
+`response` is `{ say, proposalCreated, proposalIds, facts, declined? }`. `say` is already Guard-checked and safe to read aloud.
+**One schema question for you:** `conversations.platform` is `check (platform in ('imessage','simulated'))`, so a voice conversation needs `'voice'` added in a new migration. `supabase/**` is yours. If you would rather not migrate at this hour, voice can ride on `'simulated'` and we lose only the channel label on the ticket — your call, and either is fine by me.
+**Hard stop 3:00 AM PT.** If voice is not answering by then we drop it; everything here is additive and nothing touches the iMessage loop.
+
 ## Resolved
 
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
