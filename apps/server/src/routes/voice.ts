@@ -12,7 +12,9 @@ import { logEvent } from "../events.ts";
 import { agentContext, ingestInbound, storeDrafts } from "../inbound.ts";
 import { localDateOf, resolveSpokenDay, weekdayOf } from "../time.ts";
 import { productFacts } from "../facts.ts";
+import { consumeCallback, phoneKeys } from "../voice/callback.ts";
 import { linkCall } from "../voice/calls.ts";
+import { maskHandle, normalizeHandle } from "../inbound.ts";
 
 /**
  * Tools the ElevenLabs phone agent calls mid-call. They answer from the same live data the text
@@ -193,4 +195,49 @@ voice.post("/tools/order", async (c) => {
   const stored = ids.filter((id): id is string => Boolean(id));
   const { data: codes } = stored.length ? await db().from("proposals").select("short_code").in("id", stored) : { data: [] };
   return c.json({ ...response, proposalIds: (codes ?? []).map((p) => p.short_code).filter(Boolean) });
+});
+
+const PurposeRequest = z.object({
+  /** Caller's number from ElevenLabs (`{{system__caller_id}}`). */
+  handle: z.string().min(1).optional(),
+  callerHandle: z.string().min(1).optional(),
+  callId: z.string().optional(),
+});
+
+/**
+ * Why this person is calling: a pending tap-to-call-back (owner asked us to reach them) plus
+ * their name. The agent should call this once at pickup so it does not greet a callback as a stranger.
+ */
+voice.post("/tools/purpose", async (c) => {
+  const body = PurposeRequest.safeParse(await c.req.json().catch(() => ({})));
+  if (!body.success) return c.json({ error: z.prettifyError(body.error) }, 400);
+  const raw = body.data.handle ?? body.data.callerHandle ?? "";
+  if (!raw) return c.json({ say: "I don't have the caller's number.", purpose: null, customerName: null, callback: false });
+
+  const handle = normalizeHandle(raw);
+  const keys = phoneKeys(handle);
+  const { data: customer } = await db().from("customers").select("id, name, notes").in("handle", keys).maybeSingle();
+  const pending = await consumeCallback(handle, body.data.callId);
+  const name = pending?.name ?? customer?.name ?? null;
+  const purpose = pending?.purpose ?? null;
+
+  if (pending) {
+    return c.json({
+      say: `This is ${name ?? "our customer"} calling back about ${purpose}. Greet them by name and pick up that thread; don't start from scratch.`,
+      purpose,
+      customerName: name,
+      callback: true,
+      notes: customer?.notes ?? null,
+    });
+  }
+  return c.json({
+    say: name
+      ? `This is ${name} calling in. Take the order as usual.`
+      : "Inbound call, no callback waiting. Take the order as usual.",
+    purpose: null,
+    customerName: name,
+    callback: false,
+    notes: customer?.notes ?? null,
+    caller: maskHandle(handle),
+  });
 });

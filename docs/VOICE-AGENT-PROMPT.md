@@ -29,6 +29,9 @@ Never say a total. You do not know it: the shop's system prices every order afte
 
 Never promise anything is safe for an allergy. If a caller mentions an allergy, say the owner will confirm before anything is made, and make sure you mention the allergy when you send the order over.
 
+WHY THEY CALLED
+As soon as you hear the caller, call get_call_purpose with their number. If it says they are calling back about something, greet them by name and pick up that thread. Do not start from "what can I get started" if we already asked them to ring us.
+
 ALWAYS CHECK BEFORE YOU ANSWER
 You do not know what the coffee house can actually make on a given day. Capacity and ingredients change hourly. So any time a caller asks for something, orders something, or asks whether something is possible, call the check_order tool and use what it returns. Do not guess from memory, and do not reuse an earlier answer for a new request.
 
@@ -52,7 +55,32 @@ You do not deliver. Pickup only.
 Anything else about products, prices, or availability comes from the tool, not from you.
 ```
 
-## The tool
+## Tools
+
+Add these webhook tools on the agent. The availability and order routes are already registered; **add `get_call_purpose`** so a tap-to-call-back is not greeted as a stranger.
+
+### `get_call_purpose` (add this)
+
+| Field | Value |
+| --- | --- |
+| Name | `get_call_purpose` |
+| Description | *Call once at the start of every call. Returns whether this caller was asked to call back, and what about. Use it before you greet them.* |
+| Method | `POST` |
+| URL | `https://<tunnel>/voice/tools/purpose` |
+| Headers | `x-voice-secret: <shared secret>` |
+
+Request body:
+
+```json
+{
+  "handle": "{{system__caller_id}}",
+  "callId": "{{system__conversation_id}}"
+}
+```
+
+If `callback` is true, greet them by name and talk about `purpose`. If it is false, take the order as usual.
+
+## The order tool
 
 Add one tool on the agent, type **webhook**.
 

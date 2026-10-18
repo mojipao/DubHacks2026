@@ -1,5 +1,6 @@
 import { db } from "../db.ts";
 import { env } from "../env.ts";
+import { HttpError } from "../execute.ts";
 import { logEvent } from "../events.ts";
 import { maskHandle, normalizeHandle } from "../inbound.ts";
 
@@ -155,4 +156,15 @@ export async function placeCall(toNumber: string, purpose: string): Promise<{ ok
     }),
   });
   return res.conversation_id ? { ok: true, callId: res.conversation_id } : { ok: false, reason: res.message ?? "The call didn't start." };
+}
+
+/** Owner marked a transcribed call as seen (or skipped it). Tickets are approved/skipped separately. */
+export async function reviewCall(callId: string, action: "reviewed" | "skipped") {
+  const { data } = await db().from("events").select("id, subject_id").eq("type", "call.transcribed").eq("data->>callId", callId).limit(1);
+  const ev = data?.[0];
+  if (!ev) throw new HttpError(404, "No transcribed call with that id");
+  const { data: already } = await db().from("events").select("id").eq("type", "call.reviewed").eq("data->>callId", callId).limit(1);
+  if (already?.length) return { callId, action, already: true };
+  await logEvent("owner", "call.reviewed", ev.subject_id ? { type: "conversation", id: ev.subject_id } : null, { callId, action });
+  return { callId, action, already: false };
 }

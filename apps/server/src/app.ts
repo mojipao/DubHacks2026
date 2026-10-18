@@ -39,6 +39,7 @@ app.get("/health", (c) =>
     voiceTools: Boolean(env.VOICE_TOOL_SECRET),
     autonomy: env.AUTONOMY,
     callSync: Boolean(env.ELEVENLABS_API_KEY && env.ELEVENLABS_AGENT_ID),
+    voiceCallback: Boolean(env.PHOTON_VOICE_NUMBER),
   }),
 );
 

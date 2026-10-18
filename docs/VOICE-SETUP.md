@@ -42,7 +42,7 @@ node --env-file=.env -e 'const P=process.env.PHOTON_PROJECT_ID,K=process.env.PHO
 
 **So the Photon half is finished.** A call to that number is already being handed to `sips:sip.rtc.elevenlabs.io:5061`. Until an ElevenLabs agent is listening there, the call will not be answered — that is expected, and it is the only thing left.
 
-**Outbound SIP is still not configured and is not needed.** It returns `402 ENTITLEMENT_REQUIRED` without a card on the organization, and Photon's docs call outbound credentials "not required for incoming-only setup". Our demo is a judge calling the coffee house.
+**Outbound SIP is still not configured.** It returns `402 ENTITLEMENT_REQUIRED` without a card on the organization. The workaround is tap-to-call-back: asking the agent to "call Maya" texts her `PHOTON_VOICE_NUMBER` as a tappable line, and `POST /voice/tools/purpose` tells the voice agent why she rang.
 
 ## Part 2 — ElevenLabs (about 15 minutes)
 

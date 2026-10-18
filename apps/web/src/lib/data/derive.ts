@@ -1,4 +1,4 @@
-import type { UiEvent } from "@/lib/data/types";
+import type { UiEvent, UiMessage, UiProposal } from "@/lib/data/types";
 
 /** Everything here is read from the events the store already loads; no extra queries. */
 
@@ -37,6 +37,72 @@ export function callConversationIds(events: UiEvent[]): Set<string> {
   return new Set(
     events.filter((e) => (e.type === "call.transcribed" || e.type === "call.linked") && e.subjectId).map((e) => e.subjectId!),
   );
+}
+
+/** Every transcribed call, newest first. */
+export function allCalls(events: UiEvent[]): UiCall[] {
+  return [...callsByConversation(events).values()]
+    .flat()
+    .sort((a, b) => Date.parse(b.startedAt) - Date.parse(a.startedAt));
+}
+
+export function reviewedCallIds(events: UiEvent[]): Set<string> {
+  return new Set(
+    events.filter((e) => e.type === "call.reviewed").map((e) => String((e.data as { callId?: unknown }).callId ?? "")).filter(Boolean),
+  );
+}
+
+/** Turns that fall inside a call's clock, so the Calls tab can show a transcript without a second query. */
+export function messagesForCall(messages: UiMessage[], call: UiCall): UiMessage[] {
+  const start = Date.parse(call.startedAt) - 8_000;
+  const end = Date.parse(call.startedAt) + (call.durationSecs + 90) * 1000;
+  return messages
+    .filter((m) => m.conversationId === call.conversationId && Date.parse(m.createdAt) >= start && Date.parse(m.createdAt) <= end)
+    .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
+}
+
+/** Tickets drafted from a call: prefer the trigger message inside the call clock, else the ticket's own time. */
+export function ticketsForCall(proposals: UiProposal[], call: UiCall, messages: UiMessage[] = []): UiProposal[] {
+  const start = Date.parse(call.startedAt) - 60_000;
+  const end = Date.parse(call.startedAt) + (call.durationSecs + 180) * 1000;
+  const byId = new Map(messages.map((m) => [m.id, m]));
+  return proposals
+    .filter((p) => {
+      if (p.conversationId !== call.conversationId) return false;
+      const trigger = p.triggerMessageId ? byId.get(p.triggerMessageId) : undefined;
+      const at = Date.parse(trigger?.createdAt ?? p.createdAt);
+      return at >= start && at <= end;
+    })
+    .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
+}
+
+export type UiCallback = {
+  eventId: string;
+  conversationId: string | null;
+  name: string;
+  purpose: string;
+  at: string;
+};
+
+/** Tap-to-call-backs we sent that the customer has not called in on yet. */
+export function openCallbacks(events: UiEvent[], now = Date.now()): UiCallback[] {
+  const used = new Set(
+    events.filter((e) => e.type === "call.callback_consumed").map((e) => String((e.data as { requestedEventId?: unknown }).requestedEventId ?? "")),
+  );
+  const day = 24 * 60 * 60 * 1000;
+  return events
+    .filter((e) => e.type === "call.callback_requested" && !used.has(e.id) && now - Date.parse(e.at) < day)
+    .map((e) => {
+      const d = e.data as { name?: string; purpose?: string; conversationId?: string | null };
+      return {
+        eventId: e.id,
+        conversationId: e.subjectId ?? d.conversationId ?? null,
+        name: d.name ?? "Customer",
+        purpose: d.purpose ?? "a follow-up",
+        at: e.at,
+      };
+    })
+    .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
 }
 
 export type UiHold = {

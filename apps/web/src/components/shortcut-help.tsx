@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const SHORTCUTS: [string, string][] = [
-  ["1 2 3", "Orders, Today, People"],
+  ["1 2 3 4 5", "Orders, Today, People, Calls, Ask"],
   ["A", "Approve the selected order (and its restock)"],
   ["E", "Edit the reply before approving"],
   ["W", "Write your own message instead"],
@@ -25,11 +25,11 @@ export function ShortcutHelp({ open, onOpenChange }: { open: boolean; onOpenChan
           {SHORTCUTS.map(([key, what]) => (
             <div key={key} className="contents">
               <dt>
-                <kbd className="inline-flex min-w-8 justify-center rounded border border-line bg-surface px-1.5 py-0.5 font-mono text-[12px] text-fg shadow-[0_2px_0_var(--line-strong)]">
+                <kbd className="inline-flex min-w-8 justify-center rounded border border-line bg-surface px-1.5 py-0.5 font-mono text-[12px] text-ink shadow-[0_2px_0_var(--line-strong)]">
                   {key}
                 </kbd>
               </dt>
-              <dd className="text-[14px] text-fg/85">{what}</dd>
+              <dd className="text-[14px] text-ink/85">{what}</dd>
             </div>
           ))}
         </dl>

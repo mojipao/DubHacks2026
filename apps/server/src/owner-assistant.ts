@@ -6,6 +6,7 @@ import { logEvent } from "./events.ts";
 import { sendAndRecord, HttpError } from "./execute.ts";
 import { maskHandle, normalizeHandle } from "./inbound.ts";
 import { localDateOf } from "./time.ts";
+import { prettyPhone, requestCallback, shopVoiceNumber } from "./voice/callback.ts";
 import { placeCall } from "./voice/calls.ts";
 
 /**
@@ -42,6 +43,8 @@ export interface CallResult {
   target: string;
   purpose: string;
   placed: boolean;
+  /** True when we texted a tap-to-call-back instead of dialing out. */
+  callback?: boolean;
 }
 export interface Help {
   kind: "help";
@@ -50,7 +53,7 @@ export interface Help {
 export type AssistantAnswer = StockReport | CampaignPreview | CallResult | Help;
 
 const HELP_TEXT =
-  'Try: "how\'s our stock?", "how much ghee is left?", "text regulars: milk cake is buy one get one today", "text Maya and Jun: …", or "call Jun about his order".';
+  'Try: "how\'s our stock?", "how much ghee is left?", "text regulars: milk cake is buy one get one today", "text Maya and Jun: …", or "call Jun about his order". Outbound dialing is off, so "call" texts them a tap-to-call-back to the shop line.';
 
 const PHONE = /\+?\d[\d\s().-]{8,}\d/g;
 
@@ -257,10 +260,44 @@ export async function callRequest(t: string): Promise<CallResult> {
   const target = person?.name ?? (number ? maskHandle(number) : "someone");
   if (!number) return { kind: "call", say: `I don't have a phone number for ${target}.`, target, purpose, placed: false };
   const res = await placeCall(number, purpose);
-  await logEvent("owner", "call.requested", null, { target, purpose, placed: res.ok, reason: res.ok ? null : res.reason });
-  return res.ok
-    ? { kind: "call", say: `Calling ${target} now about ${purpose}. The transcript will show up in Messages when the call ends.`, target, purpose, placed: true }
-    : { kind: "call", say: `I can't call ${target} yet: ${res.reason}`, target, purpose, placed: false };
+  if (res.ok) {
+    await logEvent("owner", "call.requested", null, { target, purpose, placed: true, reason: null });
+    return {
+      kind: "call",
+      say: `Calling ${target} now about ${purpose}. The transcript will show up under Calls when it ends.`,
+      target,
+      purpose,
+      placed: true,
+    };
+  }
+
+  const cb = await requestCallback({ handle: number, name: person?.name ?? target, purpose });
+  await logEvent("owner", "call.requested", cb.conversationId ? { type: "conversation", id: cb.conversationId } : null, {
+    target,
+    purpose,
+    placed: false,
+    callback: cb.sent,
+    reason: cb.sent ? null : `${res.reason}${cb.reason ? ` ${cb.reason}` : ""}`,
+  });
+  if (cb.sent && cb.number) {
+    return {
+      kind: "call",
+      say: `I can't dial out yet (${res.reason}) so I texted ${target} a tap-to-call-back: ${prettyPhone(cb.number)}. When they call, the agent already knows it's about ${purpose}. Transcript and any order land under Calls.`,
+      target,
+      purpose,
+      placed: false,
+      callback: true,
+    };
+  }
+  const shop = shopVoiceNumber();
+  const shopLine = shop ? ` They can still call the shop at ${prettyPhone(shop)}.` : "";
+  return {
+    kind: "call",
+    say: `I can't call ${target}: ${res.reason}${cb.reason ? ` ${cb.reason}` : ""}${shopLine}`,
+    target,
+    purpose,
+    placed: false,
+  };
 }
 
 /** A campaign previewed by text, waiting for the owner's SEND. One at a time is plenty. */

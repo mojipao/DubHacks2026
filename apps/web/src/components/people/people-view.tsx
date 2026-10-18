@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { PAYMENT_LINK_TOKEN } from "@boh/shared";
 import { Download, Phone, Search } from "lucide-react";
 import { toast } from "sonner";
-import { callConversationIds, callsByConversation, formatDuration, senders, type Sender } from "@/lib/data/derive";
+import { callConversationIds, callsByConversation, formatDuration, messagesForCall, senders, type Sender, type UiCall } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import type { ContactStage, UiContact, UiMessage } from "@/lib/data/types";
 import { money, shortRelativeTime } from "@/lib/format";
@@ -264,33 +264,25 @@ function Thread({
               </button>
             </div>
           )}
-          {calls.map((call) => (
-            <div key={call.callId} className="mb-4 border-y border-line py-3">
-              <p className="flex items-center gap-2 text-[15px] font-semibold text-ink">
-                <Phone className="size-4 text-muted" aria-hidden />
-                Phone call · {formatDuration(call.durationSecs)} · {call.turns} turns
-                <span className="ml-auto text-[13px] font-normal text-muted">{shortRelativeTime(call.startedAt)}</span>
-              </p>
-              {call.summary && <p className="mt-1 max-w-prose text-[15px] leading-snug text-ink/85">{call.summary}</p>}
-              <p className="mt-1 text-[13px] text-muted">The transcript is below: the caller on the left, the agent on the right.</p>
-            </div>
-          ))}
-          {messages.map((m) => (
-            <div key={m.id} className={cn("flex flex-col", m.direction === "inbound" ? "items-start" : "items-end")}>
-              <p
-                className={cn(
-                  "max-w-[min(80%,36rem)] rounded-2xl px-4 py-2.5 text-[15px] leading-snug whitespace-pre-wrap",
-                  m.direction === "inbound" ? "rounded-bl-md bg-bubble-in text-ink" : "rounded-br-md bg-bubble-out text-ink",
-                )}
-              >
-                {m.body}
-              </p>
-              <span className="mt-1 px-1 text-[12px] text-muted">
-                {shortRelativeTime(m.createdAt)}
-                {m.direction === "outbound" && sentBy.has(m.id) && ` · ${SENT_BY[sentBy.get(m.id)!]}`}
-              </span>
-            </div>
-          ))}
+          {threadItems(messages, calls).map((item) =>
+            item.kind === "call" ? (
+              <div key={item.call.callId} className="mb-4 border-y border-line py-3">
+                <p className="flex items-center gap-2 text-[15px] font-semibold text-ink">
+                  <Phone className="size-4 text-muted" aria-hidden />
+                  Phone call · {formatDuration(item.call.durationSecs)} · {item.call.turns} turns
+                  <span className="ml-auto text-[13px] font-normal text-muted">{shortRelativeTime(item.call.startedAt)}</span>
+                </p>
+                {item.call.summary && <p className="mt-1 max-w-prose text-[15px] leading-snug text-ink/85">{item.call.summary}</p>}
+                <div className="mt-3 space-y-2.5">
+                  {item.messages.map((m) => (
+                    <Bubble key={m.id} m={m} sentBy={sentBy.get(m.id)} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Bubble key={item.m.id} m={item.m} sentBy={sentBy.get(item.m.id)} />
+            ),
+          )}
           <div ref={endRef} />
         </div>
       </div>
@@ -324,6 +316,36 @@ function Thread({
           Send
         </button>
       </form>
+    </div>
+  );
+}
+
+function threadItems(messages: UiMessage[], callList: UiCall[]) {
+  const inCall = new Set<string>();
+  const calls = callList.map((call) => {
+    const turns = messagesForCall(messages, call);
+    for (const m of turns) inCall.add(m.id);
+    return { kind: "call" as const, at: Date.parse(call.startedAt), call, messages: turns };
+  });
+  const rest = messages.filter((m) => !inCall.has(m.id)).map((m) => ({ kind: "msg" as const, at: Date.parse(m.createdAt), m }));
+  return [...calls, ...rest].sort((a, b) => a.at - b.at);
+}
+
+function Bubble({ m, sentBy }: { m: UiMessage; sentBy?: Sender }) {
+  return (
+    <div className={cn("flex flex-col", m.direction === "inbound" ? "items-start" : "items-end")}>
+      <p
+        className={cn(
+          "max-w-[min(80%,36rem)] rounded-2xl px-4 py-2.5 text-[15px] leading-snug whitespace-pre-wrap",
+          m.direction === "inbound" ? "rounded-bl-md bg-bubble-in text-ink" : "rounded-br-md bg-bubble-out text-ink",
+        )}
+      >
+        {m.body}
+      </p>
+      <span className="mt-1 px-1 text-[12px] text-muted">
+        {shortRelativeTime(m.createdAt)}
+        {m.direction === "outbound" && sentBy && ` · ${SENT_BY[sentBy]}`}
+      </span>
     </div>
   );
 }

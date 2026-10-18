@@ -117,7 +117,7 @@ export type AssistantAnswer =
       products: { id: string; name: string; date: string; left: number; capacity: number }[];
     }
   | { kind: "campaign"; say: string; text: string; audience: string; recipients: AssistantRecipient[] }
-  | { kind: "call"; say: string; target: string; purpose: string; placed: boolean }
+  | { kind: "call"; say: string; target: string; purpose: string; placed: boolean; callback?: boolean }
   | { kind: "help"; say: string };
 
 export function askAgent(text: string) {
@@ -133,4 +133,8 @@ export function sendCampaign(text: string, conversationIds: string[]) {
 
 export function syncCalls() {
   return post<{ imported: number }>("/api/assistant/calls/sync");
+}
+
+export function reviewCall(callId: string, action: "reviewed" | "skipped") {
+  return post<{ callId: string; action: string; already?: boolean }>("/api/assistant/calls/review", { callId, action });
 }
