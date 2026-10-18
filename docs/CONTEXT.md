@@ -95,6 +95,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
 - **Web on Vercel:** team DubHacks26, project `dub-hacks2026`, root `apps/web`, auto-deploys from this repo; production URL `https://dub-hacks2026.vercel.app`. Preview env vars are set; production ones need the team owner (see NOTES).
+- **Human in the loop:** approve sends immediately; `POST /proposals/:id/approve { alternativeIndex }` sends one of the agent's alternative wordings (`ReplyPayload.alternatives`, optional, up to 3); `POST /conversations/:id/send { text, clientId }` sends the owner's own message, closes pending agent replies there, and the agents read it on the next text. Owner token.
 - **Leads:** `GET /contacts` (stage, money, counts per conversation; `?format=csv` to export) and `GET /contacts/:conversationId/messages` (paged full history). Owner token.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.

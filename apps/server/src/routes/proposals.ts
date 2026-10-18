@@ -3,7 +3,14 @@ import { z } from "zod";
 import { approve, reject, retry } from "../execute.ts";
 import { requireOwner } from "./owner-auth.ts";
 
-const ApproveBody = z.object({ editedText: z.string().optional(), includeLinked: z.boolean().optional() });
+const ApproveBody = z
+  .object({
+    editedText: z.string().optional(),
+    /** Send the agent's alternative wording at this index instead of its main draft. */
+    alternativeIndex: z.number().int().min(0).max(2).optional(),
+    includeLinked: z.boolean().optional(),
+  })
+  .refine((b) => b.editedText === undefined || b.alternativeIndex === undefined, "Send editedText or alternativeIndex, not both");
 const RejectBody = z.object({ reason: z.string().max(500).optional(), includeLinked: z.boolean().optional() });
 
 export const proposals = new Hono();

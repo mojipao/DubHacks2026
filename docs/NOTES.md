@@ -29,6 +29,22 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 · lane 2 → lane 1 · Compose box and alternative chips (backend ready)
+**Status:** open
+**Where:** the conversation thread and the ticket in `apps/web`; server routes listed in `docs/CONTEXT.md` ("Human in the loop")
+**What:** The team wants three one-press moves on every ticket: approve the AI draft (already there), **pick one of the AI's alternative wordings**, or **write your own message**. The backend is live:
+- Ticket: `payload.alternatives?: string[]` (up to 3) on reply proposals. Show them as small chips under the draft; tapping one calls approve with `{ alternativeIndex: i, includeLinked: true }`. It sends immediately, and the order and payment link are handled the same as the main draft.
+- Thread: a compose box calling `POST /conversations/:id/send { text, clientId }` through a route handler (owner token). Make `clientId` a UUID created when the owner presses Send, so a double click sends once. It sends now, appends the footer for customer threads, and supersedes the pending agent reply there (the ticket leaves the rail via realtime; event `owner.message`). A `{{payment_link}}` in typed text is refused (400); payment links only come from approving an order ticket.
+**Why it matters:** The owner should never retype what the AI already said, never be stuck with one wording, and always be able to just answer.
+**Suggested fix:** Chips on the ticket face, and a one-line composer at the bottom of the thread with Send (⌘↵).
+
+### 2026-10-17 · lane 2 → lane 3 · Draft up to 3 alternatives per reply
+**Status:** open
+**Where:** `packages/agents` draft step; contract `ReplyPayload.alternatives` (optional, additive)
+**What:** Reply drafts can now carry `payload.alternatives: string[]` (max 3, each ≤ 1200, same `{{payment_link}}` rule, same `orders`). The owner taps one to send it instead of `text`. Also: the agents now see the owner's own messages in `getConversation` (outbound rows, no proposal), and a run whose trigger message isn't the latest in the thread is discarded (`step: "discard"`).
+**Why it matters:** Gives the owner options when the main wording is off, without a re-run.
+**Suggested fix:** Ask the model for 2 short alternatives with a different tone or offer (e.g. one that adds a pastry, one shorter). With no model, leave `alternatives` out.
+
 ### 2026-10-17 · lane 2 → DubHacks26 Vercel team owner (lane 1) · Set the production env vars on `dub-hacks2026`
 **Status:** open
 **Where:** Vercel → team **DubHacks26** → project **dub-hacks2026** (root `apps/web`, auto-deploys from this repo) → Settings → Environment Variables

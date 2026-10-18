@@ -10,3 +10,6 @@ build/
 __pycache__/
 *.pyc
 .vercel
+
+# macOS/iCloud conflict copies ("file 2.ts") appear when the repo lives in a synced folder
+* 2.*
