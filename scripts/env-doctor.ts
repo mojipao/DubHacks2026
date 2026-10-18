@@ -71,7 +71,7 @@ const SPECS: readonly Spec[] = [
   { name: "PHOTON_VOICE_NUMBER", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the line customers call" },
   { name: "PHOTON_VOICE_PROFILE_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: SIP profile routing to ElevenLabs" },
   { name: "PHOTON_VOICE_RESOURCE_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the provisioned line" },
-  { name: "ELEVENLABS_AGENT_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the Larch & Rye agent" },
+  { name: "ELEVENLABS_AGENT_ID", kind: "shared-config", owner: "lane 3", required: false, note: "voice: the Mokha Coffee House agent" },
 
   // Per-machine: these are SUPPOSED to differ. Copying someone else's is the bug.
   { name: "PORT", kind: "per-machine", owner: "you", required: false },
