@@ -146,7 +146,7 @@ export interface Product {
   category: "pastry" | "bread" | "drink" | "cake" | "savory";
   priceCents: number;
   dailyCapacity: number;
-  aliases: string[];   // "croissants" → butter croissant
+  aliases: string[];   // "milk cakes" → milk cake
   active: boolean;
 }
 
