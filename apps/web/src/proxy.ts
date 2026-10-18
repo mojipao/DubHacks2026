@@ -12,6 +12,8 @@ export function proxy(request: NextRequest) {
   if (!password) return NextResponse.next();
 
   const { pathname } = request.nextUrl;
+  // The landing page is the front door; its login button leads into the locked shop.
+  if (pathname === "/" && !request.nextUrl.search) return NextResponse.next();
   if (PUBLIC.some((p) => pathname === p || pathname.startsWith(`${p}/`))) return NextResponse.next();
 
   const header = request.headers.get("authorization") ?? "";
