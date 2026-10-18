@@ -32,7 +32,7 @@ How this differs from the other docs:
 ### 2026-10-17 · lane 2 → DubHacks26 Vercel team owner (lane 1) · Set the production env vars on `dub-hacks2026`
 **Status:** open
 **Where:** Vercel → team **DubHacks26** → project **dub-hacks2026** (root `apps/web`, auto-deploys from this repo) → Settings → Environment Variables
-**What:** The project had **no environment variables**, so `https://dub-hacks2026.vercel.app` couldn't reach Supabase or the server. Lane 2 added all five for **Preview**, but Vercel refuses production ones from mojipao's role: "Additional permissions are required to create production environment variables." The team owner needs to either raise mojipao to Owner, or add these five for **Production** (values are in the shared `.env`; never paste them in chat):
+**What:** The project had **no environment variables**, so `https://dub-hacks2026.vercel.app` couldn't reach Supabase or the server. Lane 2 added all six for **Preview**, but Vercel refuses production ones from mojipao's role: "Additional permissions are required to create production environment variables." The team owner needs to either raise mojipao to Owner, or add these six for **Production** (values are in the shared `.env`; never paste them in chat):
 | Name | Value | Type |
 | - | - | - |
 | `NEXT_PUBLIC_SUPABASE_URL` | same as `.env` | plain |
@@ -40,6 +40,7 @@ How this differs from the other docs:
 | `NEXT_PUBLIC_DATA_MODE` | `live` | plain |
 | `SERVER_URL` | `https://paging-dreamless-darkened.ngrok-free.dev` (the demo host's tunnel) | plain |
 | `OWNER_TOKEN` | same as `.env` | **sensitive** |
+| `NEXT_PUBLIC_SITE_URL` | `https://dub-hacks2026.vercel.app` (the QR encodes it; lane 1's 70a2222) | plain |
 
 Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows live tickets, and `/join/qr` opened **on the vercel.app URL** encodes `https://dub-hacks2026.vercel.app/join`, which fixes the localhost QR note below. The server must be running (`pnpm demo:host` on mojipao's laptop) for actions to work.
 **Why it matters:** Judges reach the shop through the QR → `/join`, which only works on a public URL.
@@ -52,12 +53,13 @@ Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows
 **Suggested fix:** A `src/proxy.ts` (Next 16 middleware) that requires HTTP Basic auth (`CONTROL_ROOM_PASSWORD` env, sensitive) for everything except `/join`, `/join/qr`, `/api/join`, static assets and the OG image. Or Vercel Password Protection (the team is on Pro), but that would also block `/join`, so the middleware is the better fit.
 
 ### 2026-10-17 · lane 2 → lane 1 · The `/join/qr` code points at localhost on the demo laptop
-**Status:** open
+**Status:** resolved
 **Where:** `apps/web/src/app/join/qr/page.tsx` (`window.location.origin`)
 **What:** The QR encodes the origin the page was opened at. On the demo host that's `http://localhost:3000/join`, which a judge's phone can't open. The QR is now the documented way customers reach the shop (README, "How a customer texts the shop").
 **Why it matters:** Scanning the QR is the first thing a judge does, and it would fail on the spot.
 **Suggested fix:** Deploy `apps/web` to Vercel (your Phase 5 item: Root Directory `apps/web`, the web env vars, `SERVER_URL` = the demo host's ngrok URL `https://paging-dreamless-darkened.ngrok-free.dev`). Encode `NEXT_PUBLIC_SITE_URL` (the Vercel URL) when it's set and fall back to the origin. Print the QR once the URL is fixed. Lane 2's server already accepts requests through that ngrok domain; CORS only matters for browser calls, and yours go through route handlers.
 
+**Reply (lane 2):** Fixed by lane 1 in 70a2222: the QR encodes `NEXT_PUBLIC_SITE_URL` when set. Lane 2 set it in `.env.example` and on Vercel Preview; Production is in the env-var note above.
 ### 2026-10-17 · lane 2 → lane 3 · Coffee-shop switch landed in your files
 **Status:** open
 **Where:** `data/seed/*.json`, `scripts/check-seed.ts`, `scripts/generate-history.ts`, `packages/agents/src/{guard,intake,understand}.ts`, `prompts/{draft,understand}.ts`, `intake.test.ts`, `ops.test.ts`
