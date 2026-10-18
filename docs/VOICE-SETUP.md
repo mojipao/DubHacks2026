@@ -34,20 +34,15 @@ Nothing above needs redoing. Confirm any time with:
 node --env-file=.env -e 'const P=process.env.PHOTON_PROJECT_ID,K=process.env.PHOTON_API_KEY;fetch(`https://api.photon.codes/v1/projects/${P}/platforms/voice/profiles`,{headers:{authorization:`Bearer ${K}`}}).then(r=>r.json()).then(j=>console.log(JSON.stringify(j,null,1)))'
 ```
 
-### Blocked on a payment method — needs a human
+### Number provisioned and wired (2026-10-18)
 
-The project has **no phone number** (`lineCount: 0`), and Photon will not provision one without a card on the organization. Enabling outbound SIP returns:
+- **Voice line active:** Photon resource `pho_res_01m568b726e8g8pch29ktyzjp3`, type `voip_line`, state `active`, abilities `pstn_voice` and `sms`.
+- **Assigned to the voice profile** (`lineCount: 1`), which already points inbound at ElevenLabs.
+- The number itself is in the private `.env` as `PHOTON_VOICE_NUMBER`, with `PHOTON_VOICE_PROFILE_ID` and `PHOTON_VOICE_RESOURCE_ID` beside it. Not in git.
 
-```
-402 ENTITLEMENT_REQUIRED
-"Outbound calling requires a payment method on the project's organization"
-```
+**So the Photon half is finished.** A call to that number is already being handed to `sips:sip.rtc.elevenlabs.io:5061`. Until an ElevenLabs agent is listening there, the call will not be answered — that is expected, and it is the only thing left.
 
-1. **Add a payment method.** `app.beta.photon.codes` → organization settings → billing.
-2. **Buy the number.** **SMS** → purchase, country **US**, area code **206** (Seattle, which suits the bakery). **Check the price in the dialog before confirming** and say what it was in the team chat — the free plan covers iMessage sends but not numbers, and the docs do not publish the SMS number price. Voice itself is **$0.013 per minute** for US/Canada, which is negligible for a demo.
-3. Tell me the number and I will assign it to the voice profile by API.
-
-**Outbound SIP is not needed for the demo.** Photon's own docs say outbound credentials are "not required for incoming-only setup", and our demo is a judge calling the bakery. Skip ElevenLabs' outbound section too unless the agent needs to place calls.
+**Outbound SIP is still not configured and is not needed.** It returns `402 ENTITLEMENT_REQUIRED` without a card on the organization, and Photon's docs call outbound credentials "not required for incoming-only setup". Our demo is a judge calling the bakery.
 
 ## Part 2 — ElevenLabs (about 15 minutes)
 
