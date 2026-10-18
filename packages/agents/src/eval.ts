@@ -226,6 +226,8 @@ async function main(): Promise<void> {
   console.log(`\n  Back of House evals · ${cases.length} cases · ${RUNS} run${RUNS === 1 ? "" : "s"} each · ${mode}\n`);
 
   let passed = 0;
+  let modelRuns = 0;
+  let totalRuns = 0;
   const rows: string[] = [];
   const failedDetail: string[] = [];
 
@@ -233,6 +235,8 @@ async function main(): Promise<void> {
     const attempts: Attempt[] = [];
     for (let i = 0; i < RUNS; i++) attempts.push(await runOnce(testCase));
 
+    modelRuns += attempts.filter((a) => a.usedModel).length;
+    totalRuns += attempts.length;
     const clean = attempts.filter((a) => a.failures.length === 0).length;
     const ok = clean === RUNS;
     if (ok) passed++;
@@ -258,7 +262,14 @@ async function main(): Promise<void> {
   for (const row of rows) console.log(row);
 
   const rate = (passed / cases.length) * 100;
-  console.log(`\n  ${passed}/${cases.length} cases pass — ${rate.toFixed(1)}%\n`);
+  const modelShare = totalRuns === 0 ? 0 : (modelRuns / totalRuns) * 100;
+  console.log(`\n  ${passed}/${cases.length} cases pass — ${rate.toFixed(1)}%`);
+  // A model that times out on every call still scores well here, because the
+  // deterministic reader catches it. That is a fallback score, not a model score.
+  console.log(`  the model answered on ${modelRuns}/${totalRuns} runs (${modelShare.toFixed(0)}%)\n`);
+  if (isModelConfigured() && modelShare < 50) {
+    console.log(`  ! ${modelId()} answered under half the time — most of this score is the deterministic path.\n`);
+  }
 
   if (failedDetail.length > 0) {
     console.log("  failures in detail:");
