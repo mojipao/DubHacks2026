@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { AssistantView } from "@/components/assistant/assistant-view";
-import { CallsView } from "@/components/calls/calls-view";
 import { Frieze } from "@/components/frieze";
 import { OrdersView } from "@/components/orders/orders-view";
 import { PeopleView } from "@/components/people/people-view";
@@ -12,13 +11,13 @@ import { OpsView } from "@/components/ops/ops-view";
 import { TodayView } from "@/components/today/today-view";
 import { TopBar } from "@/components/top-bar";
 import { VIEWS, ViewTabs, type View } from "@/components/view-tabs";
-import { allCalls, reviewedCallIds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 
 const LEGACY_TABS: Record<string, View> = {
   pass: "orders",
   conversations: "people",
   customers: "people",
+  calls: "people",
   assistant: "ask",
 };
 
@@ -78,7 +77,6 @@ export function ControlRoom() {
   });
 
   const waiting = state.proposals.filter((p) => p.status === "pending" && !p.parentProposalId).length;
-  const callsWaiting = allCalls(state.events).filter((c) => !reviewedCallIds(state.events).has(c.callId)).length;
 
   return (
     <div className="flex h-dvh min-h-[640px] flex-col">
@@ -86,7 +84,7 @@ export function ControlRoom() {
         <TopBar
           onOpenSim={() => setSimOpen(true)}
           onOpenKeys={() => setHelpOpen(true)}
-          tabs={<ViewTabs view={view} onChange={setView} waiting={waiting} callsWaiting={callsWaiting} />}
+          tabs={<ViewTabs view={view} onChange={setView} waiting={waiting} />}
         />
         <Frieze />
       </div>
@@ -95,7 +93,6 @@ export function ControlRoom() {
         {view === "orders" && <OrdersView onOpenSim={() => setSimOpen(true)} onOpenPerson={openPerson} blocked={simOpen || helpOpen} />}
         {view === "today" && <TodayView />}
         {view === "people" && <PeopleView onOpenOrder={openOrder} />}
-        {view === "calls" && <CallsView onOpenPerson={openPerson} />}
         {view === "ask" && <AssistantView />}
         {view === "ops" && <OpsView />}
       </main>

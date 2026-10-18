@@ -264,7 +264,7 @@ export async function callRequest(t: string): Promise<CallResult> {
     await logEvent("owner", "call.requested", null, { target, purpose, placed: true, reason: null });
     return {
       kind: "call",
-      say: `Calling ${target} now about ${purpose}. The transcript will show up under Calls when it ends.`,
+      say: `Calling ${target} now about ${purpose}. The transcript will show up in People when it ends.`,
       target,
       purpose,
       placed: true,
@@ -282,7 +282,7 @@ export async function callRequest(t: string): Promise<CallResult> {
   if (cb.sent && cb.number) {
     return {
       kind: "call",
-      say: `I can't dial out yet (${res.reason}) so I texted ${target} a tap-to-call-back: ${prettyPhone(cb.number)}. When they call, the agent already knows it's about ${purpose}. Transcript and any order land under Calls.`,
+      say: `I can't dial out yet (${res.reason}) so I texted ${target} a tap-to-call-back: ${prettyPhone(cb.number)}. When they call, the agent already knows it's about ${purpose}. Transcript and any order land in People.`,
       target,
       purpose,
       placed: false,
