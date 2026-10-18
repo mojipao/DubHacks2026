@@ -1,6 +1,10 @@
 /**
  * Phase 0: prove the Photon 2.0 beta iMessage round trip.
  *
+ * Verified 2026-10-18: inbound and outbound both work on a shared line, but a send
+ * carrying `parentMessageId` is rejected with 409 SPACE_NOT_SENDABLE. See the note at
+ * the reply below before adding it back.
+ *
  *   pnpm tsx scripts/photon-ping.ts
  *   pnpm tsx scripts/photon-ping.ts --followup
  *
@@ -337,13 +341,11 @@ async function main(): Promise<void> {
   console.log(`  replying in space ${ping.space.id} as ${agent.id}`);
 
   const sentAt = Date.now();
-  const reply = await sendText(
-    ping.space.id,
-    agent.id,
-    "pong — Back of House is listening.",
-    `ping-reply:${ping.id}`,
-    ping.id,
-  );
+  // Deliberately no parentMessageId. A shared iMessage line rejects threaded replies
+  // with 409 SPACE_NOT_SENDABLE ("Replies are not supported for this Space"), which
+  // reads like the space is unsendable when a plain send to the same space works. The
+  // field is valid in the API and valid on other platforms, just not here.
+  const reply = await sendText(ping.space.id, agent.id, "pong — Back of House is listening.", `ping-reply:${ping.id}`);
   console.log(
     `✓ reply accepted: ${reply.status} in ${Date.now() - sentAt}ms` +
       ` · message ${reply.body.id}${reply.replayed ? " (idempotent replay)" : ""}` +
