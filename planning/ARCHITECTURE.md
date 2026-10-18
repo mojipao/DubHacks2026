@@ -666,6 +666,7 @@ One `.env` at the repo root, shared privately. `apps/web/.env.local` holds the w
 | `OWNER_TOKEN` | server, web server side | Random 32+ characters |
 | `SERVER_URL` | web server side | `http://localhost:8787` or the tunnel URL |
 | `NEXT_PUBLIC_DATA_MODE` | web | `live` or `mock` |
+| `NEXT_PUBLIC_SITE_URL` | web | Public origin for `/join/qr` (e.g. `https://dub-hacks2026.vercel.app`). When set, the QR encodes this URL even if the page is opened on localhost. |
 | `DEMO_PERSONAS` | seed script | `maya=+12065550100,jun=+12065550101,priya=+12065550102` with real teammate numbers |
 | `PORT` | server | Default `8787` |
 

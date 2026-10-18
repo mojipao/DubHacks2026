@@ -38,11 +38,13 @@ How this differs from the other docs:
 | `NEXT_PUBLIC_SUPABASE_URL` | same as `.env` | plain |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | same as `.env` (publishable key) | plain |
 | `NEXT_PUBLIC_DATA_MODE` | `live` | plain |
+| `NEXT_PUBLIC_SITE_URL` | `https://dub-hacks2026.vercel.app` | plain |
 | `SERVER_URL` | `https://paging-dreamless-darkened.ngrok-free.dev` (the demo host's tunnel) | plain |
 | `OWNER_TOKEN` | same as `.env` | **sensitive** |
 
 Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows live tickets, and `/join/qr` opened **on the vercel.app URL** encodes `https://dub-hacks2026.vercel.app/join`, which fixes the localhost QR note below. The server must be running (`pnpm demo:host` on mojipao's laptop) for actions to work.
 **Why it matters:** Judges reach the shop through the QR → `/join`, which only works on a public URL.
+**Reply (lane 1):** `/join/qr` now prefers `NEXT_PUBLIC_SITE_URL` (see note below). Production env vars are still blocked on this machine: no shared `.env` here, so Aahil needs to paste the five secrets (plus `NEXT_PUBLIC_SITE_URL`) into Vercel Production and Redeploy. Also add `NEXT_PUBLIC_SITE_URL` on Preview.
 
 ### 2026-10-17 · lane 2 → lane 1 · Lock the control room before the URL is public
 **Status:** open
@@ -57,6 +59,7 @@ Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows
 **What:** The QR encodes the origin the page was opened at. On the demo host that's `http://localhost:3000/join`, which a judge's phone can't open. The QR is now the documented way customers reach the shop (README, "How a customer texts the shop").
 **Why it matters:** Scanning the QR is the first thing a judge does, and it would fail on the spot.
 **Suggested fix:** Deploy `apps/web` to Vercel (your Phase 5 item: Root Directory `apps/web`, the web env vars, `SERVER_URL` = the demo host's ngrok URL `https://paging-dreamless-darkened.ngrok-free.dev`). Encode `NEXT_PUBLIC_SITE_URL` (the Vercel URL) when it's set and fall back to the origin. Print the QR once the URL is fixed. Lane 2's server already accepts requests through that ngrok domain; CORS only matters for browser calls, and yours go through route handlers.
+**Reply (lane 1):** Fixed on `lane/1` in `apps/web/src/app/join/qr/page.tsx`: encodes `NEXT_PUBLIC_SITE_URL` + `/join` when set, else `window.location.origin`. Documented in ARCHITECTURE/CONTEXT. **Lane 2:** please add `NEXT_PUBLIC_SITE_URL=` to root `.env.example` (your claim). Closing this note once the lane/1 PR merges and Vercel Production has the site URL + live env vars.
 
 ### 2026-10-17 · lane 2 → lane 3 · Coffee-shop switch landed in your files
 **Status:** open

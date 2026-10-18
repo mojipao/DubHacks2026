@@ -52,7 +52,7 @@ Lane 3 holds the filled `.env`; ask in team chat for the numbers.
 
 The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env` (gitignored).
 
-**Secrets status (2026-10-17, 16:20, demo host):** set: Photon (`PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, `PHOTON_TEST_SENDER`), `OWNER_HANDLE`, Square sandbox (`SQUARE_*`, verified live with a signed webhook), `AI_GATEWAY_API_KEY` (verified live), `SUPABASE_SERVICE_ROLE_KEY`. `AGENT_MODEL` is empty on purpose; the agents default to `google/gemini-2.5-flash-lite`. **Still not filled:** `DEMO_PERSONAS` (waiting on who texts as Maya). Do not invent values.
+**Secrets status (2026-10-17, 16:20, demo host):** set: Photon (`PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, `PHOTON_TEST_SENDER`), `OWNER_HANDLE`, Square sandbox (`SQUARE_*`, verified live with a signed webhook), `AI_GATEWAY_API_KEY` (verified live), `SUPABASE_SERVICE_ROLE_KEY`. `AGENT_MODEL` is empty on purpose; the agents default to `google/gemini-2.5-flash-lite`. **Still not filled:** `DEMO_PERSONAS` (waiting on who texts as Maya). Do not invent values. Web also needs non-secret `NEXT_PUBLIC_SITE_URL=https://dub-hacks2026.vercel.app` on Vercel (Preview + Production) so the table QR stays phone-reachable.
 
 ## Workspace (live on `main`)
 
@@ -94,7 +94,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
-- **Web on Vercel:** team DubHacks26, project `dub-hacks2026`, root `apps/web`, auto-deploys from this repo; production URL `https://dub-hacks2026.vercel.app`. Preview env vars are set; production ones need the team owner (see NOTES).
+- **Web on Vercel:** team DubHacks26, project `dub-hacks2026`, root `apps/web`, auto-deploys from this repo; production URL `https://dub-hacks2026.vercel.app`. Preview env vars are set; production ones need the team owner (see NOTES). Set `NEXT_PUBLIC_SITE_URL` to that production URL (Preview + Production) so `/join/qr` encodes a phone-reachable join link even when the page is opened on localhost.
 - **Leads:** `GET /contacts` (stage, money, counts per conversation; `?format=csv` to export) and `GET /contacts/:conversationId/messages` (paged full history). Owner token.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
