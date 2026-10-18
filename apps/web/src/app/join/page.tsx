@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Check, Copy, MessageCircle, ShieldAlert } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { GlowButton } from "@/components/glow-button";
 import { Input } from "@/components/ui/input";
 import { ActionError, joinDemo } from "@/lib/actions";
 import { BUSINESS } from "@/lib/business";
@@ -56,8 +56,8 @@ export default function JoinPage() {
     const sms = `sms:${result.agentNumber}&body=${encodeURIComponent("Hi! Can I order for Saturday?")}`;
     return (
       <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
-        <p className="font-mono text-[12px] tracking-[0.18em] text-amber uppercase">{BUSINESS.name}</p>
-        <h1 className="mt-2 text-[28px] leading-tight font-semibold tracking-tight text-fg">
+        <p className="badge-lime">{BUSINESS.name}</p>
+        <h1 className="mt-2 font-medium tracking-[-0.03em] text-[36px] leading-tight tracking-tight text-fg">
           You&apos;re in. Text the shop.
         </h1>
 
@@ -65,10 +65,9 @@ export default function JoinPage() {
           initial={reduce ? false : { y: -24, opacity: 0, rotate: -2 }}
           animate={{ y: 0, opacity: 1, rotate: -0.6 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="ticket-paper relative mt-6 overflow-hidden rounded-[6px] text-ink shadow-[0_16px_40px_rgba(0,0,0,0.45)]"
+          className="ticket-paper ticket-shadow relative mt-6 overflow-hidden rounded-[24px] text-ink"
         >
-          <div className="ticket-perforation h-2" />
-          <div className="px-5 pt-3 pb-5">
+                    <div className="px-5 pt-3 pb-5">
             <div className="font-mono text-[11px] tracking-[0.16em] text-ink/60 uppercase">Larch &amp; Rye · iMessage</div>
             <div className="mt-2 font-mono text-[32px] leading-none font-bold tracking-tight tabular-nums">
               {prettyNumber(result.agentNumber)}
@@ -95,12 +94,12 @@ export default function JoinPage() {
           </p>
         )}
 
-        <Button asChild className="mt-6 h-12 bg-[#1d82f5] text-base font-semibold text-white hover:bg-[#1d82f5]/90">
+        <GlowButton asChild tone="sky" size="lg" block className="mt-7">
           <a href={sms}>
             <MessageCircle className="size-5" />
             Open iMessage
           </a>
-        </Button>
+        </GlowButton>
         <p className="mt-3 text-[14px] leading-relaxed text-muted">
           Send from the number you entered, as an iMessage (blue bubble). The owner approves every reply, so give it a
           moment.
@@ -110,7 +109,7 @@ export default function JoinPage() {
           <h2 className="font-mono text-[11px] tracking-[0.16em] text-muted uppercase">Things to try</h2>
           <ul className="mt-2 space-y-2">
             {TRY.map((t) => (
-              <li key={t.text} className="rounded-md border border-line bg-panel/70 px-3 py-2">
+              <li key={t.text} className="rounded-2xl border border-line bg-surface px-4 py-2.5">
                 <div className="text-[14px] text-fg">&ldquo;{t.text}&rdquo;</div>
                 <div className="mt-0.5 flex items-center gap-1 text-[12px] text-muted">
                   {t.note === "try to trick it" && <ShieldAlert className="size-3.5 text-tomato" />}
@@ -126,8 +125,8 @@ export default function JoinPage() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-6 py-10">
-      <p className="font-mono text-[12px] tracking-[0.18em] text-amber uppercase">{BUSINESS.name} · Seattle</p>
-      <h1 className="mt-2 text-[32px] leading-tight font-semibold tracking-tight text-fg">Text the bakery like a regular.</h1>
+      <p className="badge-lime w-fit">Welcome to {BUSINESS.name}!</p>
+      <h1 className="mt-2 font-medium tracking-[-0.03em] text-[40px] leading-[1.05] tracking-tight text-fg">Text the bakery like a regular.</h1>
       <p className="mt-3 text-[15px] leading-relaxed text-muted">
         An AI drafts every reply from the shop&apos;s real orders and stock. Nothing reaches you until the owner approves
         it.
@@ -163,7 +162,7 @@ export default function JoinPage() {
             autoComplete="given-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="h-12 border-line bg-panel text-[16px] text-fg"
+            className="h-12 rounded-full border-line-strong bg-white px-5 text-[16px] text-fg"
             placeholder="Sam"
             maxLength={60}
           />
@@ -179,7 +178,7 @@ export default function JoinPage() {
             autoComplete="tel"
             value={handle}
             onChange={(e) => setHandle(e.target.value)}
-            className="h-12 border-line bg-panel text-[16px] text-fg"
+            className="h-12 rounded-full border-line-strong bg-white px-5 text-[16px] text-fg"
             placeholder="(206) 555-0123"
             aria-describedby="consent"
             aria-invalid={Boolean(error)}
@@ -189,17 +188,13 @@ export default function JoinPage() {
           We only reply to messages you send. Synthetic demo shop: no real orders, no real charges.
         </p>
         {error && (
-          <p role="alert" className="rounded-md border border-tomato/40 bg-tomato/10 px-3 py-2 text-[13px] text-[#f08a68]">
+          <p role="alert" className="rounded-xl border border-tomato/30 bg-tomato/10 px-3 py-2 text-[13px] text-tomato">
             {error}
           </p>
         )}
-        <Button
-          type="submit"
-          disabled={loading}
-          className="h-12 w-full bg-ticket text-[16px] font-semibold text-ink hover:bg-ticket/90"
-        >
+        <GlowButton type="submit" disabled={loading} tone="lime" size="lg" block className="!mt-6">
           {loading ? "Connecting your number…" : "Get the shop's number"}
-        </Button>
+        </GlowButton>
       </form>
     </main>
   );

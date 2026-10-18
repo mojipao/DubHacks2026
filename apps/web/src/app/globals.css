@@ -7,12 +7,16 @@
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-panel: var(--panel);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-lime: var(--lime);
   --color-ticket: var(--ticket);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
@@ -51,36 +55,42 @@
 }
 
 :root {
-  --bg: #14110f;
-  --panel: #1d1916;
-  --line: #2e2824;
-  --ticket: #f5efe4;
-  --ink: #1b1714;
-  --muted: #9c9188;
-  --fg: #eee7dd;
-  --tomato: #e4572e;
-  --amber: #f2a541;
-  --basil: #4fae6a;
-  --sky: #6ba4d8;
+  /* Nova (Webflow template) language: white page, soft gray rounded panels, black type and
+     pill buttons, one lime accent used only as a fill with black text on it. */
+  --bg: #ffffff;
+  --surface: #f6f6f6;
+  --surface-2: #ececec;
+  --panel: #f6f6f6;
+  --line: #e6e6e6;
+  --line-strong: #c5c5c5;
+  --ticket: #ffffff;
+  --ink: #171717;
+  --muted: #6b6b6b;
+  --fg: #171717;
+  --lime: #cbfb45;
+  /* Status colors, dark enough to read as text on white. */
+  --tomato: #d4441f;
+  --amber: #b45f06;
+  --basil: #15803d;
+  --sky: #1d6fe0;
   --background: var(--bg);
   --foreground: var(--fg);
   --card: var(--ticket);
   --card-foreground: var(--ink);
-  --popover: var(--panel);
+  --popover: #ffffff;
   --popover-foreground: var(--fg);
-  --primary: var(--ticket);
-  --primary-foreground: var(--ink);
-  --secondary: var(--panel);
+  --primary: var(--ink);
+  --primary-foreground: #ffffff;
+  --secondary: var(--surface);
   --secondary-foreground: var(--fg);
-  --muted: #9c9188;
   --muted-foreground: var(--muted);
-  --accent: #2a2420;
+  --accent: var(--surface-2);
   --accent-foreground: var(--fg);
   --destructive: var(--tomato);
   --border: var(--line);
-  --input: var(--line);
-  --ring: var(--amber);
-  --radius: 6px;
+  --input: var(--line-strong);
+  --ring: var(--ink);
+  --radius: 12px;
 }
 
 @layer base {
@@ -90,25 +100,23 @@
 
   html {
     @apply font-sans h-full;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     @apply min-h-full bg-bg text-fg antialiased;
-    background-image:
-      radial-gradient(ellipse 120% 80% at 10% -20%, rgba(244, 165, 65, 0.08), transparent 50%),
-      radial-gradient(ellipse 80% 60% at 100% 0%, rgba(228, 87, 46, 0.06), transparent 45%),
-      linear-gradient(180deg, #181411 0%, var(--bg) 40%, #100e0c 100%);
+    background-image: radial-gradient(rgba(23, 23, 23, 0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
     background-attachment: fixed;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--amber) 40%, transparent);
+    background: var(--lime);
     color: var(--fg);
   }
 
   :focus-visible {
-    outline: 2px solid var(--amber);
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
   }
 }
@@ -123,14 +131,39 @@
 
   .ticket-paper {
     background-color: var(--ticket);
-    background-image:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 27px,
-        rgba(27, 23, 20, 0.04) 28px
-      );
+  }
+
+  /* Cards on the gray pass: a hairline outline and a soft lift, Nova-style. */
+  .ticket-shadow {
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 1px 2px rgba(23, 23, 23, 0.06),
+      0 12px 32px -12px rgba(23, 23, 23, 0.18);
+  }
+
+  /* A soft gray panel, like Nova's rounded sections. */
+  .surface {
+    background-color: var(--surface);
+    border: 1px solid rgba(23, 23, 23, 0.04);
+  }
+
+  /* Small lime pill label ("Welcome to Nova!"). */
+  .badge-lime {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--lime);
+    padding: 2px 12px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   .pass-grain {
@@ -139,7 +172,7 @@
 
   .ticket-executing {
     background-image:
-      linear-gradient(100deg, transparent 20%, rgba(242, 165, 65, 0.28) 50%, transparent 80%),
+      linear-gradient(100deg, transparent 20%, rgba(203, 251, 69, 0.55) 50%, transparent 80%),
       linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%);
     background-size: 220% 100%, auto;
     animation: ticket-shimmer 1.1s linear infinite;
@@ -159,9 +192,154 @@
       -45deg,
       transparent,
       transparent 3px,
-      rgba(242, 165, 65, 0.45) 3px,
-      rgba(242, 165, 65, 0.45) 6px
+      rgba(180, 95, 6, 0.6) 3px,
+      rgba(180, 95, 6, 0.6) 6px
     );
+  }
+}
+
+/* Glass glow button (adapted from a uiverse-style component): a frosted pill whose
+   colored "lamps" above and below swell into a glow on hover or keyboard focus. */
+@layer components {
+  .glow-btn {
+    --glow: var(--lime);
+    position: relative;
+    display: inline-flex;
+    isolation: isolate;
+    height: 44px;
+    min-width: 10rem;
+  }
+
+  .glow-btn[data-size="sm"] {
+    height: 36px;
+    min-width: 7.5rem;
+  }
+
+  .glow-btn[data-size="lg"] {
+    height: 50px;
+  }
+
+  .glow-btn[data-block] {
+    display: flex;
+    width: 100%;
+  }
+
+  .glow-btn::before,
+  .glow-btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    z-index: -1;
+    width: 30px;
+    height: 8px;
+    border-radius: 10px;
+    background: var(--glow);
+    box-shadow:
+      0 0 5px var(--glow),
+      0 0 15px var(--glow),
+      0 0 30px var(--glow);
+    transition: all 0.5s ease 0.15s;
+  }
+
+  .glow-btn::before {
+    bottom: -4px;
+  }
+
+  .glow-btn::after {
+    top: -4px;
+  }
+
+  .glow-btn:hover::before,
+  .glow-btn:has(.glow-btn__face:focus-visible)::before {
+    bottom: 0;
+    width: 80%;
+    height: 50%;
+    border-radius: 30px;
+  }
+
+  .glow-btn:hover::after,
+  .glow-btn:has(.glow-btn__face:focus-visible)::after {
+    top: 0;
+    width: 80%;
+    height: 50%;
+    border-radius: 30px;
+  }
+
+  .glow-btn__face {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    overflow: hidden;
+    padding: 0 1.4rem;
+    border-radius: 999px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(23, 23, 23, 0.92);
+    box-shadow: 0 12px 20px -8px rgba(23, 23, 23, 0.45);
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+    text-decoration: none;
+    transition:
+      letter-spacing 0.5s,
+      background-color 0.5s;
+    outline: none;
+  }
+
+  .glow-btn[data-size="sm"] .glow-btn__face {
+    padding: 0 1rem;
+    font-size: 13px;
+  }
+
+  /* The light sweep across the glass. */
+  .glow-btn__face::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.22), transparent);
+    transform: skewX(45deg) translateX(-120%);
+    transition: transform 0.5s;
+    pointer-events: none;
+  }
+
+  .glow-btn:hover .glow-btn__face,
+  .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face {
+    letter-spacing: 1.6px;
+    background: rgba(23, 23, 23, 0.55);
+  }
+
+  .glow-btn:hover .glow-btn__face::before,
+  .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face::before {
+    transform: skewX(45deg) translateX(320%);
+  }
+
+  .glow-btn__face:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 0 4px var(--glow);
+  }
+
+  .glow-btn[data-disabled] {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .glow-btn[data-disabled]::before,
+  .glow-btn[data-disabled]::after {
+    box-shadow: none;
   }
 }
 

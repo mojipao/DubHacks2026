@@ -1,6 +1,7 @@
 import { ProposalDraft, type AgentContext, type Json } from "@boh/shared";
 import { loadHandleInbound } from "./agents.ts";
 import { business } from "./business.ts";
+import { completeLocalDateTime } from "./time.ts";
 import { supabaseDataPort } from "./data-port.ts";
 import { db } from "./db.ts";
 import { env } from "./env.ts";
@@ -81,11 +82,15 @@ async function findOrCreateCustomer(handle: string, name?: string): Promise<stri
 }
 
 async function upsertConversation(input: InboundMessage, handle: string, customerId: string | null, isOwner: boolean) {
-  const query = db().from("conversations").select("id, customer_id");
+  const query = db().from("conversations").select("id, customer_id, role");
   const { data: existing } = input.photon
     ? await query.eq("photon_space_id", input.photon.spaceId).maybeSingle()
     : await query.eq("handle", handle).eq("platform", input.platform).maybeSingle();
   if (existing) {
+    // The same phone can have texted as a customer before OWNER_HANDLE pointed at it; owner replies need this space.
+    if (isOwner && existing.role !== "owner") {
+      await db().from("conversations").update({ role: "owner", customer_id: null }).eq("id", existing.id);
+    }
     if (!existing.customer_id && customerId) {
       await db().from("conversations").update({ customer_id: customerId }).eq("id", existing.id);
     }
@@ -182,17 +187,51 @@ async function hasNewerInbound(conversationId: string, messageId: string) {
   return data?.id !== messageId;
 }
 
+/**
+ * Agents sometimes emit a local wall-clock time without seconds or a zone ("2026-10-23T07:00"), which the
+ * contract rejects and which would silently drop the whole draft. Complete those in the business zone and
+ * report what changed, so the mismatch stays visible in the trace.
+ */
+function completeDraftTimes(candidate: unknown): { draft: unknown; fixed: string[] } {
+  const fixed: string[] = [];
+  if (!candidate || typeof candidate !== "object") return { draft: candidate, fixed };
+  const draft = structuredClone(candidate) as { kind?: string; payload?: Record<string, unknown> };
+  const p = draft.payload;
+  const complete = (field: string, value: unknown) => {
+    if (typeof value !== "string") return value;
+    const next = completeLocalDateTime(value, business.timezone);
+    if (next !== value) fixed.push(`${field} "${value}" → "${next}"`);
+    return next;
+  };
+  if (draft.kind === "reorder" && p && "neededBy" in p) p.neededBy = complete("neededBy", p.neededBy);
+  if (draft.kind === "reply" && p && Array.isArray(p.orders)) {
+    p.orders.forEach((o: { pickupAt?: unknown }, i: number) => {
+      if (o && typeof o === "object") o.pickupAt = complete(`orders[${i}].pickupAt`, o.pickupAt);
+    });
+  }
+  return { draft, fixed };
+}
+
 /** Validates and stores agent drafts as pending proposals. Returns the stored IDs in input order (null when invalid). */
 export async function storeDrafts(raw: unknown[], conversationId: string | null, messageId: string | null) {
   const ids: (string | null)[] = [];
   const parents: (number | undefined)[] = [];
+  const subject = messageId ? { type: "message", id: messageId } : null;
 
-  for (const candidate of raw) {
+  for (const original of raw) {
+    const { draft: candidate, fixed } = completeDraftTimes(original);
+    if (fixed.length) {
+      await logEvent("system", "agent.step", subject, {
+        agent: "intake",
+        step: "normalize",
+        summary: `Completed a time without seconds or zone: ${fixed.join("; ")}`,
+      });
+    }
     const parsed = ProposalDraft.safeParse(candidate);
     if (!parsed.success) {
       ids.push(null);
       parents.push(undefined);
-      await logEvent("agent:intake", "agent.step", messageId ? { type: "message", id: messageId } : null, {
+      await logEvent("agent:intake", "agent.step", subject, {
         agent: "intake",
         step: "validate",
         error: parsed.error.message,

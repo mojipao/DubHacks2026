@@ -46,6 +46,14 @@ export function zonedTime(localDate: string, time: string, timeZone: string): Da
   return new Date(guess - offsetMs(new Date(first), timeZone));
 }
 
+const LOCAL_DATE_TIME = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(:\d{2}(\.\d+)?)?$/;
+
+/** "2026-10-23T07:00" (no zone) → the full instant in the business zone; anything else is returned unchanged. */
+export function completeLocalDateTime(value: string, timeZone: string): string {
+  const m = LOCAL_DATE_TIME.exec(value);
+  return m ? zonedTime(m[1]!, m[2]!, timeZone).toISOString() : value;
+}
+
 /** [start, end) of a local date as UTC ISO strings, for range queries. */
 export function dayBounds(localDate: string, timeZone: string): [string, string] {
   return [zonedTime(localDate, "00:00", timeZone).toISOString(), zonedTime(addDays(localDate, 1), "00:00", timeZone).toISOString()];

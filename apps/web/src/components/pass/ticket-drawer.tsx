@@ -5,6 +5,7 @@ import { PAYMENT_LINK_TOKEN, type ReplyPayload, type ReorderPayload } from "@boh
 import { Phone, Shield } from "lucide-react";
 import { AGENT_DOT, TraceTimeline } from "@/components/pass/trace";
 import { RiskChip } from "@/components/pass/risk-chip";
+import { GlowButton } from "@/components/glow-button";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -156,7 +157,7 @@ export function TicketDrawer({
         onOpenChange(o);
       }}
     >
-      <SheetContent side="right" className="flex w-full flex-col gap-0 border-line bg-panel p-0 text-fg sm:max-w-xl">
+      <SheetContent side="right" className="flex w-full flex-col gap-0 border-line bg-white p-0 text-fg sm:max-w-xl">
         <SheetHeader className="border-b border-line px-6 pt-5 pb-4">
           <div className="mb-1 flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-[0.14em] uppercase">
             <span className={cn("size-2 rounded-full", AGENT_DOT[proposal.agent] ?? "bg-muted")} />
@@ -185,7 +186,7 @@ export function TicketDrawer({
           <div>
             <p className="text-[17px] leading-snug font-semibold text-fg">{proposal.rationale}</p>
             {proposal.riskFlags.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1 rounded-md bg-ticket p-1.5">
+              <div className="mt-2 flex flex-wrap gap-1">
                 {proposal.riskFlags.map((f) => (
                   <RiskChip key={f} flag={f} />
                 ))}
@@ -292,11 +293,11 @@ export function TicketDrawer({
         </div>
 
         {(pending || proposal.status === "failed") && (
-          <div className="flex flex-wrap items-center gap-2 border-t border-line bg-panel px-6 py-3">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-4 border-t border-line bg-white px-6 py-4">
             {pending && (
               <>
-                <Button
-                  className="bg-[#2f7d47] font-semibold text-white hover:bg-[#276a3c]"
+                <GlowButton
+                  tone="basil"
                   disabled={canEdit && editing && (empty || tooLong)}
                   onClick={() =>
                     run(
@@ -309,26 +310,22 @@ export function TicketDrawer({
                   }
                 >
                   {children.length > 0 ? "Approve both" : edited ? "Approve edited" : "Approve"}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-tomato/40 bg-transparent text-tomato hover:bg-tomato/10 hover:text-tomato"
+                </GlowButton>
+                <GlowButton
+                  tone="tomato"
                   onClick={() => run(reject(proposal.id, { includeLinked: children.length > 0 }), "86'd")}
                 >
                   {children.length > 0 ? "Reject both" : "Reject"}
-                </Button>
+                </GlowButton>
                 {children.length > 0 && (
                   <span className="text-[12px] text-muted">Includes the linked reorder.</span>
                 )}
               </>
             )}
             {proposal.status === "failed" && (
-              <Button
-                className="bg-amber font-semibold text-ink hover:bg-amber/90"
-                onClick={() => run(retry(proposal.id), "Retried")}
-              >
+              <GlowButton tone="lime" onClick={() => run(retry(proposal.id), "Retried")}>
                 Retry
-              </Button>
+              </GlowButton>
             )}
           </div>
         )}

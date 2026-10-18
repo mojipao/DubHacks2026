@@ -2,11 +2,19 @@
 
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { GlowButton } from "@/components/glow-button";
 import { useStore } from "@/lib/data/store";
 import { maskHandle, relativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-export function ConversationThread() {
+export function ConversationThread({
+  standalone = false,
+  onOpenTicket,
+}: {
+  /** Fills its own panel (the Conversations tab) instead of sitting under the list. */
+  standalone?: boolean;
+  onOpenTicket?: (conversationId: string) => void;
+} = {}) {
   const { state } = useStore();
   const reduce = useReducedMotion();
   const conv = state.conversations.find(
@@ -22,33 +30,40 @@ export function ConversationThread() {
 
   if (!conv) {
     return (
-      <div className="flex h-40 items-center justify-center border-t border-line px-3 text-[13px] text-muted">
+      <div className={cn("flex h-40 flex-1 items-center justify-center px-4 text-[13px] text-muted", !standalone && "border-t border-line")}>
         Select a conversation
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col border-t border-line">
-      <div className="px-3 py-2">
-        <div className="text-[14px] font-semibold text-fg">
-          {conv.customerName ?? maskHandle(conv.handle)}
+    <div className={cn("flex min-h-0 flex-1 flex-col", !standalone && "border-t border-line")}>
+      <div className={cn("flex items-center justify-between gap-3 px-4 pt-3 pb-2", standalone && "border-b border-line px-6 pt-4 pb-3")}>
+        <div className="min-w-0">
+          <div className={cn("truncate font-medium text-fg", standalone ? "font-medium tracking-[-0.03em] text-[24px] leading-tight font-normal" : "text-[14px]")}>
+            {conv.role === "owner" ? "Owner" : (conv.customerName ?? maskHandle(conv.handle))}
+          </div>
+          <div className="font-mono text-[11px] text-muted">
+            {maskHandle(conv.handle)} · {conv.platform}
+          </div>
         </div>
-        <div className="font-mono text-[11px] text-muted">
-          {maskHandle(conv.handle)} · {conv.platform}
-        </div>
+        {onOpenTicket && conv.hasPendingTicket && (
+          <GlowButton tone="lime" size="sm" className="shrink-0" onClick={() => onOpenTicket(conv.id)}>
+            Ticket waiting · open in the pass
+          </GlowButton>
+        )}
       </div>
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-3">
+      <div className={cn("min-h-0 flex-1 space-y-2 overflow-y-auto px-4 pb-3", standalone && "mx-auto w-full max-w-3xl px-6 py-5")}>
         {messages.map((m) => (
           <motion.div
             key={m.id}
             initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
-              "max-w-[92%] rounded-[14px] px-3 py-2 text-[14px] leading-snug",
+              "max-w-[90%] rounded-2xl px-3 py-2 text-[13.5px] leading-snug",
               m.direction === "inbound"
-                ? "bg-[color-mix(in_srgb,var(--sky)_22%,var(--panel))] text-fg"
-                : "ml-auto bg-panel border border-line text-fg",
+                ? "rounded-bl-md bg-surface-2 text-fg"
+                : "ml-auto rounded-br-md bg-ink text-white",
             )}
           >
             <p className="whitespace-pre-wrap">{m.body}</p>

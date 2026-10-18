@@ -52,7 +52,7 @@ Lane 3 holds the filled `.env`; ask in team chat for the numbers.
 
 The full table is in `planning/ARCHITECTURE.md` under "Environment variables." Values travel privately as one shared `.env` (gitignored).
 
-**Secrets status (2026-10-17):** `PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, and `OWNER_HANDLE` are set in lane 3's private `.env`. **Square**, **AI Gateway / `AGENT_MODEL`**, `PHOTON_TEST_SENDER`, and `DEMO_PERSONAS` are not filled yet. Do not invent values.
+**Secrets status (2026-10-17, 16:20, demo host):** set: Photon (`PHOTON_PROJECT_ID`, `PHOTON_API_KEY`, `PHOTON_AGENT_HANDLE`, `PHOTON_TEST_SENDER`), `OWNER_HANDLE`, Square sandbox (`SQUARE_*`, verified live with a signed webhook), `AI_GATEWAY_API_KEY` (verified live), `SUPABASE_SERVICE_ROLE_KEY`. `AGENT_MODEL` is empty on purpose; the agents default to `google/gemini-2.5-flash-lite`. **Still not filled:** `DEMO_PERSONAS` (waiting on who texts as Maya). Do not invent values.
 
 ## Workspace (live on `main`)
 
@@ -94,12 +94,14 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
+- **Leads:** `GET /contacts` (stage, money, counts per conversation; `?format=csv` to export) and `GET /contacts/:conversationId/messages` (paged full history). Owner token.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
 - `/dev/winback-scan` returns `501` until `@boh/agents` exports `runWinbackScan`. **Lane 3:** each win-back draft must list the customer in `reads` (`{ table: "customers", id }`); the server uses the first one to pick the conversation.
 - Seed: `pnpm seed` (idempotent) and `pnpm reset --yes` (wipes proposals, messages, conversations, events, agent orders, and non-seed customers, then reseeds in ~6 s). `next_sun` resolves to the Sunday after `next_sat`.
 - Ingredient need = that day's committed units plus the requested items, against `on_hand + on_order`. This matches lane 3's `scripts/check-seed.ts`.
 - `inventory.received` is a new event type (simulated supplier delivery).
+- Before validating agent drafts, the server completes a zone-less `neededBy` or `pickupAt` (`"2026-10-23T07:00"`) in the business zone and logs an `agent.step` with `step: "normalize"`. A safety net, not the contract: agents should still emit full ISO times.
 
 ## Photon project (lane 3)
 
@@ -139,6 +141,8 @@ The rest below is from the published OpenAPI spec (`https://api.photon.codes/ope
 ## Photon events
 
 - Socket.IO `delivery(event, { seq, replyExpected })`. `event` is the same JSON as the webhook event (`{ id, type, ... }`). The received-message type is **`message.received`** (from Photon's OpenAPI example).
+- **Full round trip verified on a real phone (2026-10-17, lane 2):** inbound over the socket, reply with a real Square link delivered, and an **unprompted** owner notification delivered (the owner had texted the line first). Owner `Y <code>` by text executed a counteroffer.
+- **Sender identity gotcha:** iMessage can send from the Apple ID email or a second SIM instead of the assigned number. Apple then says "Delivered" but Photon drops it silently: no message, no space, no error. Fix on the phone: Settings → Apps → Messages → Send & Receive → "Start new conversations from" the assigned number, then start a fresh conversation. Tell judges this at `/join`.
 - **Confirmed on a live delivery (2026-10-17, API version `2026-07-01`):** the message is at `event.data.object`. The envelope is `{ id, apiVersion, type, source, timestamp, data: { object, projectId } }`. Deliveries carry large `seq` values (the first was 6196), so never compare against a hard-coded cursor.
 - Message fields used (typed in `@photon-ai/api` as `ReceivedImessageMessage`): `id`, `platform: "imessage"`, `status: "received"`, `sentBy.handle`, `sentBy.kind`, `receivedBy.id` (our agent user, used as `senderId` when replying), `space.id`, `space.kind`, `content.type: "text"`, `content.text`.
 - Send: `photon.projects.sendMessage({ path: { id }, headers: { "idempotency-key" }, body: { spaceId, senderId, content: { type: "text", format: "plain", text } } })`. Assign: `photon.projects.platforms.imessage.assignments.create({ path: { id }, headers: { idempotencyKey }, body: { handle } })` → `assignedPhoneNumber`.

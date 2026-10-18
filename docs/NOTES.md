@@ -29,6 +29,52 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 16:20 PT · lane 2 → lane 3 · Six open notes need you; here's the order for the demo
+**Status:** open
+**Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`
+**What:** Lane 3's last commit was 14:53 and none of the notes below has a reply yet. One commit (`1e7ac86`, ping test) is still on `lane/3` and not merged. In demo order:
+1. **Maya's usual flags an allergy** (`intake.ts:411`, whole-note match) and **asks "what is your usual order?"** with the model on. Both hit the opening beat.
+2. **"Saturday at 9am" becomes 8am** and is flagged `outside_hours`.
+3. **"hi" gets "We can't take orders through this message."**
+4. **Butter reorder `neededBy` is zone-less** (`ops.ts:223`). Lane 2 shipped a server-side fallback in [PR #36](https://github.com/mojipao/DubHacks2026/pull/36), so "Approve both" works now; still fix it at the source and add `ProposalDraft.parse(draft)` to `ops.test.ts`.
+5. **Win-back picks Maya**, not Elena.
+6. The AI Gateway note is fixed by PR #20; move it to Resolved.
+
+Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredientNeeds` (with `reorderPoint`/`unitCostCents`), and `getNextOpenDays`. All three, plus `getRegularCadences`, are already on `SupabaseDataPort` (`apps/server/src/data-port.ts`); no work needed there.
+**Why it matters:** The deadline is Sun 10:00 AM. Items 1 to 3 are what judges see first.
+**Suggested fix:** Reply under each note as you go; lane 2 re-tests on the real phone after each merge.
+
+### 2026-10-17 15:45 PT · lane 2 → lane 3 · Win-back picks Maya, not Elena
+**Status:** open
+**Where:** `packages/agents/src/winback.ts` (candidate ranking), with `data/seed/orders.json`
+**What:** `POST /dev/winback-scan` against the seeded DB works end to end. It found 5 overdue regulars and drafted one ticket; approval created the order with the perk and a real Square sandbox link. But the candidate is **Maya** ("orders every ~7 days; it has been 42"), not Elena as the plan says. Maya's 7-day cadence makes her the most overdue by ratio.
+**Why it matters:** Maya is also the demo's opening "the usual" beat. If the morning scan runs in the same demo, both beats are Maya and the proactive one looks like a repeat. The pickup it proposed was also Sat 8am.
+**Suggested fix:** Either rank so Elena wins (e.g. skip customers with an open conversation or a pending ticket, or prefer the longest absolute gap), or adjust Elena's or Maya's seed history. Run `scripts/check-seed.ts` after.
+
+### 2026-10-17 15:35 PT · lane 2 → lane 1 · Leads view and full thread history (backend ready)
+**Status:** open
+**Where:** `apps/web` (new "Leads" or "Contacts" panel or page; the conversation thread). Server routes from [PR #30](https://github.com/mojipao/DubHacks2026/pull/30).
+**What:** Every text is stored on both sides (`conversations` + `messages`, customers and owner). But the control room has no list of who has texted and where they are in the funnel, unknown numbers show only as a masked handle, and a thread only shows what fits in the latest 300 messages across all conversations. The server now provides (owner token, so call through a Next.js route handler like approve):
+- `GET /contacts` → `{ contacts: [{ conversationId, customerId, name|null, handle, handleMasked, role, platform, stage, firstSeenAt, lastMessageAt, lastMessage{direction, body, at}, messages{inbound, outbound}, pendingTickets, orders{agentOrders, paidCents, awaitingCents, historyOrders} }] }`, newest activity first. `stage` is `owner | lead | ordered | paid | regular`.
+- `GET /contacts?format=csv` → `leads-YYYY-MM-DD.csv` download (owner excluded).
+- `GET /contacts/:conversationId/messages?limit=100&before=<createdAt>` → `{ messages (oldest first), hasMore }`, for "load earlier" in a thread.
+**Why it matters:** The owner (and judges) should see every lead captured from iMessage, including numbers that never gave a name, and whether they converted. It also shows "nothing gets lost".
+**Suggested fix:** A Leads panel or page with stage chips (lead → ordered → paid), the masked handle when `name` is null, message counts, money, and an "Export CSV" button. In the thread view, a "Load earlier" link using the history route. Refresh on the realtime events you already subscribe to (`conversations`, `messages`, `orders`, `proposals`).
+
+### 2026-10-17 15:25 PT · lane 2 → lane 3 · Real phone: "Saturday at 9am" became 8am and was flagged outside hours
+**Status:** open
+**Where:** understand/resolve for pickup time (`packages/agents/src/understand.ts`, `intake.ts` resolve and flags)
+**What:** Live message from a new number: "Can I get 2 almond croissants and an oat latte for Saturday at 9am?" The draft's `pickupAt` was `2026-10-24T08:00:00-07:00`, the text said "pickup at 8am", and the flags included `outside_hours`, although Saturday opens at 08:00.
+**Why it matters:** The customer gets the wrong pickup time, and the payment link's line items carry it too.
+**Suggested fix:** Keep the stated time when it's inside opening hours, and only flag `outside_hours` when it falls outside `business.hours`. Add the phrasing "Saturday at 9am" to the evals.
+
+### 2026-10-17 15:25 PT · lane 2 → lane 3 · Real phone: "hi" gets "We can't take orders through this message"
+**Status:** open
+**Where:** the smalltalk / greeting draft path in `packages/agents/src/intake.ts`
+**What:** A first "hi" from a new number got: "Hi there! We can't take orders through this message, but you can see our full menu on our website. Larch & Rye".
+**Why it matters:** Ordering by text is the product. Judges' first message is often "hi".
+**Suggested fix:** Greet and invite an order ("Hi! What can we get started for you? We're open Sat 8–2…"). Never say orders aren't taken by text.
+
 ### 2026-10-17 15:10 PT · lane 2 → lane 1 · New route for a "customer pays" button
 **Status:** open
 **Where:** `apps/web` (phone simulator or the ticket/pickup row for an `awaiting_payment` order); server route `POST /dev/square-pay/:orderId`
@@ -61,6 +107,7 @@ How this differs from the other docs:
 **What:** The reorder draft's `neededBy` is `"2026-10-23T07:00"`: no seconds and no offset. `ReorderPayload.neededBy` is `IsoDateTime` (`z.iso.datetime({ offset: true })`), so the server's `ProposalDraft.parse` rejects the whole draft and logs it as an `agent.step` with `step: "validate"`.
 **Why it matters:** On live data, Jun's counteroffer arrives **without** its linked butter reorder, so "Approve both" and the reorder ticket never appear. That's `v-core`. `ops.test.ts:136` only checks `neededBy.slice(0, 10)`, so tests pass.
 **Suggested fix:** Build it as a full instant in the business timezone, e.g. `2026-10-23T07:00:00-07:00`, the same way `pickupAt` is built (those parse fine). Add `ProposalDraft.parse(draft)` to the tests so contract drift fails there.
+**Reply (lane 2, 16:20):** Server-side fallback merged in [PR #36](https://github.com/mojipao/DubHacks2026/pull/36): `storeDrafts` completes a zone-less `neededBy` or `pickupAt` in the business zone before validation and logs an `agent.step` with `step: "normalize"`. Verified on Jun's fixture draft: invalid before, valid after (7:00 AM PT Fri). Keep this note open until `ops.ts` emits a full ISO time; the `normalize` step should then stop appearing in the trace.
 
 **Reply (lane 3, 16:55):** Fixed. `neededBy` is now built with `isoWithOffset` in the business timezone, the same way `pickupAt` is, so it carries an offset and `ProposalDraft.parse` accepts it. Your diagnosis was exact, including why the tests missed it: `intake.test.ts` now runs `ProposalDraft.safeParse` over every draft returned for five different inputs, so contract drift fails there instead of in live mode.
 

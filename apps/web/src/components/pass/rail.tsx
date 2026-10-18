@@ -145,45 +145,46 @@ export function PassRail({
   );
 
   return (
-    <section className="pass-grain flex min-h-0 min-w-0 flex-1 flex-col border-x border-line bg-panel/40">
-      <div className="flex items-center justify-between border-b border-line px-4 py-2">
-        <h2 className="font-mono text-[12px] tracking-[0.2em] text-muted uppercase">The Pass</h2>
-        <span className="font-mono text-[12px] text-amber">
+    <section className="surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[28px]">
+      <div className="relative flex items-center justify-between px-5 pt-3.5 pb-1">
+        <h2 className="text-[28px] leading-none font-medium tracking-[-0.03em] text-fg">The pass</h2>
+        <span className="font-mono text-[12px] text-muted">
           {pendingCount} pending
           {hiddenCount > 0 ? ` · +${hiddenCount} more` : ""}
         </span>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-        {/* The rail itself: a steel bar the tickets hang from. */}
-        <div className="mb-4 h-1.5 rounded-full bg-gradient-to-b from-[#5b524b] to-[#2c2622] shadow-[0_2px_0_rgba(0,0,0,0.5)]" />
+      <div className="relative min-h-0 flex-1 overflow-y-auto px-5 pt-2 pb-4">
+        {/* The rail itself: a brushed steel bar the tickets hang from. */}
+        <div className="mt-2 mb-5 h-[5px] rounded-full bg-gradient-to-b from-[#d9d9d9] via-[#bdbdbd] to-[#a8a8a8] shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_2px_5px_rgba(23,23,23,0.15)]" />
 
         {visibleGroups.length === 0 ? (
           state.loaded ? (
             <EmptyPass onOpenSim={onOpenSim} />
           ) : null
         ) : (
-          <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+          <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2 min-[1400px]:grid-cols-3">
             <AnimatePresence mode="popLayout" initial={false}>
               {visibleGroups.map(({ parent, children }) => (
                 <motion.div
                   key={parent.id}
                   layout={!reduce}
                   exit={reduce ? { opacity: 0 } : { x: 160, opacity: 0, transition: { duration: 0.35 } }}
-                  className={children.length > 0 ? "xl:col-span-2" : undefined}
+                  className={children.length > 0 ? "lg:col-span-2" : undefined}
                 >
                   {children.length > 0 ? (
                     <div className="relative">
-                      <div className="mb-2 flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] text-amber uppercase">
-                        <Link2 className="size-3.5" />
-                        Linked · approve together
-                        <span className="h-px flex-1 bg-amber/40" />
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="badge-lime gap-1.5">
+                          <Link2 className="size-3.5" />
+                          Linked · one decision
+                        </span>
+                        <span className="h-px flex-1 bg-line-strong" />
                       </div>
                       {/* Rail clip: one bar spanning the pair, so they read as one decision. */}
-                      <div className="pointer-events-none absolute top-[26px] right-6 left-6 z-20 hidden h-1 rounded-full bg-amber/70 md:block" />
+                      <div className="pointer-events-none absolute top-[38px] right-8 left-8 z-20 hidden h-[4px] rounded-full bg-lime ring-1 ring-ink/15 md:block" />
                       <div className="grid gap-3 md:grid-cols-2">
                         {ticket(parent, {
-                          linked: true,
                           onApproveBoth: () =>
                             void approve(parent.id, { includeLinked: true })
                               .then(() => toast.success("Approved both: reply sent, reorder placed"))
@@ -194,7 +195,7 @@ export function PassRail({
                               .catch((e: Error) => toast.error(e.message)),
                         })}
                         {children.map((child) => (
-                          <div key={child.id}>{ticket(child, { linked: true })}</div>
+                          <div key={child.id}>{ticket(child)}</div>
                         ))}
                       </div>
                     </div>
@@ -209,8 +210,12 @@ export function PassRail({
 
         <DoneStrip tickets={done} onOpen={(id) => setDrawerId(id)} />
 
-        <p className="mt-4 font-mono text-[11px] text-muted">
-          A approve · E edit · R reject · J/K focus · S simulator · ? help
+        <p className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] text-muted">
+          {[["A", "approve"], ["E", "edit"], ["R", "reject"], ["J/K", "focus"], ["S", "simulator"], ["?", "help"]].map(([k, v]) => (
+            <span key={k}>
+              <kbd className="rounded border border-line-strong bg-white px-1 text-fg/80">{k}</kbd> {v}
+            </span>
+          ))}
         </p>
       </div>
 

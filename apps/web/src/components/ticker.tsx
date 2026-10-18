@@ -5,6 +5,14 @@ import Link from "next/link";
 import { useStore } from "@/lib/data/store";
 import { tickerTime } from "@/lib/format";
 
+function actorTone(actor: string) {
+  if (actor === "owner") return "text-basil";
+  if (actor === "customer") return "text-sky";
+  if (actor === "agent:guard") return "text-tomato";
+  if (actor.startsWith("agent:")) return "text-amber";
+  return "text-fg/55";
+}
+
 export function EventTicker() {
   const { state } = useStore();
   const ref = useRef<HTMLDivElement>(null);
@@ -20,7 +28,7 @@ export function EventTicker() {
       ref={ref}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      className="flex h-10 items-center gap-4 overflow-x-auto border-t border-line bg-[#100e0c] px-3 font-mono text-[12px] text-muted"
+      className="surface flex h-10 shrink-0 items-center gap-5 overflow-x-auto rounded-full px-5 font-mono text-[12px] text-muted [mask-image:linear-gradient(90deg,transparent,black_4%,black_96%,transparent)] [scrollbar-width:none]"
     >
       {/* Events arrive newest first; the ticker reads left to right, so the newest sits at the right edge. */}
       {state.events.slice(0, 40).reverse().map((e) => (
@@ -29,8 +37,8 @@ export function EventTicker() {
           href={`/audit?subject=${encodeURIComponent(e.subjectId ?? "")}`}
           className="shrink-0 hover:text-fg"
         >
-          <span className="text-amber/80">{tickerTime(e.at)}</span>{" "}
-          <span className="text-fg/70">{e.actor}</span> {e.type}
+          <span className="text-muted/70">{tickerTime(e.at)}</span>{" "}
+          <span className={actorTone(e.actor)}>{e.actor}</span> <span className="text-fg/75">{e.type}</span>
           {e.subjectId ? ` ${String(e.subjectId).slice(0, 8)}` : ""}
         </Link>
       ))}

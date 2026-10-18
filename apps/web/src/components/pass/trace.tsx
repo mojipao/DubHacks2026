@@ -54,7 +54,7 @@ export function TraceTimeline({ steps }: { steps: TraceStep[] }) {
           >
             <span
               className={cn(
-                "absolute top-1 -left-[26px] size-2.5 rounded-full ring-4 ring-panel",
+                "absolute top-1 -left-[26px] size-2.5 rounded-full ring-4 ring-white",
                 AGENT_DOT[step.agent] ?? "bg-muted",
               )}
             />
@@ -76,7 +76,7 @@ export function TraceTimeline({ steps }: { steps: TraceStep[] }) {
                 {step.flags.map((f) => (
                   <span
                     key={f}
-                    className="rounded bg-tomato/15 px-1.5 py-0.5 text-[10px] font-semibold tracking-wide text-[#f08a68] uppercase"
+                    className="rounded-full bg-tomato/10 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-tomato uppercase"
                   >
                     {flagMeta(f).label}
                   </span>
@@ -84,7 +84,7 @@ export function TraceTimeline({ steps }: { steps: TraceStep[] }) {
                 {groupReads(step.reads).map(([table, n]) => (
                   <span
                     key={table}
-                    className="rounded bg-bg px-1.5 py-0.5 font-mono text-[10px] text-muted"
+                    className="rounded-full bg-surface-2 px-2 py-0.5 font-mono text-[10px] text-muted"
                     title={step.reads
                       .filter((r) => r.table === table)
                       .map((r) => `${r.table}/${r.id}`)

@@ -12,7 +12,9 @@ import { PickupsBoard } from "@/components/today/pickups";
 import { TodayRevenue } from "@/components/today/revenue";
 import { StockBars } from "@/components/today/stock-bars";
 import { TopBar } from "@/components/top-bar";
+import { VIEWS, ViewTabs, type View } from "@/components/view-tabs";
 import { BUSINESS } from "@/lib/business";
+import { localDateKey } from "@/lib/format";
 import { useStore } from "@/lib/data/store";
 import { toast } from "sonner";
 
@@ -20,6 +22,19 @@ export function ControlRoom() {
   const { state, focusProposal, approve, reject } = useStore();
   const [drawer, setDrawer] = useState<DrawerTarget>(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [view, setViewState] = useState<View>(() => {
+    if (typeof window === "undefined") return "pass";
+    const t = new URLSearchParams(window.location.search).get("tab");
+    return VIEWS.some((v) => v.id === t) ? (t as View) : "pass";
+  });
+  // Keep the tab in the URL so a reload (or a link to ?tab=today) lands on the same view.
+  const setView = (next: View) => {
+    setViewState(next);
+    const url = new URL(window.location.href);
+    if (next === "pass") url.searchParams.delete("tab");
+    else url.searchParams.set("tab", next);
+    window.history.replaceState(null, "", url);
+  };
   const [simOpen, setSimOpen] = useState(() => {
     if (typeof window === "undefined") return false;
     return new URLSearchParams(window.location.search).get("sim") === "1";
@@ -45,7 +60,14 @@ export function ControlRoom() {
         e.preventDefault();
         setHelpOpen(true);
       }
-      if (!focused) return;
+      const byKey = VIEWS.find((v) => v.key === e.key);
+      if (byKey) {
+        e.preventDefault();
+        setView(byKey.id);
+        return;
+      }
+      // Ticket shortcuts only act where the tickets are.
+      if (view !== "pass" || !focused) return;
       const hasChildren = pending.some((p) => p.parentProposalId === focused.id);
       if (e.key === "a" || e.key === "A") {
         e.preventDefault();
@@ -82,7 +104,7 @@ export function ControlRoom() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [state.proposals, state.focusedProposalId, approve, reject, focusProposal, drawer, simOpen, helpOpen]);
+  }, [state.proposals, state.focusedProposalId, approve, reject, focusProposal, drawer, simOpen, helpOpen, view]);
 
   const dayLabel = new Intl.DateTimeFormat("en-US", {
     timeZone: BUSINESS.timezone,
@@ -91,30 +113,69 @@ export function ControlRoom() {
     day: "numeric",
   }).format(new Date(state.now));
 
+  const todayKey = localDateKey(state.now);
+  const counts = {
+    pass: { n: state.proposals.filter((p) => p.status === "pending").length, alert: true },
+    conversations: { n: state.conversations.filter((c) => c.hasPendingTicket).length },
+    today: {
+      n: state.orders.filter(
+        (o) => localDateKey(o.pickupAt) === todayKey && (o.status === "paid" || o.status === "awaiting_payment"),
+      ).length,
+    },
+  };
+
+  const openTicketFor = (conversationId: string) => {
+    const ticket = state.proposals.find((p) => p.conversationId === conversationId && p.status === "pending");
+    if (!ticket) return;
+    focusProposal(ticket.id);
+    setView("pass");
+  };
+
   return (
-    <div className="flex h-dvh min-h-[720px] flex-col">
-      <TopBar onOpenSim={() => setSimOpen(true)} />
-      <FrictionStrip />
+    <div className="flex h-dvh min-h-[640px] flex-col gap-2.5 p-2.5">
+      <div className="sticky top-2 z-30 rounded-[28px] border border-black/5 bg-[rgba(248,248,248,0.82)] backdrop-blur-md">
+        <TopBar onOpenSim={() => setSimOpen(true)} />
+        <ViewTabs view={view} onChange={setView} counts={counts} />
+        <FrictionStrip />
+      </div>
+
       <div className="flex min-h-0 flex-1">
-        <aside className="flex w-[272px] shrink-0 flex-col border-r border-line bg-panel/30 min-[1400px]:w-[320px]">
-          <div className="min-h-0 flex-[1.1]">
-            <ConversationList />
+        {view === "pass" && (
+          <div id="view-pass" role="tabpanel" className="flex min-h-0 min-w-0 flex-1">
+            <PassRail onOpenSim={() => setSimOpen(true)} drawer={drawer} onDrawer={setDrawer} />
           </div>
-          <div className="min-h-0 flex-1">
-            <ConversationThread />
+        )}
+
+        {view === "conversations" && (
+          <div id="view-conversations" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-2.5">
+            <aside className="surface flex w-[340px] shrink-0 flex-col overflow-hidden rounded-[28px] min-[1400px]:w-[380px]">
+              <ConversationList />
+            </aside>
+            <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-line bg-white">
+              <ConversationThread standalone onOpenTicket={openTicketFor} />
+            </section>
           </div>
-        </aside>
+        )}
 
-        <PassRail onOpenSim={() => setSimOpen(true)} drawer={drawer} onDrawer={setDrawer} />
-
-        <aside className="w-[288px] shrink-0 overflow-y-auto bg-panel/30 px-4 py-3 min-[1400px]:w-[340px]">
-          <h2 className="mb-3 font-mono text-[12px] tracking-[0.2em] text-muted uppercase">
-            Today · {dayLabel}
-          </h2>
-          <PickupsBoard />
-          <StockBars />
-          <TodayRevenue />
-        </aside>
+        {view === "today" && (
+          <div id="view-today" role="tabpanel" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+            <div className="grid gap-2.5 lg:grid-cols-[1.1fr_1fr]">
+              <section className="surface rounded-[28px] px-6 py-5">
+                <div className="mb-3 flex items-baseline justify-between">
+                  <h2 className="badge-lime">Today</h2>
+                  <span className="font-mono text-[12px] text-fg/80">{dayLabel}</span>
+                </div>
+                <PickupsBoard />
+              </section>
+              <div className="flex flex-col gap-2.5">
+                <TodayRevenue />
+                <section className="surface rounded-[28px] px-6 py-5">
+                  <StockBars />
+                </section>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <EventTicker />
       <PhoneSimulator open={simOpen} onOpenChange={setSimOpen} />

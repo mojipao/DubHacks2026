@@ -72,17 +72,15 @@ In a restaurant kitchen, the pass is where tickets hang on a rail and nothing le
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--bg` | `#14110F` | App background, warm charcoal |
-| `--panel` | `#1D1916` | Columns |
-| `--line` | `#2E2824` | Dividers, borders |
-| `--ticket` | `#F5EFE4` | Ticket paper |
-| `--ink` | `#1B1714` | Text on tickets |
-| `--muted` | `#9C9188` | Secondary text on dark |
-| `--fg` | `#EEE7DD` | Primary text on dark |
-| `--tomato` | `#E4572E` | Needs attention, risk flags, reject |
-| `--amber` | `#F2A541` | Pending, executing |
-| `--basil` | `#4FAE6A` | Approved, executed, paid |
-| `--sky` | `#6BA4D8` | Customer messages, iMessage blue nod |
+| `--bg` | `#FFFFFF` | Page, with a faint dot grid |
+| `--surface` / `--surface-2` | `#F6F6F6` / `#ECECEC` | Rounded panels (28px) and hover |
+| `--line` / `--line-strong` | `#E6E6E6` / `#C5C5C5` | Hairlines, outlined pills |
+| `--ink` / `--fg` | `#171717` | Text, primary pill buttons, active tab |
+| `--muted` | `#6B6B6B` | Secondary text (AA on white) |
+| `--lime` | `#CBFB45` | The one accent, always a fill with black text: badges, pending, linked set |
+| `--tomato` / `--amber` / `--basil` / `--sky` | `#D4441F` / `#B45F06` / `#15803D` / `#1D6FE0` | Risk, Ops/pending, done, customer/Intake; text-safe on white |
+
+Design follows Webflow's Nova template (Sat ~5:15 PM): Inter, 500-weight tight headings, lime pill eyebrows, black pill buttons, frosted pill header, white outlined ticket cards on gray panels with a 4px agent stripe. Glow buttons are black Nova pills with bright lamp colors.
 
 - Typography: Geist Sans for UI, Geist Mono (or JetBrains Mono) for ticket bodies, timestamps, order lines, and the event ticker.
 - Tickets: paper color, slightly rounded (6px), a perforated top edge (CSS radial-gradient mask), a subtle drop shadow, and a 0.5° random rotation that straightens on hover.
