@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const SHORTCUTS: [string, string][] = [
-  ["A", "Approve the focused ticket (and its linked reorder)"],
+  ["A", "Approve the focused ticket"],
   ["E", "Edit the focused reply"],
   ["R", "Skip the focused ticket"],
   ["Enter", "Open the ticket's trace and evidence"],

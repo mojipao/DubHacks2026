@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Link2 } from "lucide-react";
 import { Ticket } from "@/components/pass/ticket";
 import { TicketDrawer } from "@/components/pass/ticket-drawer";
 import { DoneStrip } from "@/components/pass/done-strip";
@@ -11,18 +10,10 @@ import { useStore } from "@/lib/data/store";
 import type { UiProposal } from "@/lib/data/types";
 import { toast } from "sonner";
 
-const MAX_VISIBLE = 6;
-/** How long a just-approved or just-rejected ticket stays on the rail so its stamp can land. */
+const MAX_VISIBLE = 8;
 const STAMP_HOLD_MS = 1600;
 const ACTIVE = new Set(["pending", "executing", "failed"]);
 
-function rotationFor(id: string): number {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h + id.charCodeAt(i) * (i + 1)) % 11;
-  return (h - 5) * 0.12;
-}
-
-/** Tickets that were on the rail and just got decided, kept briefly for the stamp animation. */
 function useStampHold(proposals: UiProposal[]) {
   const lastStatus = useRef(new Map<string, string>());
   const [held, setHeld] = useState<Set<string>>(() => new Set());
@@ -37,7 +28,6 @@ function useStampHold(proposals: UiProposal[]) {
       lastStatus.current.set(p.id, p.status);
     }
     if (newlyDecided.length === 0) return;
-    // Syncing derived UI state from an external change; the timeout below clears it.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setHeld((s) => new Set([...s, ...newlyDecided]));
     const t = setTimeout(() => {
@@ -59,48 +49,29 @@ export function PassRail({
   onOpenSim,
   drawer,
   onDrawer,
+  compact,
 }: {
   onOpenSim: () => void;
   drawer: DrawerTarget;
   onDrawer: (target: DrawerTarget) => void;
+  /** Side panel next to messages — tighter header. */
+  compact?: boolean;
 }) {
-  const { state, focusProposal, approve, reject, retry } = useStore();
+  const { state, focusProposal, selectConversation, approve, reject, retry } = useStore();
   const reduce = useReducedMotion();
   const setDrawerId = (id: string | null) => onDrawer(id ? { id, editing: false } : null);
   const drawerId = drawer?.id ?? null;
   const held = useStampHold(state.proposals);
 
-  const onRail = useMemo(
-    () => state.proposals.filter((p) => ACTIVE.has(p.status) || held.has(p.id)),
-    [state.proposals, held],
-  );
+  // Flat list: reply and restock are separate tickets, never a paired card.
+  const onRail = useMemo(() => {
+    const items = state.proposals.filter((p) => ACTIVE.has(p.status) || held.has(p.id));
+    return items.sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+  }, [state.proposals, held]);
 
-  // Group each parent with its children so a counteroffer and its reorder hang together.
-  const groups = useMemo(() => {
-    const byParent = new Map<string, UiProposal[]>();
-    for (const p of onRail) {
-      if (!p.parentProposalId) continue;
-      byParent.set(p.parentProposalId, [...(byParent.get(p.parentProposalId) ?? []), p]);
-    }
-    const ids = new Set(onRail.map((p) => p.id));
-    const out: { parent: UiProposal; children: UiProposal[] }[] = [];
-    for (const p of onRail) {
-      if (p.parentProposalId && ids.has(p.parentProposalId)) continue;
-      out.push({ parent: p, children: byParent.get(p.id) ?? [] });
-    }
-    return out;
-  }, [onRail]);
-
-  let shown = 0;
-  const visibleGroups = groups.filter((g) => {
-    if (shown >= MAX_VISIBLE) return false;
-    shown += 1 + g.children.length;
-    return true;
-  });
+  const visible = onRail.slice(0, MAX_VISIBLE);
   const pendingCount = state.proposals.filter((p) => p.status === "pending").length;
-  const hiddenCount = groups
-    .slice(visibleGroups.length)
-    .reduce((n, g) => n + 1 + g.children.length, 0);
+  const hiddenCount = Math.max(0, onRail.length - visible.length);
 
   const done = useMemo(
     () =>
@@ -117,9 +88,17 @@ export function PassRail({
 
   const drawerProposal = state.proposals.find((p) => p.id === drawerId) ?? null;
 
+  const focusTicket = (p: UiProposal) => {
+    focusProposal(p.id);
+    if (p.conversationId) selectConversation(p.conversationId);
+  };
+
   const handlers = (p: UiProposal) => ({
-    onFocus: () => focusProposal(p.id),
-    onOpen: () => setDrawerId(p.id),
+    onFocus: () => focusTicket(p),
+    onOpen: () => {
+      focusTicket(p);
+      setDrawerId(p.id);
+    },
     onApprove: () =>
       void approve(p.id)
         .then(() => toast.success(p.kind === "reorder" ? "Reorder placed" : "Sent"))
@@ -134,85 +113,51 @@ export function PassRail({
         .catch((e: Error) => toast.error(e.message)),
   });
 
-  const ticket = (p: UiProposal, extra?: Partial<Parameters<typeof Ticket>[0]>) => (
-    <Ticket
-      proposal={p}
-      focused={state.focusedProposalId === p.id}
-      rotation={rotationFor(p.id)}
-      {...handlers(p)}
-      {...extra}
-    />
-  );
-
   return (
-    <section className="surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[28px]">
-      <div className="relative flex flex-wrap items-end justify-between gap-3 px-6 pt-6 pb-2">
+    <section className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+      <div className={cnHeader(compact)}>
         <div>
-          <h1 className="heading text-[34px] text-fg">Waiting for you</h1>
-          <p className="mt-1.5 max-w-[42ch] text-[16px] leading-snug text-muted">
-            The agents drafted these. Nothing goes out until you approve it.
+          <h1 className={compact ? "heading text-[28px] text-fg" : "heading text-[40px] text-fg md:text-[44px]"}>
+            Waiting for you
+          </h1>
+          <p className="mt-2 max-w-[36ch] text-[15px] leading-relaxed text-muted">
+            Drafts from the thread on the left. Nothing goes out until you approve it.
           </p>
         </div>
-        <span className="text-[15px] font-semibold text-muted">
+        <span className="text-[13px] tracking-wide text-muted">
           {pendingCount} waiting
-          {hiddenCount > 0 ? ` · ${hiddenCount} more below` : ""}
+          {hiddenCount > 0 ? ` · ${hiddenCount} more` : ""}
         </span>
       </div>
 
-      <div className="relative min-h-0 flex-1 overflow-y-auto px-6 pt-4 pb-6">
-
-        {visibleGroups.length === 0 ? (
+      <div className="relative min-h-0 flex-1 overflow-y-auto">
+        {visible.length === 0 ? (
           state.loaded ? (
             <EmptyPass onOpenSim={onOpenSim} />
           ) : null
         ) : (
-          <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-2 min-[1400px]:grid-cols-3">
+          <div className="flex flex-col">
             <AnimatePresence mode="popLayout" initial={false}>
-              {visibleGroups.map(({ parent, children }) => (
+              {visible.map((p) => (
                 <motion.div
-                  key={parent.id}
+                  key={p.id}
                   layout={!reduce}
-                  exit={reduce ? { opacity: 0 } : { x: 160, opacity: 0, transition: { duration: 0.35 } }}
-                  className={children.length > 0 ? "lg:col-span-2" : undefined}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8, transition: { duration: 0.25 } }}
                 >
-                  {children.length > 0 ? (
-                    <div className="relative">
-                      <div className="mb-3 flex flex-wrap items-center gap-2">
-                        <span className="badge-brand text-[13px]">
-                          <Link2 className="size-3.5" />
-                          These go together
-                        </span>
-                        <span className="text-[14px] text-muted">
-                          Approve both and the reply and restock go out in one step.
-                        </span>
-                      </div>
-                      <div className="grid gap-3 md:grid-cols-2">
-                        {ticket(parent, {
-                          onApproveBoth: () =>
-                            void approve(parent.id, { includeLinked: true })
-                              .then(() => toast.success("Approved both: reply sent, reorder placed"))
-                              .catch((e: Error) => toast.error(e.message)),
-                          onRejectBoth: () =>
-                            void reject(parent.id, { includeLinked: true })
-                              .then(() => toast.message("Skipped both"))
-                              .catch((e: Error) => toast.error(e.message)),
-                        })}
-                        {children.map((child) => (
-                          <div key={child.id}>{ticket(child, { linkedChild: true })}</div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    ticket(parent)
-                  )}
+                  <Ticket
+                    proposal={p}
+                    focused={state.focusedProposalId === p.id}
+                    {...handlers(p)}
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
         )}
 
-        <DoneStrip tickets={done} onOpen={(id) => setDrawerId(id)} />
-
+        <div className="mt-6">
+          <DoneStrip tickets={done} onOpen={(id) => setDrawerId(id)} />
+        </div>
       </div>
 
       <TicketDrawer
@@ -226,4 +171,10 @@ export function PassRail({
       />
     </section>
   );
+}
+
+function cnHeader(compact?: boolean) {
+  return compact
+    ? "mb-2 flex flex-wrap items-end justify-between gap-3 border-b border-line pb-4"
+    : "mb-4 flex flex-wrap items-end justify-between gap-4 border-b border-line pb-6";
 }
