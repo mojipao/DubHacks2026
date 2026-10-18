@@ -14,6 +14,8 @@ export interface InboundMessage {
   name?: string;
   text: string;
   photon?: { spaceId: string; agentUserId: string; messageId: string };
+  /** False when the caller runs the agents itself (the voice tool answers mid-call). */
+  runAgents?: boolean;
 }
 
 const DEBOUNCE_MS = 4000;
@@ -54,7 +56,7 @@ export async function ingestInbound(input: InboundMessage): Promise<{ conversati
   if (error?.code === "23505") return null;
   if (error) throw new Error(`insert message: ${error.message}`);
   // Arm the debounce before the slower bookkeeping so a burst of texts collapses into one run.
-  if (!isOwner) schedule(conversationId, message.id);
+  if (!isOwner && input.runAgents !== false) schedule(conversationId, message.id);
 
   await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", conversationId);
   await logEvent(isOwner ? "owner" : "customer", "message.received", { type: "message", id: message.id }, {

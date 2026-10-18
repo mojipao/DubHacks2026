@@ -10,6 +10,8 @@ const optional = z.preprocess((v) => (v === "" ? undefined : v), z.string().min(
 const Env = z.object({
   PORT: z.coerce.number().int().positive().default(8787),
   OWNER_TOKEN: optional,
+  /** Shared secret ElevenLabs sends on voice tool calls (`x-voice-secret`). */
+  VOICE_TOOL_SECRET: optional,
 
   SUPABASE_URL: optional,
   SUPABASE_SERVICE_ROLE_KEY: optional,
