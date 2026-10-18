@@ -5,12 +5,13 @@ import { AlertTriangle } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useStore } from "@/lib/data/store";
 import { BUSINESS } from "@/lib/business";
-import { addDaysKey, localDateKey } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import { addDaysKey, localDateKey, money } from "@/lib/format";
+import { usePay } from "@/lib/use-pay";
+
 
 export function PickupsBoard() {
-  const { state, markPaid } = useStore();
+  const { state } = useStore();
+  const { pay, paying } = usePay();
   const [tab, setTab] = useState("today");
 
   const todayKey = localDateKey(state.now);
@@ -38,74 +39,62 @@ export function PickupsBoard() {
 
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-[22px] font-medium tracking-[-0.02em] text-fg">Pickups</h3>
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="heading text-[22px] text-fg">Pickups</h2>
+        <Tabs value={tab} onValueChange={setTab}>
+          <TabsList className="h-9 rounded-full border border-line bg-bg/60 p-1">
+            {[
+              ["today", "Today"],
+              ["tomorrow", "Tomorrow"],
+              ["saturday", "Saturday"],
+            ].map(([v, label]) => (
+              <TabsTrigger
+                key={v}
+                value={v}
+                className="rounded-full px-3 text-[12px] font-semibold text-muted data-[state=active]:bg-ticket data-[state=active]:text-ink"
+              >
+                {label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </div>
-      <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="mb-3 h-9 w-full rounded-full border border-line bg-white p-1">
-          <TabsTrigger value="today" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-ink data-[state=active]:text-white">
-            Today
-          </TabsTrigger>
-          <TabsTrigger value="tomorrow" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-ink data-[state=active]:text-white">
-            Tomorrow
-          </TabsTrigger>
-          <TabsTrigger value="saturday" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-ink data-[state=active]:text-white">
-            Saturday
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
       <ul className="space-y-2">
-        {pickups.length === 0 && (
-          <li className="text-[13px] text-muted">No pickups this day.</li>
-        )}
+        {pickups.length === 0 && <li className="py-6 text-center text-[14px] text-muted">No pickups this day.</li>}
         {pickups.map((o) => {
           const time = new Intl.DateTimeFormat("en-US", {
             timeZone: BUSINESS.timezone,
             hour: "numeric",
             minute: "2-digit",
           }).format(new Date(o.pickupAt));
-          const qty = o.items.reduce((n, i) => n + i.qty, 0);
+          const what = o.items.map((i) => `${i.qty} ${i.name.toLowerCase()}`).join(", ");
+          const due = o.totalCents - o.discountCents;
           return (
-            <li
-              key={o.id}
-              className="group flex items-center justify-between gap-2 rounded-2xl border border-line bg-white px-4 py-2.5 transition-colors hover:border-line-strong"
-            >
-              <div className="min-w-0">
-                <div className="truncate text-[13px] text-fg">
-                  <span className="font-mono text-[12px] text-muted tabular-nums">{time}</span>{" "}
-                  <span className="font-medium">{o.customerName ?? "Guest"}</span>{" "}
-                  <span className="font-mono text-[12px] text-muted">×{qty}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-1.5">
-                {o.hasShortfall && (
-                  <AlertTriangle className="size-3.5 text-tomato" />
-                )}
-                {o.status === "awaiting_payment" && (
+            <li key={o.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[16px] bg-bg/50 px-4 py-3">
+              <span className="w-16 shrink-0 text-[15px] font-bold text-fg tabular-nums">{time}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[15px] font-semibold text-fg">{o.customerName ?? "Guest"}</span>
+                <span className="block truncate text-[13px] text-muted">{what}</span>
+              </span>
+              {o.hasShortfall && <AlertTriangle className="size-4 text-tomato" aria-label="Short on stock" />}
+              {o.status === "paid" ? (
+                <span className="rounded-full bg-basil/15 px-3 py-1 text-[12px] font-bold tracking-wide text-basil uppercase">
+                  Paid {money(due)}
+                </span>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <span className="text-[13px] text-amber">{money(due)} due</span>
                   <button
                     type="button"
-                    title="Demo fallback when the Square webhook can't reach this laptop"
-                    onClick={() =>
-                      void markPaid(o.id)
-                        .then(() => toast.success("Marked paid"))
-                        .catch((e: Error) => toast.error(e.message))
-                    }
-                    className="rounded px-1.5 py-0.5 text-[10px] text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-fg focus-visible:opacity-100"
+                    disabled={paying === o.id}
+                    onClick={() => void pay(o.id, o.customerName?.split(" ")[0])}
+                    title="Pays the order's Square sandbox link, like the customer tapping it"
+                    className="rounded-full bg-cherry px-3.5 py-1.5 text-[12px] font-bold tracking-wide text-white uppercase transition-opacity hover:bg-cherry/90 disabled:opacity-50"
                   >
-                    mark paid
+                    {paying === o.id ? "Paying…" : "Customer pays"}
                   </button>
-                )}
-                <span
-                  className={cn(
-                    "rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase",
-                    o.status === "paid"
-                      ? "bg-basil/15 text-basil"
-                      : "bg-amber/15 text-amber",
-                  )}
-                >
-                  {o.status === "paid" ? "paid" : "awaiting"}
                 </span>
-              </div>
+              )}
             </li>
           );
         })}

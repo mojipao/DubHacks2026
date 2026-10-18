@@ -7,16 +7,17 @@
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-panel: var(--panel);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
-  --color-lime: var(--lime);
+  --color-cherry: var(--cherry);
+  --color-crema: var(--crema);
   --color-ticket: var(--ticket);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
@@ -55,33 +56,33 @@
 }
 
 :root {
-  /* Nova (Webflow template) language: white page, soft gray rounded panels, black type and
-     pill buttons, one lime accent used only as a fill with black text on it. */
-  --bg: #ffffff;
-  --surface: #f6f6f6;
-  --surface-2: #ececec;
-  --panel: #f6f6f6;
-  --line: #e6e6e6;
-  --line-strong: #c5c5c5;
-  --ticket: #ffffff;
-  --ink: #171717;
-  --muted: #6b6b6b;
-  --fg: #171717;
-  --lime: #cbfb45;
-  /* Status colors, dark enough to read as text on white. */
-  --tomato: #d4441f;
-  --amber: #b45f06;
-  --basil: #15803d;
-  --sky: #1d6fe0;
+  /* Coffee house (Mercury's-inspired): espresso-dark rooms, crema-cream tickets, one cherry-red accent. */
+  --bg: #15110e;
+  --surface: #1e1814;
+  --surface-2: #2a221c;
+  --panel: #1e1814;
+  --line: #33291f;
+  --line-strong: #4a3c30;
+  --ticket: #f4ebdd;
+  --ink: #1d140f;
+  --muted: #a8998b;
+  --fg: #f6efe6;
+  --cherry: #e2352b;
+  --crema: #d9a066;
+  /* Status colors, readable on the espresso surfaces. */
+  --tomato: #f0603d;
+  --amber: #e0a35a;
+  --basil: #5cbf7f;
+  --sky: #7fb2e5;
   --background: var(--bg);
   --foreground: var(--fg);
   --card: var(--ticket);
   --card-foreground: var(--ink);
-  --popover: #ffffff;
+  --popover: var(--surface);
   --popover-foreground: var(--fg);
-  --primary: var(--ink);
+  --primary: var(--cherry);
   --primary-foreground: #ffffff;
-  --secondary: var(--surface);
+  --secondary: var(--surface-2);
   --secondary-foreground: var(--fg);
   --muted-foreground: var(--muted);
   --accent: var(--surface-2);
@@ -89,8 +90,8 @@
   --destructive: var(--tomato);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--ink);
-  --radius: 12px;
+  --ring: var(--crema);
+  --radius: 14px;
 }
 
 @layer base {
@@ -100,23 +101,24 @@
 
   html {
     @apply font-sans h-full;
-    color-scheme: light;
+    color-scheme: dark;
   }
 
   body {
     @apply min-h-full bg-bg text-fg antialiased;
-    background-image: radial-gradient(rgba(23, 23, 23, 0.06) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background-image:
+      radial-gradient(ellipse 60% 45% at 15% -10%, rgba(217, 160, 102, 0.1), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(226, 53, 43, 0.06), transparent 55%);
     background-attachment: fixed;
   }
 
   ::selection {
-    background: var(--lime);
+    background: var(--crema);
     color: var(--fg);
   }
 
   :focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--crema);
     outline-offset: 2px;
   }
 }
@@ -136,26 +138,38 @@
   /* Cards on the gray pass: a hairline outline and a soft lift, Nova-style. */
   .ticket-shadow {
     box-shadow:
-      0 0 0 1px var(--line),
-      0 1px 2px rgba(23, 23, 23, 0.06),
-      0 12px 32px -12px rgba(23, 23, 23, 0.18);
+      0 1px 0 rgba(255, 255, 255, 0.6) inset,
+      0 2px 4px rgba(0, 0, 0, 0.35),
+      0 18px 40px -16px rgba(0, 0, 0, 0.7);
   }
 
   /* A soft gray panel, like Nova's rounded sections. */
   .surface {
     background-color: var(--surface);
-    border: 1px solid rgba(23, 23, 23, 0.04);
+    border: 1px solid var(--line);
   }
 
-  /* Small lime pill label ("Welcome to Nova!"). */
-  .badge-lime {
+  /* Mercury-style heading: heavy, uppercase, a little tracking. */
+  .heading {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* Small cherry pill label. */
+  .badge-brand {
     display: inline-flex;
     align-items: center;
+    gap: 6px;
     border-radius: 999px;
-    background: var(--lime);
+    background: var(--cherry);
     padding: 2px 12px;
-    font-size: 13px;
-    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #ffffff;
   }
 
   .eyebrow {
@@ -172,7 +186,7 @@
 
   .ticket-executing {
     background-image:
-      linear-gradient(100deg, transparent 20%, rgba(203, 251, 69, 0.55) 50%, transparent 80%),
+      linear-gradient(100deg, transparent 20%, rgba(226, 53, 43, 0.25) 50%, transparent 80%),
       linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%);
     background-size: 220% 100%, auto;
     animation: ticket-shimmer 1.1s linear infinite;
@@ -192,8 +206,8 @@
       -45deg,
       transparent,
       transparent 3px,
-      rgba(180, 95, 6, 0.6) 3px,
-      rgba(180, 95, 6, 0.6) 6px
+      rgba(217, 160, 102, 0.7) 3px,
+      rgba(217, 160, 102, 0.7) 6px
     );
   }
 }
@@ -202,7 +216,7 @@
    colored "lamps" above and below swell into a glow on hover or keyboard focus. */
 @layer components {
   .glow-btn {
-    --glow: var(--lime);
+    --glow: var(--cherry);
     position: relative;
     display: inline-flex;
     isolation: isolate;
@@ -280,13 +294,13 @@
     border-radius: 999px;
     border-top: 1px solid rgba(255, 255, 255, 0.14);
     border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(23, 23, 23, 0.92);
-    box-shadow: 0 12px 20px -8px rgba(23, 23, 23, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.5);
     -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
     color: #ffffff;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.4px;
     white-space: nowrap;
     text-decoration: none;
@@ -318,7 +332,7 @@
   .glow-btn:hover .glow-btn__face,
   .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face {
     letter-spacing: 1.6px;
-    background: rgba(23, 23, 23, 0.55);
+    background: rgba(255, 255, 255, 0.1);
   }
 
   .glow-btn:hover .glow-btn__face::before,

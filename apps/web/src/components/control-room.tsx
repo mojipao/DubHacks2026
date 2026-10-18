@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { ConversationList } from "@/components/conversations/list";
 import { ConversationThread } from "@/components/conversations/thread";
-import { FrictionStrip } from "@/components/friction-strip";
+import { LeadsView } from "@/components/leads/leads-view";
 import { PassRail, type DrawerTarget } from "@/components/pass/rail";
 import { PhoneSimulator } from "@/components/phone-simulator";
 import { ShortcutHelp } from "@/components/shortcut-help";
-import { EventTicker } from "@/components/ticker";
+import { Activity } from "@/components/today/activity";
 import { PickupsBoard } from "@/components/today/pickups";
 import { TodayRevenue } from "@/components/today/revenue";
+import { TimeSaved } from "@/components/today/time-saved";
 import { StockBars } from "@/components/today/stock-bars";
 import { TopBar } from "@/components/top-bar";
 import { VIEWS, ViewTabs, type View } from "@/components/view-tabs";
@@ -19,7 +20,7 @@ import { useStore } from "@/lib/data/store";
 import { toast } from "sonner";
 
 export function ControlRoom() {
-  const { state, focusProposal, approve, reject } = useStore();
+  const { state, focusProposal, selectConversation, approve, reject } = useStore();
   const [drawer, setDrawer] = useState<DrawerTarget>(null);
   const [helpOpen, setHelpOpen] = useState(false);
   const [view, setViewState] = useState<View>(() => {
@@ -117,6 +118,7 @@ export function ControlRoom() {
   const counts = {
     pass: { n: state.proposals.filter((p) => p.status === "pending").length, alert: true },
     conversations: { n: state.conversations.filter((c) => c.hasPendingTicket).length },
+    customers: { n: 0 },
     today: {
       n: state.orders.filter(
         (o) => localDateKey(o.pickupAt) === todayKey && (o.status === "paid" || o.status === "awaiting_payment"),
@@ -131,12 +133,18 @@ export function ControlRoom() {
     setView("pass");
   };
 
+  const openConversation = (conversationId: string) => {
+    selectConversation(conversationId);
+    setView("conversations");
+  };
+
   return (
-    <div className="flex h-dvh min-h-[640px] flex-col gap-2.5 p-2.5">
-      <div className="sticky top-2 z-30 rounded-[28px] border border-black/5 bg-[rgba(248,248,248,0.82)] backdrop-blur-md">
-        <TopBar onOpenSim={() => setSimOpen(true)} />
-        <ViewTabs view={view} onChange={setView} counts={counts} />
-        <FrictionStrip />
+    <div className="flex h-dvh min-h-[640px] flex-col gap-3 p-3">
+      <div className="surface sticky top-3 z-30 rounded-full bg-surface/90 backdrop-blur-md">
+        <TopBar
+          onOpenSim={() => setSimOpen(true)}
+          tabs={<ViewTabs view={view} onChange={setView} counts={counts} />}
+        />
       </div>
 
       <div className="flex min-h-0 flex-1">
@@ -147,29 +155,39 @@ export function ControlRoom() {
         )}
 
         {view === "conversations" && (
-          <div id="view-conversations" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-2.5">
-            <aside className="surface flex w-[340px] shrink-0 flex-col overflow-hidden rounded-[28px] min-[1400px]:w-[380px]">
+          <div id="view-conversations" role="tabpanel" className="flex min-h-0 min-w-0 flex-1 gap-3">
+            <aside className="surface flex w-[330px] shrink-0 flex-col overflow-hidden rounded-[22px] min-[1400px]:w-[370px]">
               <ConversationList />
             </aside>
-            <section className="flex min-w-0 flex-1 flex-col overflow-hidden rounded-[28px] border border-line bg-white">
+            <section className="surface flex min-w-0 flex-1 flex-col overflow-hidden rounded-[22px]">
               <ConversationThread standalone onOpenTicket={openTicketFor} />
             </section>
           </div>
         )}
 
+        {view === "customers" && (
+          <div id="view-customers" role="tabpanel" className="flex min-h-0 min-w-0 flex-1">
+            <LeadsView onOpenConversation={openConversation} />
+          </div>
+        )}
+
         {view === "today" && (
           <div id="view-today" role="tabpanel" className="min-h-0 min-w-0 flex-1 overflow-y-auto">
-            <div className="grid gap-2.5 lg:grid-cols-[1.1fr_1fr]">
-              <section className="surface rounded-[28px] px-6 py-5">
-                <div className="mb-3 flex items-baseline justify-between">
-                  <h2 className="badge-lime">Today</h2>
-                  <span className="font-mono text-[12px] text-fg/80">{dayLabel}</span>
-                </div>
-                <PickupsBoard />
-              </section>
-              <div className="flex flex-col gap-2.5">
+            <div className="mb-3 flex items-baseline justify-between px-1">
+              <h1 className="heading text-[30px] text-fg">Today</h1>
+              <span className="text-[15px] font-semibold text-muted">{dayLabel}</span>
+            </div>
+            <div className="grid gap-3 lg:grid-cols-[1.15fr_1fr]">
+              <div className="flex flex-col gap-3">
+                <section className="surface rounded-[22px] px-6 py-5">
+                  <PickupsBoard />
+                </section>
+                <Activity />
+              </div>
+              <div className="flex flex-col gap-3">
                 <TodayRevenue />
-                <section className="surface rounded-[28px] px-6 py-5">
+                <TimeSaved />
+                <section className="surface rounded-[22px] px-6 py-5">
                   <StockBars />
                 </section>
               </div>
@@ -177,7 +195,6 @@ export function ControlRoom() {
           </div>
         )}
       </div>
-      <EventTicker />
       <PhoneSimulator open={simOpen} onOpenChange={setSimOpen} />
       <ShortcutHelp open={helpOpen} onOpenChange={setHelpOpen} />
     </div>

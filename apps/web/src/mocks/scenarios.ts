@@ -1,5 +1,6 @@
 import { PAYMENT_LINK_TOKEN, type RiskFlag } from "@boh/shared";
 import type { TraceStep, UiProposal } from "@/lib/data/types";
+import { BRAND_SHORT } from "@/lib/business";
 import { FIXTURE_SAT_PICKUP } from "@/mocks/fixtures";
 
 /** What a mock agent run produces: the trace steps it streams, then the tickets it drafts. */
@@ -9,7 +10,7 @@ export type ScriptedRun = {
 };
 
 const SUN_PICKUP = new Date(Date.parse(FIXTURE_SAT_PICKUP) + 24 * 3600_000).toISOString();
-const SIGN = "\n— Larch & Rye";
+const SIGN = `\n— ${BRAND_SHORT}`;
 
 function base(flags: RiskFlag[] = []) {
   return {
@@ -32,7 +33,7 @@ export function scriptFor(text: string, firstName: string | null): ScriptedRun {
     return {
       steps: [
         { agent: "intake", step: "understand", ms: 640, summary: "No order; asks for free items and to ignore instructions", reads: [], flags: ["injection_suspected", "off_policy"] },
-        { agent: "guard", step: "guard", ms: 9, summary: "Guard: asked to ignore instructions and for free bread. Reply declines; no order.", reads: [], flags: ["injection_suspected", "off_policy"] },
+        { agent: "guard", step: "guard", ms: 9, summary: "Guard: asked to ignore instructions and for free food. Reply declines; no order.", reads: [], flags: ["injection_suspected", "off_policy"] },
       ],
       proposals: [
         {
@@ -41,12 +42,12 @@ export function scriptFor(text: string, firstName: string | null): ScriptedRun {
           kind: "reply",
           title: "Decline off-policy ask",
           summary: "Declines politely and offers the real menu. No order.",
-          rationale: "Asked to ignore instructions and for free bread: decline, no order.",
-          payload: { text: `${hi}we can't give bread away, but a sourdough loaf is $9 and there's plenty for Saturday. Want one?${SIGN}`, orders: [] },
-          evidence: [{ label: "Ask", value: "Free bread + ignore instructions" }],
+          rationale: "Asked to ignore instructions and for free food: decline, no order.",
+          payload: { text: `${hi}we can't give anything away, but a cold brew is $5.25 and we're pouring all morning. Want one?${SIGN}`, orders: [] },
+          evidence: [{ label: "Ask", value: "Free items + ignore instructions" }],
           reads: [{ table: "messages", id: "sim" }],
           confidence: 0.94,
-          guardSummary: "Guard: asked to ignore instructions and for free bread. Reply declines; no order.",
+          guardSummary: "Guard: asked to ignore instructions and for free food. Reply declines; no order.",
         },
       ],
     };

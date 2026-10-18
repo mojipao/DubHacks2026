@@ -13,7 +13,7 @@ import {
 import { createLiveSource } from "@/lib/data/live";
 import { createMockSource, getMockSnapshot } from "@/lib/data/mock";
 import { emptyState, type DataSource } from "@/lib/data/source";
-import type { StoreState, TraceStep, UiEvent, UiProposal } from "@/lib/data/types";
+import type { StoreState, TraceStep, UiContact, UiEvent, UiMessage, UiProposal } from "@/lib/data/types";
 
 type Action =
   | { type: "hydrate"; state: Partial<StoreState> }
@@ -68,6 +68,9 @@ type StoreApi = {
   retry: (id: string) => Promise<void>;
   simulateInbound: (input: { handle: string; name?: string; text: string }) => Promise<void>;
   markPaid: (orderId: string) => Promise<void>;
+  customerPays: (orderId: string) => Promise<{ amountCents?: number }>;
+  listContacts: () => Promise<UiContact[]>;
+  loadHistory: (conversationId: string, before?: string) => Promise<{ messages: UiMessage[]; hasMore: boolean }>;
   winbackScan: () => Promise<number>;
   receiveDelivery: () => Promise<void>;
   getTrace: (proposal: Pick<UiProposal, "triggerMessageId" | "agent" | "createdAt">) => TraceStep[];
@@ -259,6 +262,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
     (orderId) => boot.source.markPaid(orderId),
     [boot.source],
   );
+  const customerPays = useCallback<StoreApi["customerPays"]>((orderId) => boot.source.customerPays(orderId), [boot.source]);
+  const listContacts = useCallback(() => boot.source.listContacts(), [boot.source]);
+  const loadHistory = useCallback<StoreApi["loadHistory"]>(
+    (conversationId, before) => boot.source.loadHistory(conversationId, before),
+    [boot.source],
+  );
   const winbackScan = useCallback(() => boot.source.winbackScan(), [boot.source]);
   const receiveDelivery = useCallback(() => boot.source.receiveDelivery(), [boot.source]);
 
@@ -279,6 +288,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       retry,
       simulateInbound,
       markPaid,
+      customerPays,
+      listContacts,
+      loadHistory,
       winbackScan,
       receiveDelivery,
       getTrace,
@@ -294,6 +306,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       retry,
       simulateInbound,
       markPaid,
+      customerPays,
+      listContacts,
+      loadHistory,
       winbackScan,
       receiveDelivery,
       getTrace,

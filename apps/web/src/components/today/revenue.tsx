@@ -21,10 +21,10 @@ export function TodayRevenue() {
   }, [state.orders, today]);
 
   return (
-    <div className="overflow-hidden rounded-[28px] bg-ink px-6 py-5 text-white">
-      <div className="badge-lime">Paid today</div>
-      <div className="mt-1 font-medium tracking-[-0.03em] text-[44px] leading-none text-white tabular-nums mt-3">{money(paidCents)}</div>
-      <div className="mt-2 text-[13px] text-white/60">
+    <div className="overflow-hidden rounded-[22px] bg-ticket px-6 py-5 text-ink">
+      <div className="heading text-[15px] text-ink/60">Paid today</div>
+      <div className="mt-1 heading text-[52px] text-ink tabular-nums">{money(paidCents)}</div>
+      <div className="mt-2 text-[14px] text-ink/60">
         {agentOrders} order{agentOrders === 1 ? "" : "s"} created by agents today
       </div>
     </div>

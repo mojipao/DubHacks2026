@@ -54,6 +54,32 @@ export function markPaid(orderId: string) {
   return post<unknown>(`/api/dev/mark-paid/${orderId}`);
 }
 
+export function customerPays(orderId: string) {
+  return post<{ paymentId: string; status: string; amountCents: number }>(`/api/dev/square-pay/${orderId}`);
+}
+
+async function get<T>(path: string): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(path, { cache: "no-store" });
+  } catch {
+    throw new ActionError("Network error: the control room can't reach its API", 0);
+  }
+  const data = (await res.json().catch(() => ({}))) as T & { error?: string };
+  if (!res.ok) throw new ActionError(data.error ?? `Request failed (${res.status})`, res.status);
+  return data;
+}
+
+export function fetchContacts<T>() {
+  return get<{ contacts: T[] }>("/api/contacts");
+}
+
+export function fetchHistory<T>(conversationId: string, before?: string) {
+  const q = new URLSearchParams({ limit: "100" });
+  if (before) q.set("before", before);
+  return get<{ messages: T[]; hasMore: boolean }>(`/api/contacts/${conversationId}/messages?${q}`);
+}
+
 export function runWinbackScan() {
   return post<{ created: number }>("/api/dev/winback-scan");
 }

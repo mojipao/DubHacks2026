@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter } from "next/font/google";
+import { Geist_Mono, Saira } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
+import { BUSINESS } from "@/lib/business";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const saira = Saira({
+  variable: "--font-saira",
   subsets: ["latin"],
 });
 
@@ -15,9 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Larch & Rye · Back of House",
-  description:
-    "Operations control room for Larch & Rye. Agents draft replies; the owner approves at the pass.",
+  title: `${BUSINESS.name} · Back of House`,
+  description: `Operations control room for ${BUSINESS.name}. Agents draft replies; the owner approves each one.`,
 };
 
 export default function RootLayout({
@@ -28,12 +28,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${saira.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <TooltipProvider>
           {children}
-          <Toaster theme="light" position="top-center" />
+          <Toaster theme="dark" position="top-center" />
         </TooltipProvider>
       </body>
     </html>

@@ -1,0 +1,2085 @@
+diff --git a/data/seed/business.json b/data/seed/business.json
+index 9e1d158..d7eb323 100644
+--- a/data/seed/business.json
++++ b/data/seed/business.json
+@@ -1,14 +1,32 @@
+ {
+-  "name": "Larch & Rye",
++  "name": "Kettle & Crow Coffee",
+   "timezone": "America/Los_Angeles",
+   "hours": {
+     "mon": null,
+-    "tue": { "open": "07:00", "close": "15:00" },
+-    "wed": { "open": "07:00", "close": "15:00" },
+-    "thu": { "open": "07:00", "close": "15:00" },
+-    "fri": { "open": "07:00", "close": "15:00" },
+-    "sat": { "open": "08:00", "close": "14:00" },
+-    "sun": { "open": "08:00", "close": "14:00" }
++    "tue": {
++      "open": "06:30",
++      "close": "15:00"
++    },
++    "wed": {
++      "open": "06:30",
++      "close": "15:00"
++    },
++    "thu": {
++      "open": "06:30",
++      "close": "15:00"
++    },
++    "fri": {
++      "open": "06:30",
++      "close": "15:00"
++    },
++    "sat": {
++      "open": "07:00",
++      "close": "14:00"
++    },
++    "sun": {
++      "open": "07:00",
++      "close": "14:00"
++    }
+   },
+   "minLeadHours": 12,
+   "cateringThresholdUnits": 24,
+@@ -17,7 +35,13 @@
+   "welcomeBackAfterDays": 30,
+   "winbackOverdueFactor": 2.5,
+   "winbackMinOrders": 6,
+-  "minutesSaved": { "reply": 3, "order": 5, "counteroffer": 10, "reorder": 8, "guardCatch": 2 },
+-  "voice": "Warm and brief, the way the person at the counter actually talks. Use the customer's first name. Say the real constraint plainly instead of apologizing twice. No exclamation-mark pileups, at most one emoji, never all caps. Prices come from the menu, never invented. Sign off with — Larch & Rye.",
++  "minutesSaved": {
++    "reply": 3,
++    "order": 5,
++    "counteroffer": 10,
++    "reorder": 8,
++    "guardCatch": 2
++  },
++  "voice": "Warm and brief, the way the barista at the counter actually talks. Use the customer's first name. Say the real constraint plainly instead of apologizing twice. No exclamation-mark pileups, at most one emoji, never all caps. Prices come from the menu, never invented. Sign off with — Kettle & Crow.",
+   "poweredByFooter": "Sent with Back of House · backofhouse.app"
+ }
+diff --git a/data/seed/customers.json b/data/seed/customers.json
+index 6e0b78e..2f055c9 100644
+--- a/data/seed/customers.json
++++ b/data/seed/customers.json
+@@ -21,7 +21,7 @@
+     "id": "652ed691-51c5-5bcd-8fff-fee2f2cce7d7",
+     "personaKey": "elena",
+     "name": "Elena Ortiz",
+-    "notes": "Came in every other Saturday for four months, then stopped. Likes the rye loaf."
++    "notes": "Came in every other Saturday for four months, then stopped. Likes a cold brew."
+   },
+   {
+     "id": "d3ff1a40-4e1e-5cd1-bc16-80f5828f4b9e",
+@@ -35,7 +35,7 @@
+   {
+     "id": "1c1059b2-fd31-5406-b6d6-7bf360baca8d",
+     "name": "Aisha Bello",
+-    "notes": "Dairy-free when she can; usually takes the sourdough."
++    "notes": "Dairy-free when she can; usually takes a cappuccino with oat milk on the side."
+   },
+   {
+     "id": "6ce4ae25-c621-5f52-ae60-48944ad77f72",
+@@ -61,7 +61,7 @@
+   {
+     "id": "1245d8ab-beb2-59e7-a3d2-f22ce3d317a4",
+     "name": "Ruth Adeyemi",
+-    "notes": "Buys two rye loaves and freezes one."
++    "notes": "Buys two cold brews, one for her partner."
+   },
+   {
+     "id": "eb02972e-951e-56cd-a3ff-3ba09f3a32d2",
+@@ -102,7 +102,7 @@
+   {
+     "id": "3a599891-67b7-5417-b73e-9ffd5fecebb6",
+     "name": "Omar Farouk",
+-    "notes": "Standing Friday baguette."
++    "notes": "Standing Friday mocha."
+   },
+   {
+     "id": "d142918a-4ebe-5d32-aecd-1a597105dcff",
+diff --git a/data/seed/ingredients.json b/data/seed/ingredients.json
+index d1c6562..152a2e3 100644
+--- a/data/seed/ingredients.json
++++ b/data/seed/ingredients.json
+@@ -3,7 +3,7 @@
+     "id": "butter",
+     "name": "Cultured butter",
+     "unit": "kg",
+-    "onHand": 1.86,
++    "onHand": 1.66,
+     "reorderPoint": 2,
+     "supplier": "Rainier Dairy",
+     "unitCostCents": 1280
+@@ -18,13 +18,13 @@
+     "unitCostCents": 180
+   },
+   {
+-    "id": "rye-flour",
+-    "name": "Rye flour",
+-    "unit": "kg",
+-    "onHand": 12,
+-    "reorderPoint": 6,
+-    "supplier": "Cascade Restaurant Supply",
+-    "unitCostCents": 240
++    "id": "whole-milk",
++    "name": "Whole milk",
++    "unit": "L",
++    "onHand": 24,
++    "reorderPoint": 10,
++    "supplier": "Rainier Dairy",
++    "unitCostCents": 190
+   },
+   {
+     "id": "almond-flour",
+diff --git a/data/seed/orders.json b/data/seed/orders.json
+index 881e9db..562ebc3 100644
+--- a/data/seed/orders.json
++++ b/data/seed/orders.json
+@@ -15,7 +15,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -45,7 +45,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -105,7 +105,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -139,7 +139,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -169,7 +169,7 @@
+     "pickupLocalTime": "08:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -195,11 +195,11 @@
+     "pickupLocalTime": "10:30",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -216,7 +216,7 @@
+     "pickupLocalTime": "12:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -229,7 +229,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -293,7 +293,7 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -318,7 +318,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       }
+     ]
+@@ -398,7 +398,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -496,7 +496,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -522,7 +522,7 @@
+     "pickupLocalTime": "08:00",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -569,7 +569,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -612,7 +612,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -646,7 +646,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+@@ -680,7 +680,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -705,7 +705,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -769,7 +769,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -837,7 +837,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -880,7 +880,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -927,7 +927,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       }
+     ]
+@@ -944,7 +944,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -1132,11 +1132,11 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -1153,7 +1153,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -1166,7 +1166,7 @@
+     "pickupLocalTime": "12:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -1196,7 +1196,7 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -1213,7 +1213,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+@@ -1243,7 +1243,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -1256,7 +1256,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -1277,7 +1277,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -1290,7 +1290,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       },
+       {
+@@ -1320,7 +1320,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -1354,7 +1354,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -1375,7 +1375,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -1435,11 +1435,11 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -1503,7 +1503,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -1533,7 +1533,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -1619,7 +1619,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -1709,7 +1709,7 @@
+     "pickupLocalTime": "08:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -1722,7 +1722,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -1799,7 +1799,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       },
+       {
+@@ -1829,7 +1829,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -1846,7 +1846,7 @@
+     "pickupLocalTime": "07:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -1876,7 +1876,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -1936,7 +1936,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -2000,7 +2000,7 @@
+     "pickupLocalTime": "12:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+@@ -2034,7 +2034,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -2123,7 +2123,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -2187,7 +2187,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -2200,7 +2200,7 @@
+     "pickupLocalTime": "12:00",
+     "items": [
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       },
+       {
+@@ -2225,7 +2225,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -2238,7 +2238,7 @@
+     "pickupLocalTime": "08:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -2255,7 +2255,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -2289,7 +2289,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -2341,7 +2341,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -2435,7 +2435,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -2486,7 +2486,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -2529,7 +2529,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -2658,7 +2658,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -2722,7 +2722,7 @@
+     "pickupLocalTime": "07:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -2752,7 +2752,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -2769,7 +2769,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -2811,7 +2811,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -2828,7 +2828,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -2905,7 +2905,7 @@
+     "pickupLocalTime": "08:15",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       },
+       {
+@@ -2922,7 +2922,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       },
+       {
+@@ -2939,7 +2939,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       },
+       {
+@@ -2986,7 +2986,7 @@
+     "pickupLocalTime": "12:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -3041,7 +3041,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -3182,7 +3182,7 @@
+     "pickupLocalTime": "08:30",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+@@ -3190,7 +3190,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -3237,7 +3237,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -3280,11 +3280,11 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -3297,11 +3297,11 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -3374,7 +3374,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -3417,11 +3417,11 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -3434,7 +3434,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -3481,7 +3481,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -3528,7 +3528,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -3575,7 +3575,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -3592,11 +3592,11 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -3617,7 +3617,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -3643,11 +3643,11 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       },
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -3664,7 +3664,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -3690,7 +3690,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -3724,7 +3724,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -3737,7 +3737,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -3780,7 +3780,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -3801,7 +3801,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -3848,7 +3848,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -3865,7 +3865,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -3895,7 +3895,7 @@
+     "pickupLocalTime": "08:30",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -3950,7 +3950,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -3984,7 +3984,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -4040,7 +4040,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -4091,7 +4091,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -4130,7 +4130,7 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -4160,7 +4160,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -4216,7 +4216,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       },
+       {
+@@ -4237,7 +4237,7 @@
+     "pickupLocalTime": "11:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       }
+     ]
+@@ -4271,7 +4271,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -4340,7 +4340,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       },
+       {
+@@ -4365,7 +4365,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       }
+     ]
+@@ -4382,7 +4382,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -4408,7 +4408,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -4425,7 +4425,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -4485,7 +4485,7 @@
+     "pickupLocalTime": "12:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -4558,7 +4558,7 @@
+     "pickupLocalTime": "14:00",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       },
+       {
+@@ -4717,7 +4717,7 @@
+     "pickupLocalTime": "08:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       },
+       {
+@@ -4742,7 +4742,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 2
+       }
+     ]
+@@ -4798,7 +4798,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -4867,7 +4867,7 @@
+     "pickupLocalTime": "08:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -4949,7 +4949,7 @@
+     "pickupLocalTime": "07:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -4962,7 +4962,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -4979,7 +4979,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -5060,7 +5060,7 @@
+     "pickupLocalTime": "08:15",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -5094,7 +5094,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       }
+     ]
+@@ -5124,7 +5124,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       },
+       {
+@@ -5162,7 +5162,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -5196,7 +5196,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       },
+       {
+@@ -5273,7 +5273,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       },
+       {
+@@ -5341,7 +5341,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -5410,7 +5410,7 @@
+     "pickupLocalTime": "14:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -5511,7 +5511,7 @@
+         "qty": 1
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -5554,7 +5554,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -5584,7 +5584,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -5735,7 +5735,7 @@
+         "qty": 3
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -5761,7 +5761,7 @@
+     "pickupLocalTime": "08:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -5859,7 +5859,7 @@
+     "pickupLocalTime": "10:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       },
+       {
+@@ -5927,7 +5927,7 @@
+     "pickupLocalTime": "09:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+@@ -5961,7 +5961,7 @@
+         "qty": 4
+       },
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -6047,7 +6047,7 @@
+     "pickupLocalTime": "07:15",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -6090,7 +6090,7 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -6116,7 +6116,7 @@
+     "pickupLocalTime": "07:30",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 3
+       }
+     ]
+@@ -6129,7 +6129,7 @@
+     "pickupLocalTime": "08:00",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       },
+       {
+@@ -6150,7 +6150,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -6210,7 +6210,7 @@
+     "pickupLocalTime": "07:30",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 1
+       }
+     ]
+@@ -6240,7 +6240,7 @@
+     "pickupLocalTime": "12:30",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+@@ -6330,7 +6330,7 @@
+     "pickupLocalTime": "09:30",
+     "items": [
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -6399,7 +6399,7 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "rye-loaf",
++        "productId": "cold-brew",
+         "qty": 2
+       },
+       {
+@@ -6544,11 +6544,11 @@
+     "pickupLocalTime": "11:00",
+     "items": [
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 2
+       },
+       {
+-        "productId": "baguette",
++        "productId": "mocha",
+         "qty": 1
+       }
+     ]
+@@ -6561,7 +6561,7 @@
+     "pickupLocalTime": "12:00",
+     "items": [
+       {
+-        "productId": "birthday-cake-6",
++        "productId": "coffee-box",
+         "qty": 1
+       }
+     ]
+@@ -6595,7 +6595,7 @@
+         "qty": 2
+       },
+       {
+-        "productId": "sourdough-loaf",
++        "productId": "cappuccino",
+         "qty": 1
+       }
+     ]
+diff --git a/data/seed/products.json b/data/seed/products.json
+index 46b4138..f66e0ed 100644
+--- a/data/seed/products.json
++++ b/data/seed/products.json
+@@ -5,7 +5,15 @@
+     "category": "pastry",
+     "priceCents": 450,
+     "dailyCapacity": 36,
+-    "aliases": ["croissant", "croissants", "plain croissant", "plain croissants", "butter croissants", "classic croissant", "regular croissant"],
++    "aliases": [
++      "croissant",
++      "croissants",
++      "plain croissant",
++      "plain croissants",
++      "butter croissants",
++      "classic croissant",
++      "regular croissant"
++    ],
+     "active": true
+   },
+   {
+@@ -14,7 +22,13 @@
+     "category": "pastry",
+     "priceCents": 525,
+     "dailyCapacity": 48,
+-    "aliases": ["almond croissants", "almond", "almonds", "amandine", "almond pastry"],
++    "aliases": [
++      "almond croissants",
++      "almond",
++      "almonds",
++      "amandine",
++      "almond pastry"
++    ],
+     "active": true
+   },
+   {
+@@ -23,7 +37,13 @@
+     "category": "pastry",
+     "priceCents": 495,
+     "dailyCapacity": 36,
+-    "aliases": ["chocolate croissant", "chocolate croissants", "choc croissant", "pain au chocolate", "chocolatine"],
++    "aliases": [
++      "chocolate croissant",
++      "chocolate croissants",
++      "choc croissant",
++      "pain au chocolate",
++      "chocolatine"
++    ],
+     "active": true
+   },
+   {
+@@ -32,7 +52,12 @@
+     "category": "pastry",
+     "priceCents": 475,
+     "dailyCapacity": 24,
+-    "aliases": ["morning buns", "cinnamon bun", "cinnamon buns", "morning roll"],
++    "aliases": [
++      "morning buns",
++      "cinnamon bun",
++      "cinnamon buns",
++      "morning roll"
++    ],
+     "active": true
+   },
+   {
+@@ -41,7 +66,13 @@
+     "category": "pastry",
+     "priceCents": 525,
+     "dailyCapacity": 24,
+-    "aliases": ["cardamom knots", "cardamom bun", "cardamom buns", "knot", "knots"],
++    "aliases": [
++      "cardamom knots",
++      "cardamom bun",
++      "cardamom buns",
++      "knot",
++      "knots"
++    ],
+     "active": true
+   },
+   {
+@@ -50,34 +81,51 @@
+     "category": "savory",
+     "priceCents": 650,
+     "dailyCapacity": 20,
+-    "aliases": ["quiche", "quiche slices", "slice of quiche"],
++    "aliases": [
++      "quiche",
++      "quiche slices",
++      "slice of quiche"
++    ],
+     "active": true
+   },
+   {
+-    "id": "sourdough-loaf",
+-    "name": "Sourdough loaf",
+-    "category": "bread",
+-    "priceCents": 900,
+-    "dailyCapacity": 30,
+-    "aliases": ["sourdough", "sourdough bread", "sourdough loaves", "loaf of sourdough"],
++    "id": "cappuccino",
++    "name": "Cappuccino",
++    "category": "drink",
++    "priceCents": 575,
++    "dailyCapacity": 150,
++    "aliases": [
++      "cappuccinos",
++      "capp",
++      "cap",
++      "cappucino"
++    ],
+     "active": true
+   },
+   {
+-    "id": "rye-loaf",
+-    "name": "Rye loaf",
+-    "category": "bread",
+-    "priceCents": 950,
+-    "dailyCapacity": 18,
+-    "aliases": ["rye", "rye bread", "rye loaves", "loaf of rye"],
++    "id": "cold-brew",
++    "name": "Cold brew",
++    "category": "drink",
++    "priceCents": 525,
++    "dailyCapacity": 120,
++    "aliases": [
++      "cold brews",
++      "iced coffee",
++      "coldbrew"
++    ],
+     "active": true
+   },
+   {
+-    "id": "baguette",
+-    "name": "Baguette",
+-    "category": "bread",
+-    "priceCents": 450,
+-    "dailyCapacity": 40,
+-    "aliases": ["baguettes", "french bread", "french stick"],
++    "id": "mocha",
++    "name": "Mocha",
++    "category": "drink",
++    "priceCents": 625,
++    "dailyCapacity": 100,
++    "aliases": [
++      "mochas",
++      "cafe mocha",
++      "chocolate coffee"
++    ],
+     "active": true
+   },
+   {
+@@ -86,7 +134,13 @@
+     "category": "drink",
+     "priceCents": 800,
+     "dailyCapacity": 120,
+-    "aliases": ["latte", "lattes", "oat milk latte", "oatmilk latte", "oat latté"],
++    "aliases": [
++      "latte",
++      "lattes",
++      "oat milk latte",
++      "oatmilk latte",
++      "oat latté"
++    ],
+     "active": true
+   },
+   {
+@@ -95,16 +149,43 @@
+     "category": "drink",
+     "priceCents": 350,
+     "dailyCapacity": 200,
+-    "aliases": ["coffee", "coffees", "drip", "black coffee", "cup of coffee", "regular coffee"],
++    "aliases": [
++      "coffee",
++      "coffees",
++      "drip",
++      "black coffee",
++      "cup of coffee",
++      "regular coffee"
++    ],
+     "active": true
+   },
+   {
+-    "id": "birthday-cake-6",
+-    "name": "6-inch birthday cake",
+-    "category": "cake",
+-    "priceCents": 4200,
++    "id": "coffee-box",
++    "name": "Coffee box (serves 12)",
++    "category": "drink",
++    "priceCents": 3600,
+     "dailyCapacity": 4,
+-    "aliases": ["birthday cake", "cake", "6 inch cake", "6-inch cake", "small cake", "round cake"],
++    "aliases": [
++      "coffee box",
++      "box of coffee",
++      "coffee traveler",
++      "traveler",
++      "carafe"
++    ],
++    "active": true
++  },
++  {
++    "id": "house-beans",
++    "name": "House espresso beans, 12 oz bag",
++    "category": "drink",
++    "priceCents": 1800,
++    "dailyCapacity": 30,
++    "aliases": [
++      "beans",
++      "bag of beans",
++      "coffee beans",
++      "whole bean"
++    ],
+     "active": true
+   }
+ ]
+diff --git a/data/seed/recipes.json b/data/seed/recipes.json
+index a425888..60706b0 100644
+--- a/data/seed/recipes.json
++++ b/data/seed/recipes.json
+@@ -1,56 +1,202 @@
+ [
+-  { "productId": "butter-croissant", "ingredientId": "butter", "qtyPerUnit": 0.03 },
+-  { "productId": "butter-croissant", "ingredientId": "bread-flour", "qtyPerUnit": 0.065 },
+-  { "productId": "butter-croissant", "ingredientId": "sugar", "qtyPerUnit": 0.004 },
+-  { "productId": "butter-croissant", "ingredientId": "yeast", "qtyPerUnit": 0.001 },
+-
+-  { "productId": "almond-croissant", "ingredientId": "butter", "qtyPerUnit": 0.03 },
+-  { "productId": "almond-croissant", "ingredientId": "bread-flour", "qtyPerUnit": 0.06 },
+-  { "productId": "almond-croissant", "ingredientId": "almond-flour", "qtyPerUnit": 0.035 },
+-  { "productId": "almond-croissant", "ingredientId": "sugar", "qtyPerUnit": 0.012 },
+-  { "productId": "almond-croissant", "ingredientId": "eggs", "qtyPerUnit": 0.02 },
+-  { "productId": "almond-croissant", "ingredientId": "yeast", "qtyPerUnit": 0.001 },
+-
+-  { "productId": "pain-au-chocolat", "ingredientId": "butter", "qtyPerUnit": 0.03 },
+-  { "productId": "pain-au-chocolat", "ingredientId": "bread-flour", "qtyPerUnit": 0.062 },
+-  { "productId": "pain-au-chocolat", "ingredientId": "dark-chocolate", "qtyPerUnit": 0.025 },
+-  { "productId": "pain-au-chocolat", "ingredientId": "sugar", "qtyPerUnit": 0.004 },
+-  { "productId": "pain-au-chocolat", "ingredientId": "yeast", "qtyPerUnit": 0.001 },
+-
+-  { "productId": "morning-bun", "ingredientId": "butter", "qtyPerUnit": 0.025 },
+-  { "productId": "morning-bun", "ingredientId": "bread-flour", "qtyPerUnit": 0.055 },
+-  { "productId": "morning-bun", "ingredientId": "sugar", "qtyPerUnit": 0.018 },
+-  { "productId": "morning-bun", "ingredientId": "cardamom", "qtyPerUnit": 0.0008 },
+-  { "productId": "morning-bun", "ingredientId": "yeast", "qtyPerUnit": 0.001 },
+-
+-  { "productId": "cardamom-knot", "ingredientId": "butter", "qtyPerUnit": 0.02 },
+-  { "productId": "cardamom-knot", "ingredientId": "bread-flour", "qtyPerUnit": 0.058 },
+-  { "productId": "cardamom-knot", "ingredientId": "sugar", "qtyPerUnit": 0.016 },
+-  { "productId": "cardamom-knot", "ingredientId": "cardamom", "qtyPerUnit": 0.0015 },
+-  { "productId": "cardamom-knot", "ingredientId": "yeast", "qtyPerUnit": 0.001 },
+-
+-  { "productId": "quiche-slice", "ingredientId": "butter", "qtyPerUnit": 0.015 },
+-  { "productId": "quiche-slice", "ingredientId": "bread-flour", "qtyPerUnit": 0.03 },
+-  { "productId": "quiche-slice", "ingredientId": "eggs", "qtyPerUnit": 0.06 },
+-  { "productId": "quiche-slice", "ingredientId": "cream-cheese", "qtyPerUnit": 0.03 },
+-
+-  { "productId": "sourdough-loaf", "ingredientId": "bread-flour", "qtyPerUnit": 0.45 },
+-
+-  { "productId": "rye-loaf", "ingredientId": "rye-flour", "qtyPerUnit": 0.3 },
+-  { "productId": "rye-loaf", "ingredientId": "bread-flour", "qtyPerUnit": 0.15 },
+-
+-  { "productId": "baguette", "ingredientId": "bread-flour", "qtyPerUnit": 0.25 },
+-  { "productId": "baguette", "ingredientId": "yeast", "qtyPerUnit": 0.002 },
+-
+-  { "productId": "oat-latte", "ingredientId": "oat-milk", "qtyPerUnit": 0.3 },
+-  { "productId": "oat-latte", "ingredientId": "coffee-beans", "qtyPerUnit": 0.018 },
+-
+-  { "productId": "drip-coffee", "ingredientId": "coffee-beans", "qtyPerUnit": 0.015 },
+-
+-  { "productId": "birthday-cake-6", "ingredientId": "butter", "qtyPerUnit": 0.2 },
+-  { "productId": "birthday-cake-6", "ingredientId": "bread-flour", "qtyPerUnit": 0.22 },
+-  { "productId": "birthday-cake-6", "ingredientId": "sugar", "qtyPerUnit": 0.26 },
+-  { "productId": "birthday-cake-6", "ingredientId": "eggs", "qtyPerUnit": 0.33 },
+-  { "productId": "birthday-cake-6", "ingredientId": "cream-cheese", "qtyPerUnit": 0.2 },
+-  { "productId": "birthday-cake-6", "ingredientId": "dark-chocolate", "qtyPerUnit": 0.04 }
++  {
++    "productId": "butter-croissant",
++    "ingredientId": "butter",
++    "qtyPerUnit": 0.03
++  },
++  {
++    "productId": "butter-croissant",
++    "ingredientId": "bread-flour",
++    "qtyPerUnit": 0.065
++  },
++  {
++    "productId": "butter-croissant",
++    "ingredientId": "sugar",
++    "qtyPerUnit": 0.004
++  },
++  {
++    "productId": "butter-croissant",
++    "ingredientId": "yeast",
++    "qtyPerUnit": 0.001
++  },
++  {
++    "productId": "almond-croissant",
++    "ingredientId": "butter",
++    "qtyPerUnit": 0.03
++  },
++  {
++    "productId": "almond-croissant",
++    "ingredientId": "bread-flour",
++    "qtyPerUnit": 0.06
++  },
++  {
++    "productId": "almond-croissant",
++    "ingredientId": "almond-flour",
++    "qtyPerUnit": 0.035
++  },
++  {
++    "productId": "almond-croissant",
++    "ingredientId": "sugar",
++    "qtyPerUnit": 0.012
++  },
++  {
++    "productId": "almond-croissant",
++    "ingredientId": "eggs",
++    "qtyPerUnit": 0.02
++  },
++  {
++    "productId": "almond-croissant",
++    "ingredientId": "yeast",
++    "qtyPerUnit": 0.001
++  },
++  {
++    "productId": "pain-au-chocolat",
++    "ingredientId": "butter",
++    "qtyPerUnit": 0.03
++  },
++  {
++    "productId": "pain-au-chocolat",
++    "ingredientId": "bread-flour",
++    "qtyPerUnit": 0.062
++  },
++  {
++    "productId": "pain-au-chocolat",
++    "ingredientId": "dark-chocolate",
++    "qtyPerUnit": 0.025
++  },
++  {
++    "productId": "pain-au-chocolat",
++    "ingredientId": "sugar",
++    "qtyPerUnit": 0.004
++  },
++  {
++    "productId": "pain-au-chocolat",
++    "ingredientId": "yeast",
++    "qtyPerUnit": 0.001
++  },
++  {
++    "productId": "morning-bun",
++    "ingredientId": "butter",
++    "qtyPerUnit": 0.025
++  },
++  {
++    "productId": "morning-bun",
++    "ingredientId": "bread-flour",
++    "qtyPerUnit": 0.055
++  },
++  {
++    "productId": "morning-bun",
++    "ingredientId": "sugar",
++    "qtyPerUnit": 0.018
++  },
++  {
++    "productId": "morning-bun",
++    "ingredientId": "cardamom",
++    "qtyPerUnit": 0.0008
++  },
++  {
++    "productId": "morning-bun",
++    "ingredientId": "yeast",
++    "qtyPerUnit": 0.001
++  },
++  {
++    "productId": "cardamom-knot",
++    "ingredientId": "butter",
++    "qtyPerUnit": 0.02
++  },
++  {
++    "productId": "cardamom-knot",
++    "ingredientId": "bread-flour",
++    "qtyPerUnit": 0.058
++  },
++  {
++    "productId": "cardamom-knot",
++    "ingredientId": "sugar",
++    "qtyPerUnit": 0.016
++  },
++  {
++    "productId": "cardamom-knot",
++    "ingredientId": "cardamom",
++    "qtyPerUnit": 0.0015
++  },
++  {
++    "productId": "cardamom-knot",
++    "ingredientId": "yeast",
++    "qtyPerUnit": 0.001
++  },
++  {
++    "productId": "quiche-slice",
++    "ingredientId": "butter",
++    "qtyPerUnit": 0.015
++  },
++  {
++    "productId": "quiche-slice",
++    "ingredientId": "bread-flour",
++    "qtyPerUnit": 0.03
++  },
++  {
++    "productId": "quiche-slice",
++    "ingredientId": "eggs",
++    "qtyPerUnit": 0.06
++  },
++  {
++    "productId": "quiche-slice",
++    "ingredientId": "cream-cheese",
++    "qtyPerUnit": 0.03
++  },
++  {
++    "productId": "oat-latte",
++    "ingredientId": "oat-milk",
++    "qtyPerUnit": 0.3
++  },
++  {
++    "productId": "oat-latte",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.018
++  },
++  {
++    "productId": "drip-coffee",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.015
++  },
++  {
++    "productId": "cappuccino",
++    "ingredientId": "whole-milk",
++    "qtyPerUnit": 0.15
++  },
++  {
++    "productId": "cappuccino",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.018
++  },
++  {
++    "productId": "cold-brew",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.03
++  },
++  {
++    "productId": "mocha",
++    "ingredientId": "whole-milk",
++    "qtyPerUnit": 0.25
++  },
++  {
++    "productId": "mocha",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.018
++  },
++  {
++    "productId": "mocha",
++    "ingredientId": "dark-chocolate",
++    "qtyPerUnit": 0.02
++  },
++  {
++    "productId": "coffee-box",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.12
++  },
++  {
++    "productId": "house-beans",
++    "ingredientId": "coffee-beans",
++    "qtyPerUnit": 0.34
++  }
+ ]
+diff --git a/scripts/check-seed.ts b/scripts/check-seed.ts
+index 9f1fcfe..8e8af3f 100644
+--- a/scripts/check-seed.ts
++++ b/scripts/check-seed.ts
+@@ -1,5 +1,5 @@
+ /**
+- * Asserts that the synthetic bakery adds up. Run after any change to `data/seed/**`:
++ * Asserts that the synthetic coffee shop adds up. Run after any change to `data/seed/**`:
+  *
+  *   pnpm tsx scripts/check-seed.ts
+  *
+@@ -172,7 +172,7 @@ group("the capacity table in planning/LANE-3-AGENTS.md Phase 1", () => {
+   check("Saturday remaining", capacity - sat === 24, `expected 24 left, found ${capacity - sat}`);
+   check("Sunday remaining", capacity - sun === 30, `expected 30 left, found ${capacity - sun}`);
+   check("almond croissant capacity", product("almond-croissant").dailyCapacity === 48, "expected 48 per day");
+-  check("birthday cake capacity", product("birthday-cake-6").dailyCapacity === 4, "expected 4 per day");
++  check("coffee box capacity", product("coffee-box").dailyCapacity === 4, "expected 4 per day");
+ 
+   notes.push(`butter croissants: Sat ${sat}/${capacity} committed (${capacity - sat} left) · Sun ${sun}/${capacity} (${capacity - sun} left)`);
+ });
+@@ -272,7 +272,7 @@ group("the demo prices the pitch says out loud", () => {
+   );
+   const mayaTotal = 2 * product("almond-croissant").priceCents + product("oat-latte").priceCents;
+   check("Maya's usual is $18.50", mayaTotal === 1850, `found ${mayaTotal}c; the demo script says $18.50`);
+-  check("sourdough is $9 a loaf", product("sourdough-loaf").priceCents === 900, "quoted in the Guard decline example");
++  check("cold brew is $5.25", product("cold-brew").priceCents === 525, "quoted in the Guard decline example");
+ });
+ 
+ group("personas", () => {
+diff --git a/scripts/generate-history.ts b/scripts/generate-history.ts
+index 8a49301..d8f2f61 100644
+--- a/scripts/generate-history.ts
++++ b/scripts/generate-history.ts
+@@ -134,7 +134,7 @@ const MAYA_VARIATIONS: Record<number, SeedItem[]> = {
+   13: [
+     { productId: "almond-croissant", qty: 2 },
+     { productId: "oat-latte", qty: 1 },
+-    { productId: "sourdough-loaf", qty: 1 },
++    { productId: "cappuccino", qty: 1 },
+   ],
+ };
+ 
+@@ -191,7 +191,7 @@ orders.push({
+   daysAgo: 70,
+   pickupLocalTime: "10:00",
+   items: [
+-    { productId: "sourdough-loaf", qty: 1 },
++    { productId: "cappuccino", qty: 1 },
+     { productId: "oat-latte", qty: 1 },
+   ],
+ });
+@@ -211,7 +211,7 @@ for (let i = 0; i < 7; i++) {
+     kind: "history",
+     daysAgo: 42 + i * 14,
+     pickupLocalTime: "09:30",
+-    items: [{ productId: "rye-loaf", qty: 1 }, { productId: "drip-coffee", qty: 1 }, ...extras],
++    items: [{ productId: "cold-brew", qty: 1 }, { productId: "drip-coffee", qty: 1 }, ...extras],
+   });
+ }
+ 
+@@ -241,10 +241,10 @@ const COMMON: readonly string[] = [
+   "morning-bun",
+   "cardamom-knot",
+   "quiche-slice",
+-  "sourdough-loaf",
+-  "sourdough-loaf",
+-  "rye-loaf",
+-  "baguette",
++  "cappuccino",
++  "cappuccino",
++  "cold-brew",
++  "mocha",
+   "drip-coffee",
+   "drip-coffee",
+   "oat-latte",
+@@ -252,10 +252,10 @@ const COMMON: readonly string[] = [
+ ];
+ 
+ const MAX_QTY: Record<string, number> = {
+-  "birthday-cake-6": 1,
+-  "sourdough-loaf": 2,
+-  "rye-loaf": 2,
+-  "baguette": 3,
++  "coffee-box": 1,
++  "cappuccino": 2,
++  "cold-brew": 2,
++  "mocha": 3,
+   "quiche-slice": 2,
+   "oat-latte": 2,
+   "drip-coffee": 3,
+@@ -272,8 +272,8 @@ for (let n = 0; n < TARGET_HISTORY_ORDERS; n++) {
+   const items = new Map<string, number>();
+ 
+   for (let i = 0; i < lineCount; i++) {
+-    // A cake is a rare, deliberate purchase, so it never joins the random pastry mix.
+-    const productId = rng() < 0.01 ? "birthday-cake-6" : pick(COMMON);
++    // A coffee box is a rare, deliberate purchase, so it never joins the random pastry mix.
++    const productId = rng() < 0.01 ? "coffee-box" : pick(COMMON);
+     const cap = MAX_QTY[productId] ?? 4;
+     items.set(productId, Math.min(cap, (items.get(productId) ?? 0) + intBetween(1, cap)));
+   }
+@@ -328,15 +328,15 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
+     pickupDay: "next_sat",
+     at: "11:00",
+     items: [
+-      { productId: "sourdough-loaf", qty: 2 },
+-      { productId: "baguette", qty: 1 },
++      { productId: "cappuccino", qty: 2 },
++      { productId: "mocha", qty: 1 },
+     ],
+   },
+   {
+     customer: "Linnea Sorensen",
+     pickupDay: "next_sat",
+     at: "12:00",
+-    items: [{ productId: "birthday-cake-6", qty: 1 }],
++    items: [{ productId: "coffee-box", qty: 1 }],
+   },
+   {
+     customer: "Marcus Ruiz",
+@@ -353,7 +353,7 @@ const UPCOMING: { customer: string; pickupDay: "next_sat" | "next_sun"; at: stri
+     at: "10:30",
+     items: [
+       { productId: "butter-croissant", qty: 2 },
+-      { productId: "sourdough-loaf", qty: 1 },
++      { productId: "cappuccino", qty: 1 },
+     ],
+   },
+   {

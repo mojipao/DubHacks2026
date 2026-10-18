@@ -69,12 +69,12 @@ export function AuditTable() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="badge-lime mb-2">
+            <p className="badge-brand mb-2">
               Audit {mode === "mock" ? "· fixtures" : ""}
             </p>
-            <h1 className="font-medium tracking-[-0.03em] text-4xl text-fg">Every action, on the record</h1>
+            <h1 className="heading text-4xl text-fg">Every action, on the record</h1>
           </div>
-          <Link href="/" className="rounded-full bg-ink px-4 py-2 text-[13px] text-white hover:bg-ink/85">
+          <Link href="/" className="rounded-full bg-ticket px-4 py-2 text-[13px] font-semibold text-ink hover:bg-ticket/90">
             ← Control room
           </Link>
         </div>
@@ -136,7 +136,7 @@ export function AuditTable() {
               className={cn(
                 "rounded-full border px-3 py-1 text-[12px] transition-colors",
                 type === q.value
-                  ? "border-ink bg-ink text-white"
+                  ? "border-ticket bg-ticket text-ink"
                   : "border-line text-muted hover:text-fg",
               )}
             >
@@ -157,7 +157,7 @@ export function AuditTable() {
               onChange={(e) => f.set(e.target.value)}
               placeholder={f.label}
               aria-label={f.label}
-              className="h-9 rounded-full border border-line-strong bg-white px-4 text-[13px] text-fg placeholder:text-muted"
+              className="h-9 rounded-full border border-line-strong bg-bg px-4 text-[13px] text-fg placeholder:text-muted"
             />
           ))}
           <span className="self-center font-mono text-[12px] text-muted">
@@ -165,7 +165,7 @@ export function AuditTable() {
           </span>
         </div>
 
-        <div className="overflow-x-auto rounded-[24px] border border-line bg-white">
+        <div className="surface overflow-x-auto rounded-[22px]">
           <table className="w-full text-left text-[13px]">
             <thead className="bg-panel font-mono text-[11px] tracking-wider text-muted uppercase">
               <tr>
