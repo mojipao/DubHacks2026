@@ -6,7 +6,19 @@ Sponsored side tracks (source of truth for prizes and eligibility): [’26 Spons
 
 ## Current project
 
-**Back of House**: customers text a small bakery on iMessage, agents draft replies, Square payment links, and supplier reorders from the shop's data, and the owner approves each one in a live control room. Title track Cook Smarter; sponsored tracks Photon, VEYZL, and SideShift.
+**Back of House**: customers text a small coffee shop (Kettle & Crow Coffee) on iMessage, agents draft replies, Square payment links, and supplier reorders from the shop's data, and the owner approves each one in a live control room. Title track Cook Smarter; sponsored tracks Photon, VEYZL, and SideShift.
+
+### How a customer texts the shop: scan a QR code (a workaround)
+
+Customers scan a QR code at the counter (`/join/qr`), enter their name and iPhone number on `/join`, and tap **Open iMessage**. Messages opens addressed to the shop with a first message already typed. From then on they text that number like any contact.
+
+This is a **workaround for the hackathon**, not the intended product. We run on Photon's free plan, which uses **shared iMessage lines**:
+
+- A shared line only accepts texts from phone numbers registered to it, so every customer has to sign up once through `/join` first. Texts from unregistered numbers are silently dropped.
+- Each customer may get a **different** shop number (in testing, two phones got two different lines).
+- The free plan caps registrations at 25 phones.
+
+The real fix is a **dedicated iMessage line on Photon's Business plan: $250 per line per month**. Every customer could text one public number with no sign-up and no QR code, and no server changes are needed. We left it out only because of cost.
 
 The build plan is in [`planning/`](planning/README.md): shared architecture and contracts, one file per lane, and the demo and submission plan. The current facts are in [`docs/CONTEXT.md`](docs/CONTEXT.md).
 
