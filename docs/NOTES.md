@@ -29,6 +29,21 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 16:20 PT · lane 2 → lane 3 · Six open notes need you; here's the order for the demo
+**Status:** open
+**Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`
+**What:** Lane 3's last commit was 14:53 and none of the notes below has a reply yet. One commit (`1e7ac86`, ping test) is still on `lane/3` and not merged. In demo order:
+1. **Maya's usual flags an allergy** (`intake.ts:411`, whole-note match) and **asks "what is your usual order?"** with the model on. Both hit the opening beat.
+2. **"Saturday at 9am" becomes 8am** and is flagged `outside_hours`.
+3. **"hi" gets "We can't take orders through this message."**
+4. **Butter reorder `neededBy` is zone-less** (`ops.ts:223`). Lane 2 shipped a server-side fallback in [PR #36](https://github.com/mojipao/DubHacks2026/pull/36), so "Approve both" works now; still fix it at the source and add `ProposalDraft.parse(draft)` to `ops.test.ts`.
+5. **Win-back picks Maya**, not Elena.
+6. The AI Gateway note is fixed by PR #20; move it to Resolved.
+
+Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredientNeeds` (with `reorderPoint`/`unitCostCents`), and `getNextOpenDays`. All three, plus `getRegularCadences`, are already on `SupabaseDataPort` (`apps/server/src/data-port.ts`); no work needed there.
+**Why it matters:** The deadline is Sun 10:00 AM. Items 1 to 3 are what judges see first.
+**Suggested fix:** Reply under each note as you go; lane 2 re-tests on the real phone after each merge.
+
 ### 2026-10-17 15:45 PT · lane 2 → lane 3 · Win-back picks Maya, not Elena
 **Status:** open
 **Where:** `packages/agents/src/winback.ts` (candidate ranking), with `data/seed/orders.json`
@@ -92,6 +107,7 @@ How this differs from the other docs:
 **What:** The reorder draft's `neededBy` is `"2026-10-23T07:00"`: no seconds and no offset. `ReorderPayload.neededBy` is `IsoDateTime` (`z.iso.datetime({ offset: true })`), so the server's `ProposalDraft.parse` rejects the whole draft and logs it as an `agent.step` with `step: "validate"`.
 **Why it matters:** On live data, Jun's counteroffer arrives **without** its linked butter reorder, so "Approve both" and the reorder ticket never appear. That's `v-core`. `ops.test.ts:136` only checks `neededBy.slice(0, 10)`, so tests pass.
 **Suggested fix:** Build it as a full instant in the business timezone, e.g. `2026-10-23T07:00:00-07:00`, the same way `pickupAt` is built (those parse fine). Add `ProposalDraft.parse(draft)` to the tests so contract drift fails there.
+**Reply (lane 2, 16:20):** Server-side fallback merged in [PR #36](https://github.com/mojipao/DubHacks2026/pull/36): `storeDrafts` completes a zone-less `neededBy` or `pickupAt` in the business zone before validation and logs an `agent.step` with `step: "normalize"`. Verified on Jun's fixture draft: invalid before, valid after (7:00 AM PT Fri). Keep this note open until `ops.ts` emits a full ISO time; the `normalize` step should then stop appearing in the trace.
 
 **Reply (lane 3, 16:55):** Fixed. `neededBy` is now built with `isoWithOffset` in the business timezone, the same way `pickupAt` is, so it carries an offset and `ProposalDraft.parse` accepts it. Your diagnosis was exact, including why the tests missed it: `intake.test.ts` now runs `ProposalDraft.safeParse` over every draft returned for five different inputs, so contract drift fails there instead of in live mode.
 
