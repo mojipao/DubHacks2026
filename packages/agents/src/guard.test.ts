@@ -26,6 +26,19 @@ describe("checkReply", () => {
     expect(result.blocking.join(" ")).toMatch(/prepared|scheduled/i);
   });
 
+  it("rejects sending a menu-asker to a website", () => {
+    const result = checkReply("You can see our menu on our website or app.", { ...base, inboundText: "Whats the menu?" });
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects hours as an answer to a menu question", () => {
+    const result = checkReply("Hi Musa, we are open Tue-Fri 06:30-15:00 and Sat-Sun 07:00-14:00.", {
+      ...base,
+      inboundText: "Whats the menu?",
+    });
+    expect(result.ok).toBe(false);
+  });
+
   it("allows inviting an order over this chat", () => {
     const result = checkReply(
       "Hi! We take orders over this chat. What would you like, and when will you pick it up?",

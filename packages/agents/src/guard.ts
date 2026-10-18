@@ -240,11 +240,19 @@ export function checkReply(text: string, facts: GuardFacts): GuardResult {
   if (
     /\b(can'?t|cannot|can not|don'?t|do not|unable to)\s+(take|accept|place|process)\s+orders?\b/i.test(text) ||
     /\borders?\s+(through|in|via|on)\s+this\s+(chat|message|text|thread)\b/i.test(text) ||
-    /\bplace\s+an?\s+order\b.{0,40}\b(website|app|online)\b/i.test(text)
+    /\b(place\s+an?\s+order|see our menu|full menu|the menu)\b.{0,40}\b(website|app|online)\b/i.test(text) ||
+    /\b(website|app)\b.{0,30}\b(menu|order)\b/i.test(text)
   ) {
     blocking.push(
-      "Do not say the shop cannot take orders by text, and do not send them to a website or app. This shop takes orders by iMessage. Invite what they would like and a pickup time instead.",
+      "Do not say the shop cannot take orders by text, and do not send them to a website or app. This shop takes orders by iMessage. If they asked for the menu, list items and prices here.",
     );
+  }
+
+  // 10b. "what's the menu?" must get prices, not hours.
+  if (/\bmenu\b/i.test(facts.inboundText) && !facts.hasOrder) {
+    if (!/\$\s?\d/.test(text)) {
+      blocking.push("They asked for the menu. List items with their menu prices from the facts. Do not answer with hours.");
+    }
   }
 
   // 11. Without an attached order, never promise that something is ready or being made.
