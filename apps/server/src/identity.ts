@@ -80,6 +80,16 @@ export function withNameAsk(text: string): string {
   return `What's your name?\n\n${text}`;
 }
 
+/** The iMessage thread we can actually deliver to for this phone, if they have texted the shop. */
+export async function imessageThread(handle: string) {
+  const { data } = await db()
+    .from("conversations")
+    .select("*")
+    .in("handle", lookupKeys(handle))
+    .eq("platform", "imessage");
+  return (data ?? []).find((c) => c.photon_space_id && c.photon_agent_user_id) ?? null;
+}
+
 export async function findCustomerId(handle: string): Promise<string | null> {
   const { data } = await db().from("customers").select("id").in("handle", lookupKeys(handle)).maybeSingle();
   return data?.id ?? null;

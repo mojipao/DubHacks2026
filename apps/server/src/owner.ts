@@ -20,9 +20,9 @@ async function ownerConversation(): Promise<Conversation | null> {
     .from("conversations")
     .select("*")
     .eq("role", "owner")
-    .order("last_message_at", { ascending: false })
-    .limit(1);
-  return data?.[0] ?? null;
+    .order("last_message_at", { ascending: false });
+  const list = data ?? [];
+  return list.find((c) => c.platform === "imessage" && c.photon_space_id) ?? list[0] ?? null;
 }
 
 async function reply(text: string, key: string) {
