@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "../db.ts";
 import { env, features } from "../env.ts";
 import { logEvent } from "../events.ts";
+import { rememberCustomerName } from "../identity.ts";
 import { normalizeHandle } from "../inbound.ts";
 import { photon, projectPath } from "../photon/client.ts";
 
@@ -44,14 +45,9 @@ join.post("/", async (c) => {
     return c.json({ error: "That number belongs to the shop owner." }, 400);
   }
 
-  let customerId: string;
-  const { data: existing } = await db().from("customers").select("id").eq("handle", handle).maybeSingle();
-  if (existing) customerId = existing.id;
-  else {
-    const { data, error } = await db().from("customers").insert({ name, handle }).select("id").single();
-    if (error) throw new Error(`create customer: ${error.message}`);
-    customerId = data.id;
-  }
+  const saved = await rememberCustomerName(handle, name, null, { trusted: true });
+  if (!saved) return c.json({ error: "Use a first and last name, letters only." }, 400);
+  const customerId = saved.customerId;
 
   let agentNumber: string;
   try {

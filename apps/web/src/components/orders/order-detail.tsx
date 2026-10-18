@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { callConversationIds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import { flagMeta, isGuardFlag } from "@/lib/flags";
-import { maskHandle, money, shortRelativeTime } from "@/lib/format";
+import { money, personLabel, shortRelativeTime } from "@/lib/format";
 import { pickupGroups, reorderLines, type MenuLine, type OrderGroup } from "@/lib/order-math";
 import { cn } from "@/lib/utils";
 
@@ -68,7 +68,7 @@ export function OrderDetail({ group, onOpenPerson }: { group: OrderGroup; onOpen
   const conv = state.conversations.find((c) => c.id === lead.conversationId);
   // A phone order: the call summary and transcript are in People.
   const fromCall = Boolean(lead.conversationId && callConversationIds(state.events).has(lead.conversationId));
-  const who = lead.kind === "reorder" && !lead.conversationId ? `Restock from ${(lead.payload as ReorderPayload).supplier}` : (lead.customerName ?? (conv ? maskHandle(conv.handle) : "New customer"));
+  const who = lead.kind === "reorder" && !lead.conversationId ? `Restock from ${(lead.payload as ReorderPayload).supplier}` : personLabel(lead.customerName);
 
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(reply?.text ?? "");

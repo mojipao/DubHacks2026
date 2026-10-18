@@ -295,7 +295,7 @@ async function fetchSnapshot(sb: BrowserDb): Promise<Omit<DataSnapshot, "connect
   };
 }
 
-const REALTIME_TABLES = ["conversations", "messages", "proposals", "orders", "ingredients", "events"] as const;
+const REALTIME_TABLES = ["conversations", "messages", "proposals", "orders", "ingredients", "events", "customers"] as const;
 const SUBSCRIBE_TIMEOUT_MS = 5000;
 const POLL_MS = 3000;
 /** A single agent run writes a burst of rows; one refetch covers the whole burst. */

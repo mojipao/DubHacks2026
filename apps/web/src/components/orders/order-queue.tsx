@@ -7,7 +7,7 @@ import { openHolds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import type { UiProposal } from "@/lib/data/types";
 import { flagMeta, isGuardFlag } from "@/lib/flags";
-import { maskHandle, money, shortRelativeTime } from "@/lib/format";
+import { money, personLabel, shortRelativeTime } from "@/lib/format";
 import { groupTotals, orderSummary, reorderLines, type OrderGroup } from "@/lib/order-math";
 import { cn } from "@/lib/utils";
 
@@ -45,7 +45,7 @@ export function OrderRow({
   const flags = ROW_FLAGS.filter((f) => lead.riskFlags.includes(f as never)).slice(0, 2);
   const { customerCents, supplierCents } = groupTotals(group);
   const total = customerCents || supplierCents;
-  const who = lead.kind === "reorder" && !lead.conversationId ? "Restock" : (lead.customerName ?? "New customer");
+  const who = lead.kind === "reorder" && !lead.conversationId ? "Restock" : personLabel(lead.customerName);
 
   return (
     <li>
@@ -179,7 +179,7 @@ function WaitingOnCustomer({ onOpenPerson }: { onOpenPerson: (conversationId: st
       <ul className="mt-2 max-h-48 divide-y divide-line overflow-y-auto">
         {holds.map((h) => {
           const conv = state.conversations.find((c) => c.id === h.conversationId);
-          const name = conv?.customerName ?? (conv ? maskHandle(conv.handle) : "Customer");
+          const name = personLabel(conv?.customerName);
           return (
             <li key={h.eventId}>
               <button

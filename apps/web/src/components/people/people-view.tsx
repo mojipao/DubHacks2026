@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { callConversationIds, callsByConversation, formatDuration, messagesForCall, senders, type Sender, type UiCall } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import type { ContactStage, UiContact, UiMessage } from "@/lib/data/types";
-import { money, shortRelativeTime } from "@/lib/format";
+import { money, personLabel, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 // Who put an outbound message out: the agent answers and checks orders alone; orders need you.
@@ -128,7 +128,7 @@ export function PeopleView({ onOpenOrder }: { onOpenOrder: (conversationId: stri
                   >
                     <span className="flex items-baseline justify-between gap-3">
                       <span className="flex min-w-0 items-center gap-1.5">
-                        <span className="truncate text-[16px] font-bold text-ink">{r.name ?? r.handleMasked}</span>
+                        <span className="truncate text-[16px] font-bold text-ink">{personLabel(r.name)}</span>
                         {called && <Phone aria-label="Called the shop" className="size-3.5 shrink-0 text-muted" />}
                       </span>
                       <span className="shrink-0 text-[13px] text-muted">{shortRelativeTime(r.lastMessageAt)}</span>
@@ -225,10 +225,9 @@ function Thread({
     <div className="flex min-h-0 flex-1 flex-col bg-paper">
       <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-line px-8 pt-6 pb-4">
         <div className="min-w-0">
-          <h2 className="heading truncate text-[30px] text-ink">{person.name ?? person.handleMasked}</h2>
+          <h2 className="heading truncate text-[30px] text-ink">{personLabel(person.name)}</h2>
           <p className="mt-1 text-[14px] text-muted">
-            {person.name ? `${person.handleMasked} · ` : "No name yet · "}
-            {calls.length > 0 ? "called" : "first texted"} {shortRelativeTime(person.firstSeenAt)}
+            {person.handleMasked} · {calls.length > 0 ? "called" : "first texted"} {shortRelativeTime(person.firstSeenAt)}
           </p>
         </div>
         <p className="text-[14px] text-ink/85">

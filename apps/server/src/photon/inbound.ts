@@ -10,6 +10,7 @@ export const photonStatus = { mode: "off" as "off" | "socket" | "poll", connecte
 interface ReceivedText {
   id: string;
   handle: string;
+  name?: string;
   text: string;
   spaceId: string;
   agentUserId: string;
@@ -22,7 +23,7 @@ interface ReceivedText {
 export function toReceivedText(raw: unknown): ReceivedText | null {
   const m = raw as Partial<Message> & Record<string, unknown>;
   if (m.platform !== "imessage" || m.status !== "received") return null;
-  const sentBy = m.sentBy as { handle?: string; kind?: string } | undefined;
+  const sentBy = m.sentBy as { handle?: string; kind?: string; name?: string; displayName?: string } | undefined;
   // receivedBy is optional; addressedTo carries the same agent user when it's the one Photon fills in.
   const receivedBy = (m.receivedBy ?? m.addressedTo) as { id?: string } | undefined;
   const space = m.space as { id?: string; kind?: string } | undefined;
@@ -31,7 +32,8 @@ export function toReceivedText(raw: unknown): ReceivedText | null {
   if (sentBy.kind && sentBy.kind !== "human") return null;
   if (space.kind && /group/i.test(space.kind)) return null;
   if (content?.type !== "text" || !content.text?.trim()) return null;
-  return { id: String(m.id), handle: sentBy.handle, text: content.text, spaceId: space.id, agentUserId: receivedBy.id };
+  const name = sentBy.name?.trim() || sentBy.displayName?.trim() || undefined;
+  return { id: String(m.id), handle: sentBy.handle, name, text: content.text, spaceId: space.id, agentUserId: receivedBy.id };
 }
 
 /** The message inside a `message.received` event: `event.data.object` (confirmed against a live delivery, API version 2026-07-01). */
@@ -45,6 +47,7 @@ async function handle(raw: unknown) {
   await ingestInbound({
     platform: "imessage",
     handle: msg.handle,
+    name: msg.name,
     text: msg.text,
     photon: { spaceId: msg.spaceId, agentUserId: msg.agentUserId, messageId: msg.id },
   });
