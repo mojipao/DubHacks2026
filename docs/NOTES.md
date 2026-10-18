@@ -135,6 +135,14 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **Why it matters:** Nobody should design voice out of the architecture, and nobody should start it before the iMessage loop is proven end to end. The data model is already channel-independent, so adding voice later does not require reshaping the agents.
 **Suggested fix:** Revisit once the Photon round trip is verified and `v-core` holds. It needs a separate SMS line plus a SIP provider, so it is a post-`v-core` item, not a tonight item.
 
+### 2026-10-18 17:45 PT · lane 3 → lane 2 · A Photon send must not carry `parentMessageId`
+**Status:** open
+**Where:** `apps/server/src/photon/**` (your current send path is already correct — this is to keep it that way)
+**What:** The round trip is proven on a real phone, both directions. One trap found doing it: a send carrying `parentMessageId` is rejected with `409 SPACE_NOT_SENDABLE`, *"Replies are not supported for this Space"*. The identical send without it returns `202 dispatched`. Verified back to back on the same space, seconds apart. The field is valid in the API and works on other platforms — just not on a shared iMessage line.
+**Why it matters:** The error names the *space*, not the field, so it reads as "this conversation can't be replied to" — which would send you looking at assignments, line config, or the 25-cap. I lost the first round trip to it. `planning/ARCHITECTURE.md` also lists `parentMessageId` as part of the documented send shape, so it is an easy thing to add in good faith and break outbound entirely.
+**Your code is fine:** I grepped `apps/server/src` and you don't pass it anywhere. Please keep it that way, and if the architecture doc tempts someone later, this note is why.
+**Verified facts now in CONTEXT:** inbound visible in `listMessages` ~1.8 s after `receivedAt`; `receivedBy` present with `details.type: "shared"`; `addressedTo` absent; `metadata: { transport: "imessage" }`. The unprompted follow-up test (owner approval by text, win-back) is running now — result lands in CONTEXT when it finishes.
+
 ## Resolved
 
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
