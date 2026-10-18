@@ -16,6 +16,9 @@ colors:
   qamariya-red: "#8e2328"
   terrace-green: "#3f6b45"
   bubble-in: "#f6ead2"
+  mud-wall: "#6e3d1f"
+  street-sand: "#efe3cf"
+  lime-plaster: "#f3e8d6"
 typography:
   display:
     fontFamily: "Marcellus, ui-serif, Georgia, serif"
@@ -216,6 +219,14 @@ A 6px track in Sand Deep. The fill is Qamariya Red when below par and Roast Mute
 
 ### Sana'a Frieze
 An authored SVG pattern under the band. It is used once per page and never repeated as a divider elsewhere.
+
+### Storefront (the shop's homepage, `/`)
+The shop's public page is the front of a Sana'a tower house, and it is the one surface where the world performs. The facade fills the first viewport on **Street Sand** (street-sand): a **Mud Wall** (mud-wall) with visible brick courses, a white stepped parapet, gypsum friezes between floors, and a raised diagonal brick band under each frieze.
+- **Floors:** the top floor holds the large qamariya and the shop name. The middle floor's four arched windows are the navigation (wooden lattice inside; they warm to Brew on hover). The ground floor holds the plank-and-stud main door ("Order by text") and the small staff door.
+- **The staff door** is the only link out of the shop, to `/shop`. On hover or focus it swings ajar on its left hinge, and the opening edge shows a sliver of the control room (the Orders count and queue rows).
+- **Inside:** the menu hangs as one framed board on **Lime Plaster** (lime-plaster) under a brown frieze, with dotted leaders. The coffee story sits on the mud wall between white friezes.
+- **Motion:** the qamariya glass warms once on load, pane by pane. Under reduced motion there is no animation.
+- Here the stained glass uses red, gold, and green as material, not as meaning. The Three Spices Rule governs the control room, not this page.
 
 ## Do's and Don'ts
 

@@ -2,23 +2,23 @@
 version: 1
 slug: "apps-web-src-app-page-tsx"
 primary_target: "apps/web/src/app/page.tsx"
-related_targets: ["apps/web/src/components/control-room.tsx"]
+related_targets: []
 ---
 
-# Control room surface brief
+# Shop homepage surface brief
 
-Scope: `/` control room (Orders, Today, People). Visitor mode: Operate. Users: a small coffee house owner mid-service; judges watching a short demo. Job: clear agent-drafted orders one at a time, see the day, find a person. Constraints: PRODUCT.md; data layer unchanged; standard web controls.
+Scope: `/`, the public homepage of Mokha Coffee House. Visitor mode: Persuade. Audience: investors and hackathon judges in a pitch, seeing a real-feeling neighbourhood coffee house site, then pressing the one working control, "Back of House view", which opens `/shop` (Orders). Job: make it obvious that the shop is just a shop and Back of House is the infrastructure behind it. Only the Back of House view link must work; nav may anchor-scroll. Constraints: PRODUCT.md, DESIGN.md palette and type; prices and hours from the seed; no invented reviews, press, or claims; the text number is the fictional (206) 555-0142.
 
 ## Direction contract
 
-THESIS: One order at a time, read like a line on a coffee house menu, decided in place. Refuses the category default: a dashboard of cards, chips, stat tiles, and a drawer for the details.
+THESIS: The homepage is the front of a Sana'a tower house, and its staff door is the way backstage. Refuses the coffee-shop template: a full-bleed latte photo, a centred headline, and a row of menu cards.
 
-OWN-WORLD: Old Sana'a coffee house. Sand-cream ground #F6EEE3, coffee-brown shell band #3A2215 carrying a cream Marcellus wordmark with قهوة المخا in qishr gold, paper-white work pane #FFFCF7, ink #2B1A10, tinted secondary #6B4F3C. Three meaning colours and no others: qishr gold only for "waiting", qamariya red #8E2328 for Guard and risk, terrace green #3F6B45 for sent and paid; no blue anywhere in the room. Manrope for all UI; Marcellus only for the shop name, page titles, and the name of the person in view. One Yemeni motif: a hairline Sana'a gypsum frieze, authored SVG, along the foot of the band. Hairline rules, no cards, no chips, no glow.
+OWN-WORLD: Mud-brick brown wall with white gypsum trim (zigzag and triangle friezes framing every floor), a qamariya fanlight in red, gold, and green glass, a carved dark wood door, a warm sand sky either side. Marcellus for the shop name and section titles, Manrope for everything read or pressed, Reem Kufi for قهوة المخا. Menu rows keep the dotted leaders.
 
-STORY: A text arrives; the owner sees who asked, the agents' plan in one sentence, the total, the evidence and steps beside it, and presses Approve, picks another wording, or writes their own.
+STORY: A visitor sees a real coffee house front, reads the name, hours, and "Order by text", finds the menu inside. Then the presenter knocks on the small staff door, Back of House view, and lands on the Orders screen running the same shop.
 
-FIRST VIEWPORT: Brown band (wordmark left; Orders 4 / Today / People as text tabs; Phone button right). Left 40%: the queue as menu rows on cream. Right 60% on paper: the selected order — conversation, our reply with alternatives, order lines with leaders to the total, "How we got here" steps, and a fixed action bar (Approve, Write my own, Skip) at the bottom.
+FIRST VIEWPORT: The facade fills the centre, about 62% of the width, full height. Top floor: the fanlight above the name and Arabic. Middle floor: four arched windows, each a nav link (Menu, Our coffee, Visit, Catering). Ground floor: the arched main door with "Order by text" and the number, and beside it a small staff door plaque reading "Back of House view". On the sand either side, hours on the left and how to order on the right. Signature motion: the fanlight's glass lights up once on load, and the staff door swings ajar on hover to show a sliver of the brown control room band.
 
-FORM: master-detail queue; signature move is menu-board leaders, dotted from every order line and pickup to its price. Position 1 of 1 (direction pinned by the user: Arwa scheme and layout, Yemeni coffee themed). seed:953d4420065561ed (direction pinned by the user; the roll's assignment was not built)
+FORM: tower-house facade as page carrier; position 4 of 7 on the ordered list; seed:833c4599e7c9b83b
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
