@@ -167,11 +167,13 @@ const ALLERGY_WORDS = /\b(allerg(y|ic|ies)|anaphyla|celiac|coeliac|intoleran(t|c
 const HOURS_WORDS = /\b(open|close|closing|closed|hours|what\s+time)\b/i;
 const MENU_WORDS = /\b(menu|do\s+you\s+(have|sell|make|carry)|gluten\s*free|vegan|dairy\s*free|what\s+(do\s+you|kind))\b/i;
 const PRICE_WORDS = /\b(how\s+much|price|cost)\b/i;
-const STATUS_WORDS = /\b(my\s+order|order\s+status|is\s+(it|my\s+order)\s+ready|pick\s*up\s+time)\b/i;
+const STATUS_WORDS =
+  /\b(my\s+order|order\s+status|is\s+(it|my\s+order)\s+ready|(what'?s|where'?s)\s+(my\s+)?(order|pickup(\s*time)?))\b/i;
 const COMPLAINT_WORDS = /\b(wrong|stale|burnt|cold|rude|upset|disappoint|refund|complain|awful|terrible)\b/i;
 const CHANGE_WORDS = /\b(actually|instead|change|make\s+it|cancel|add\s+(a|one|another)|same\s+as\s+last)\b/i;
 const USUAL_WORDS = /\b(the\s+usual|my\s+usual|usual\b|same\s+as\s+(last|always)|regular\s+order)\b/i;
-const SMALLTALK_WORDS = /^\s*(thanks?|thank\s+you|thx|ty|cool|great|awesome|perfect|ok|okay|sounds\s+good|👍|🙏)[\s!.…]*$/i;
+const SMALLTALK_WORDS =
+  /^\s*(hi+|hello|hey|howdy|yo|thanks?|thank\s+you|thx|ty|cool|great|awesome|perfect|ok|okay|sounds\s+good|👍|🙏)[\s!.…]*$/i;
 const DELIVERY_WORDS = /\b(deliver|delivery|doordash|uber\s*eats|ship)\b/i;
 const OFF_TOPIC_WORDS = /\b(what'?s\s+\d+\s*[+\-*/]\s*\d+|weather|capital\s+of|who\s+won|tell\s+me\s+a\s+joke)\b/i;
 const ABUSIVE_WORDS = /\b(fuck|shit|bitch|asshole|idiot|stupid\s+(coffee house|caf[eé]|coffee\s+shop|shop)|moron)\b/i;
@@ -220,7 +222,7 @@ export function dayFromText(text: string, todayLocal: string, timezone: string):
 }
 
 /** Resolves a day and time from the message, in the business timezone. */
-function resolvePickup(text: string, todayLocal: string, timezone: string): string | null {
+export function resolvePickup(text: string, todayLocal: string, timezone: string): string | null {
   const lower = text.toLowerCase();
   const date = dayFromText(text, todayLocal, timezone);
 
@@ -280,6 +282,30 @@ export function matchItems(text: string, catalog: Product[]): { productId: strin
   return [...found].map(([productId, qty]) => ({ productId, qty }));
 }
 
+/**
+ * The nearest prior inbound that named items or a pickup time.
+ *
+ * People split an order across texts ("a coffee" then "12pm tomorrow"). Understand
+ * reads one message; resolve uses this so the second half still becomes an order.
+ * Smalltalk ("thanks", "hi") is skipped so a completed order is not replayed.
+ */
+export function pendingFromHistory(
+  recentTurns: UnderstandInput["recentTurns"],
+  catalog: Product[],
+  todayLocal: string,
+  timezone: string,
+): { items: { productId: string; qty: number }[]; pickupLocal: string | null } {
+  const prior = (recentTurns ?? []).filter((t) => t.direction === "inbound").slice(0, -1);
+  for (let i = prior.length - 1; i >= 0; i--) {
+    const body = prior[i]?.body ?? "";
+    if (SMALLTALK_WORDS.test(body)) continue;
+    const items = matchItems(body, catalog);
+    const pickupLocal = resolvePickup(body, todayLocal, timezone);
+    if (items.length > 0 || pickupLocal) return { items, pickupLocal };
+  }
+  return { items: [], pickupLocal: null };
+}
+
 export function understandDeterministically(input: UnderstandInput): Understanding {
   const { text, catalog, todayLocal, timezone } = input;
 
@@ -303,6 +329,7 @@ export function understandDeterministically(input: UnderstandInput): Understandi
     intent = units >= 24 ? "catering" : "order_new";
   } else if (SMALLTALK_WORDS.test(text)) intent = "smalltalk";
   else if (offTopic || abusive) intent = "other";
+  else if (pickupLocal) intent = "order_new";
   else intent = "other";
 
   const needsClarification =
@@ -323,7 +350,11 @@ export function understandDeterministically(input: UnderstandInput): Understandi
     abusive,
     offTopic,
     needsClarification,
-    clarifyingQuestion: needsClarification ? "Happy to help — which items and how many?" : null,
+    clarifyingQuestion: needsClarification
+      ? pickupLocal
+        ? "What would you like to pick up then?"
+        : "Happy to help — which items and how many?"
+      : null,
     confidence,
   };
 }

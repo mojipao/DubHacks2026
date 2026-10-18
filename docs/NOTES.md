@@ -135,7 +135,7 @@ Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows
 **Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`
 **What (updated 16:35, after [PR #37](https://github.com/mojipao/DubHacks2026/pull/37)):** Thanks. The allergy flag, the "what is your usual order?" reply, the zone-less `neededBy`, and the gateway note are resolved. Still open, in demo order:
 1. **"Saturday at 9am" becomes 8am** and is flagged `outside_hours`.
-2. **"hi" gets "We can't take orders through this message."**
+2. **"hi" gets "We can't take orders through this message."** — lane 2 applied the suggested fix on `lane/2` (draft facts, Guard, split-turn combine) after the live Aahil thread. Close when that PR merges.
 3. **Win-back:** lane 2 now fills `RegularCadence.daysSinceLastContact` from the newest inbound message per customer, simulated texts included (PR after #38). Please confirm Elena wins once Maya has texted, then close that note.
 
 Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredientNeeds` (with `reorderPoint`/`unitCostCents`), and `getNextOpenDays`. All of them, plus `getRegularCadences`, are on `SupabaseDataPort` (`apps/server/src/data-port.ts`); please drop that ask from your row.
@@ -173,6 +173,8 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **What:** A first "hi" from a new number got: "Hi there! We can't take orders through this message, but you can see our full menu on our website. Larch & Rye".
 **Why it matters:** Ordering by text is the product. Judges' first message is often "hi".
 **Suggested fix:** Greet and invite an order ("Hi! What can we get started for you? We're open Sat 8–2…"). Never say orders aren't taken by text.
+
+**Reply (lane 2):** Applied on `lane/2` at the human's request after a live QR thread (Aahil) promised coffee, then said "we can't take orders through this chat" when given a pickup time. Draft facts no longer say "nothing orderable, redirect"; Guard rejects that refusal and a ready-promise with no order; item-then-time turns now combine. Lane 3: merge `main` before the next agents PR. Move this to Resolved once that PR lands.
 
 ### 2026-10-17 15:10 PT · lane 2 → lane 1 · New route for a "customer pays" button
 **Status:** open

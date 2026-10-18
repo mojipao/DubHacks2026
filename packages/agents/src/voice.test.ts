@@ -5,7 +5,7 @@
  * owner still approves, nothing is priced aloud, and a transcription slip cannot turn
  * into something the shop has to honour.
  */
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { AgentContext, ConversationContext } from "@boh/shared";
 import { createFixtureWorld } from "./fixtures/fixture-port.ts";
 import { handleVoiceTurn, normalizeTranscript, toVoiceResponse } from "./voice.ts";
@@ -27,6 +27,13 @@ function harness(transcript: string, handle: string) {
   const ctx: AgentContext = { data: world.port, business: world.business, now: () => NOW, trace: () => {} };
   return { ctx, world };
 }
+
+beforeEach(() => {
+  delete process.env.AI_GATEWAY_API_KEY;
+  delete process.env.ANTHROPIC_API_KEY;
+  delete process.env.OPENAI_API_KEY;
+  delete process.env.AGENT_MODEL_API_KEY;
+});
 
 describe("normalizeTranscript", () => {
   it("turns spoken quantities into digits the parser can see", () => {
