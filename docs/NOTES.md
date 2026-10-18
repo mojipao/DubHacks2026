@@ -29,19 +29,16 @@ How this differs from the other docs:
 
 ## Open
 
-### 2026-10-17 16:20 PT · lane 2 → lane 3 · Six open notes need you; here's the order for the demo
+### 2026-10-17 16:20 PT · lane 2 → lane 3 · What's still open for the demo
 **Status:** open
 **Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`
-**What:** Lane 3's last commit was 14:53 and none of the notes below has a reply yet. One commit (`1e7ac86`, ping test) is still on `lane/3` and not merged. In demo order:
-1. **Maya's usual flags an allergy** (`intake.ts:411`, whole-note match) and **asks "what is your usual order?"** with the model on. Both hit the opening beat.
-2. **"Saturday at 9am" becomes 8am** and is flagged `outside_hours`.
-3. **"hi" gets "We can't take orders through this message."**
-4. **Butter reorder `neededBy` is zone-less** (`ops.ts:223`). Lane 2 shipped a server-side fallback in [PR #36](https://github.com/mojipao/DubHacks2026/pull/36), so "Approve both" works now; still fix it at the source and add `ProposalDraft.parse(draft)` to `ops.test.ts`.
-5. **Win-back picks Maya**, not Elena.
-6. The AI Gateway note is fixed by PR #20; move it to Resolved.
+**What (updated 16:35, after [PR #37](https://github.com/mojipao/DubHacks2026/pull/37)):** Thanks. The allergy flag, the "what is your usual order?" reply, the zone-less `neededBy`, and the gateway note are resolved. Still open, in demo order:
+1. **"Saturday at 9am" becomes 8am** and is flagged `outside_hours`.
+2. **"hi" gets "We can't take orders through this message."**
+3. **Win-back:** lane 2 now fills `RegularCadence.daysSinceLastContact` from the newest inbound message per customer, simulated texts included (PR after #38). Please confirm Elena wins once Maya has texted, then close that note.
 
-Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredientNeeds` (with `reorderPoint`/`unitCostCents`), and `getNextOpenDays`. All three, plus `getRegularCadences`, are already on `SupabaseDataPort` (`apps/server/src/data-port.ts`); no work needed there.
-**Why it matters:** The deadline is Sun 10:00 AM. Items 1 to 3 are what judges see first.
+Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredientNeeds` (with `reorderPoint`/`unitCostCents`), and `getNextOpenDays`. All of them, plus `getRegularCadences`, are on `SupabaseDataPort` (`apps/server/src/data-port.ts`); please drop that ask from your row.
+**Why it matters:** The deadline is Sun 10:00 AM. Items 1 and 2 are what judges see first.
 **Suggested fix:** Reply under each note as you go; lane 2 re-tests on the real phone after each merge.
 
 ### 2026-10-17 15:45 PT · lane 2 → lane 3 · Win-back picks Maya, not Elena
@@ -50,6 +47,7 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **What:** `POST /dev/winback-scan` against the seeded DB works end to end. It found 5 overdue regulars and drafted one ticket; approval created the order with the perk and a real Square sandbox link. But the candidate is **Maya** ("orders every ~7 days; it has been 42"), not Elena as the plan says. Maya's 7-day cadence makes her the most overdue by ratio.
 **Why it matters:** Maya is also the demo's opening "the usual" beat. If the morning scan runs in the same demo, both beats are Maya and the proactive one looks like a repeat. The pickup it proposed was also Sat 8am.
 **Suggested fix:** Either rank so Elena wins (e.g. skip customers with an open conversation or a pending ticket, or prefer the longest absolute gap), or adjust Elena's or Maya's seed history. Run `scripts/check-seed.ts` after.
+**Reply (lane 2, 16:35):** `getRegularCadences` now sets `daysSinceLastContact` (days since the customer's newest inbound message, any platform) when one exists, so PR #37's 7-day exclusion has data to act on. On a fresh reset nobody has texted, so it is undefined for everyone until Maya texts.
 
 ### 2026-10-17 15:35 PT · lane 2 → lane 1 · Leads view and full thread history (backend ready)
 **Status:** open
