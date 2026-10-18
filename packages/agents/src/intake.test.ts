@@ -348,6 +348,16 @@ describe("guiding toward an order", () => {
     expect(reply.payload.orders).toEqual([]);
   });
 
+  it("lists catalog prices when they ask for the menu, not hours or a website", async () => {
+    const drafts = await run(harness("Whats the menu?", null));
+    const reply = drafts[0];
+    if (reply?.kind !== "reply") throw new Error("expected a reply draft");
+    expect(reply.payload.orders).toEqual([]);
+    expect(reply.payload.text).toMatch(/\$\s?\d/);
+    expect(reply.payload.text).toMatch(/coffee|chai|cake/i);
+    expect(reply.payload.text).not.toMatch(/06:30|open Tue|website or app|through this (chat|message)/i);
+  });
+
   it("asks for a pickup time when they name an item and no time", async () => {
     const drafts = await run(harness("Can I have a coffee", null));
     const reply = drafts[0];

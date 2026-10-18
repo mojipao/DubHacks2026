@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const SHORTCUTS: [string, string][] = [
-  ["1 2 3 4 5", "Orders, Today, People, Calls, Ask"],
+  ["1 2 3 4 5", "Orders, Today, People, Ask, House"],
   ["A", "Approve the selected order (and its restock)"],
   ["E", "Edit the reply before approving"],
   ["W", "Write your own message instead"],

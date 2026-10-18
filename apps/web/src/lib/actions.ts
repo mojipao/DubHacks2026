@@ -74,6 +74,10 @@ export function fetchContacts<T>() {
   return get<{ contacts: T[] }>("/api/contacts");
 }
 
+export function fetchOps<T>() {
+  return get<T>("/api/ops");
+}
+
 export function fetchHistory<T>(conversationId: string, before?: string) {
   const q = new URLSearchParams({ limit: "100" });
   if (before) q.set("before", before);

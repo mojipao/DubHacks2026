@@ -153,3 +153,39 @@ export type UiContact = {
   pendingTickets: number;
   orders: { agentOrders: number; paidCents: number; awaitingCents: number; historyOrders: number };
 };
+
+/** GET /ops — paid Square (and seed history) rolled up for the House tab. */
+export type OpsReport = {
+  generatedAt: string;
+  funnel: { leads: number; ordered: number; paid: number; regular: number };
+  sales: {
+    onlinePaidCents: number;
+    onlinePaidOrders: number;
+    awaitingCents: number;
+    historyPaidCents: number;
+    squarePaidOrders: number;
+    byDay: { date: string; onlineCents: number; onlineOrders: number }[];
+    byProduct: { productId: string; name: string; units: number; cents: number }[];
+  };
+  stock: {
+    ingredientId: string;
+    name: string;
+    unit: string;
+    onHand: number;
+    onOrder: number;
+    reorderPoint: number;
+    avgPerDay: number;
+    daysOfCover: number | null;
+    restockBy: string | null;
+  }[];
+  observability: {
+    photonConnected: boolean;
+    photonMode: string;
+    autonomy: string;
+    square: boolean;
+    pendingTickets: number;
+    eventsSinceReset: number;
+    agentSteps: number;
+    sentWithoutApproval: number;
+  };
+};
