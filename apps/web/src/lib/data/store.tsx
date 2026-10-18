@@ -63,7 +63,8 @@ type StoreApi = {
   mode: "mock" | "live";
   selectConversation: (id: string | null) => void;
   focusProposal: (id: string | null) => void;
-  approve: (id: string, opts?: DecisionOpts & { editedText?: string }) => Promise<void>;
+  approve: (id: string, opts?: DecisionOpts & { editedText?: string; alternativeIndex?: number }) => Promise<void>;
+  sendMessage: (conversationId: string, text: string, clientId: string) => Promise<void>;
   reject: (id: string, opts?: DecisionOpts & { reason?: string }) => Promise<void>;
   retry: (id: string) => Promise<void>;
   simulateInbound: (input: { handle: string; name?: string; text: string }) => Promise<void>;
@@ -258,6 +259,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
     (input) => boot.source.simulateInbound(input),
     [boot.source],
   );
+  const sendMessage = useCallback<StoreApi["sendMessage"]>(
+    (conversationId, text, clientId) => boot.source.sendMessage(conversationId, text, clientId),
+    [boot.source],
+  );
   const markPaid = useCallback<StoreApi["markPaid"]>(
     (orderId) => boot.source.markPaid(orderId),
     [boot.source],
@@ -287,6 +292,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       reject,
       retry,
       simulateInbound,
+      sendMessage,
       markPaid,
       customerPays,
       listContacts,
@@ -305,6 +311,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       reject,
       retry,
       simulateInbound,
+      sendMessage,
       markPaid,
       customerPays,
       listContacts,

@@ -7,9 +7,20 @@
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-sans: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-spectral), ui-serif, Georgia, serif;
+  --font-heading: var(--font-marcellus), ui-serif, Georgia, serif;
+  --font-arabic: var(--font-reem-kufi), "Geeza Pro", serif;
+  --color-shell: var(--shell);
+  --color-shell-fg: var(--shell-fg);
+  --color-paper: var(--paper);
+  --color-brew: var(--brew);
+  --color-qishr: var(--qishr);
+  --color-qishr-ink: var(--qishr-ink);
+  --color-qamar: var(--qamar);
+  --color-terrace: var(--terrace);
+  --color-bubble-in: var(--bubble-in);
+  --color-bubble-out: var(--bubble-out);
   --color-bg: var(--bg);
   --color-panel: var(--panel);
   --color-surface: var(--surface);
@@ -56,41 +67,55 @@
 }
 
 :root {
-  /* Arwa-inspired: one warm cream room end-to-end — no dark/light split. */
-  --bg: #f6f0e6;
-  --surface: #f6f0e6;
-  --surface-2: #ebe3d6;
-  --panel: #f6f0e6;
-  --line: #d9cbb8;
-  --line-strong: #c4b29a;
-  --ticket: #f6f0e6;
-  --ink: #2a1f16;
-  --muted: #7a6856;
-  --fg: #2a1f16;
-  --cherry: #a84530;
-  --crema: #8f6f45;
-  --tomato: #c45a3a;
-  --amber: #b8893f;
-  --basil: #4f8a5e;
-  --sky: #5a7ea0;
+  /* Old Sana'a coffee house: sand-cream walls, a coffee-brown band, paper for the work,
+     and colour only where it means something: qishr gold = waiting, qamariya red = risk,
+     terrace green = sent or paid. Nothing cool or blue in the room. */
+  --bg: #f6eee3;
+  --surface: #f6eee3;
+  --surface-2: #ede2d3;
+  --paper: #fffcf7;
+  --panel: #f6eee3;
+  --line: #e3d3bf;
+  --line-strong: #cbb59b;
+  --ticket: #fffcf7;
+  --ink: #2b1a10;
+  --fg: #2b1a10;
+  --muted: #6b4f3c;
+  --shell: #3a2215;
+  --shell-fg: #f6eee3;
+  --brew: #5a3016;
+  --qishr: #c9971f;
+  --qishr-ink: #7d5a0c;
+  --qamar: #8e2328;
+  --terrace: #3f6b45;
+  /* The customer's words sit in a warm qishr tint; the shop's in sand. */
+  --bubble-in: #f6ead2;
+  --bubble-out: #ede2d3;
+  /* Older names, mapped onto the same world so every page shares one palette. */
+  --cherry: var(--brew);
+  --crema: var(--qishr-ink);
+  --tomato: var(--qamar);
+  --amber: var(--qishr-ink);
+  --basil: var(--terrace);
+  --sky: var(--muted);
   --background: var(--bg);
   --foreground: var(--fg);
-  --card: var(--ticket);
+  --card: var(--paper);
   --card-foreground: var(--ink);
-  --popover: #fffaf3;
+  --popover: var(--paper);
   --popover-foreground: var(--fg);
-  --primary: var(--cherry);
-  --primary-foreground: #ffffff;
+  --primary: var(--brew);
+  --primary-foreground: var(--paper);
   --secondary: var(--surface-2);
   --secondary-foreground: var(--fg);
   --muted-foreground: var(--muted);
   --accent: var(--surface-2);
   --accent-foreground: var(--fg);
-  --destructive: var(--tomato);
+  --destructive: var(--qamar);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--crema);
-  --radius: 12px;
+  --ring: var(--brew);
+  --radius: 10px;
 }
 
 @layer base {
@@ -105,20 +130,27 @@
 
   body {
     @apply min-h-full bg-bg text-fg antialiased;
-    background-image:
-      radial-gradient(ellipse 80% 50% at 0% 0%, rgba(168, 69, 48, 0.06), transparent 55%),
-      radial-gradient(ellipse 60% 40% at 100% 10%, rgba(143, 111, 69, 0.07), transparent 50%);
-    background-attachment: fixed;
+    font-feature-settings: "tnum" 0;
+    scrollbar-color: var(--line-strong) transparent;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--crema) 45%, white);
+    background: color-mix(in srgb, var(--qishr) 35%, var(--paper));
     color: var(--ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--crema);
-    outline-offset: 3px;
+    outline: 2px solid var(--brew);
+    outline-offset: 2px;
+  }
+
+  input,
+  textarea {
+    caret-color: var(--brew);
+  }
+
+  ::placeholder {
+    color: color-mix(in srgb, var(--muted) 80%, var(--paper));
   }
 }
 
@@ -138,40 +170,49 @@
 
   .heading {
     font-family: var(--font-heading);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    letter-spacing: -0.005em;
     text-transform: none;
-    line-height: 1.1;
+    line-height: 1.12;
   }
 
   .heading-caps {
     font-family: var(--font-heading);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1.1;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.12;
   }
 
+  /* Kept for older pages; now a quiet sentence-case tag, not a shouting pill. */
   .badge-brand {
     display: inline-flex;
     align-items: center;
     gap: 6px;
     border-radius: 999px;
-    background: var(--cherry);
-    padding: 3px 14px;
-    font-size: 12px;
+    background: var(--surface-2);
+    padding: 2px 10px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #ffffff;
+    color: var(--brew);
   }
 
   .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 500;
     color: var(--muted);
+  }
+
+  /* The signature move: a café menu's dotted leader running from an item to its price. */
+  .leader {
+    flex: 1 1 auto;
+    min-width: 1.5rem;
+    margin: 0 0.5rem;
+    border-bottom: 2px dotted var(--line-strong);
+    transform: translateY(-0.32em);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 
   .pass-grain {
@@ -182,7 +223,7 @@
     background-image: linear-gradient(
       100deg,
       transparent 20%,
-      rgba(168, 69, 48, 0.08) 50%,
+      color-mix(in srgb, var(--qishr) 18%, transparent) 50%,
       transparent 80%
     );
     background-size: 220% 100%;
@@ -203,29 +244,27 @@
       -45deg,
       transparent,
       transparent 3px,
-      rgba(143, 111, 69, 0.55) 3px,
-      rgba(143, 111, 69, 0.55) 6px
+      color-mix(in srgb, var(--qishr-ink) 60%, transparent) 3px,
+      color-mix(in srgb, var(--qishr-ink) 60%, transparent) 6px
     );
   }
 }
 
 @layer components {
+  /* One button shape for the whole room: a solid coffee pill, a quieter outline pill. */
   .glow-btn {
-    --glow: var(--cherry);
+    --glow: var(--brew);
     position: relative;
     display: inline-flex;
-    isolation: isolate;
-    height: 44px;
-    min-width: 10rem;
+    height: 42px;
   }
 
   .glow-btn[data-size="sm"] {
-    height: 36px;
-    min-width: 7.5rem;
+    height: 34px;
   }
 
   .glow-btn[data-size="lg"] {
-    height: 50px;
+    height: 48px;
   }
 
   .glow-btn[data-block] {
@@ -233,118 +272,42 @@
     width: 100%;
   }
 
-  .glow-btn::before,
-  .glow-btn::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    translate: -50% 0;
-    z-index: -1;
-    width: 30px;
-    height: 8px;
-    border-radius: 10px;
-    background: var(--glow);
-    box-shadow:
-      0 0 5px var(--glow),
-      0 0 15px var(--glow),
-      0 0 30px var(--glow);
-    transition: all 0.5s ease 0.15s;
-  }
-
-  .glow-btn::before {
-    bottom: -4px;
-  }
-
-  .glow-btn::after {
-    top: -4px;
-  }
-
-  .glow-btn:hover::before,
-  .glow-btn:has(.glow-btn__face:focus-visible)::before {
-    bottom: 0;
-    width: 80%;
-    height: 50%;
-    border-radius: 30px;
-  }
-
-  .glow-btn:hover::after,
-  .glow-btn:has(.glow-btn__face:focus-visible)::after {
-    top: 0;
-    width: 80%;
-    height: 50%;
-    border-radius: 30px;
-  }
-
   .glow-btn__face {
-    position: relative;
-    z-index: 1;
     display: flex;
     width: 100%;
     height: 100%;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    overflow: hidden;
-    padding: 0 1.4rem;
+    padding: 0 1.25rem;
     border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--cherry) 35%, transparent);
-    background: color-mix(in srgb, var(--cherry) 12%, white);
-    box-shadow: 0 8px 18px -10px rgba(42, 31, 22, 0.35);
-    color: var(--cherry);
+    background: var(--glow);
+    color: var(--paper);
     font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.4px;
     white-space: nowrap;
     text-decoration: none;
     transition:
-      letter-spacing 0.5s,
-      background-color 0.5s;
-    outline: none;
+      background-color 160ms ease-out,
+      transform 160ms ease-out;
   }
 
   .glow-btn[data-size="sm"] .glow-btn__face {
-    padding: 0 1rem;
+    padding: 0 0.9rem;
     font-size: 13px;
   }
 
-  .glow-btn__face::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.35), transparent);
-    transform: skewX(45deg) translateX(-120%);
-    transition: transform 0.5s;
-    pointer-events: none;
+  .glow-btn:hover .glow-btn__face {
+    background: color-mix(in srgb, var(--glow) 86%, black);
   }
 
-  .glow-btn:hover .glow-btn__face,
-  .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face {
-    letter-spacing: 1.2px;
-    background: color-mix(in srgb, var(--cherry) 18%, white);
-  }
-
-  .glow-btn:hover .glow-btn__face::before,
-  .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face::before {
-    transform: skewX(45deg) translateX(320%);
-  }
-
-  .glow-btn__face:focus-visible {
-    box-shadow:
-      0 0 0 2px var(--bg),
-      0 0 0 4px var(--glow);
+  .glow-btn__face:active {
+    transform: translateY(1px);
   }
 
   .glow-btn[data-disabled] {
     opacity: 0.45;
     pointer-events: none;
-  }
-
-  .glow-btn[data-disabled]::before,
-  .glow-btn[data-disabled]::after {
-    box-shadow: none;
   }
 }
 

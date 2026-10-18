@@ -34,7 +34,7 @@ export function trustSummary(events: UiEvent[]) {
 
 function actorTone(actor: string) {
   if (actor === "owner") return "text-basil";
-  if (actor === "customer") return "text-sky";
+  if (actor === "customer") return "text-brew";
   if (actor === "agent:guard") return "text-tomato";
   if (actor.startsWith("agent:")) return "text-amber";
   return "text-fg/80";
@@ -69,10 +69,8 @@ export function AuditTable() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="badge-brand mb-2">
-              Audit {mode === "mock" ? "· fixtures" : ""}
-            </p>
             <h1 className="heading text-4xl text-fg">Every action, on the record</h1>
+            <p className="mt-2 text-[15px] text-muted">{mode === "mock" ? "Demo data. " : ""}Every message, approval, and payment, in order.</p>
           </div>
           <Link href="/" className="rounded-full bg-ticket px-4 py-2 text-[13px] font-semibold text-ink hover:bg-ticket/90">
             ← Control room
@@ -93,7 +91,7 @@ export function AuditTable() {
             { n: trust.sent, label: "messages sent" },
           ].map((s) => (
             <div key={s.label} className="bg-panel px-4 py-3">
-              <div className="font-mono text-[26px] font-semibold text-fg tabular-nums">{s.n}</div>
+              <div className="text-[28px] font-bold text-ink tabular-nums">{s.n}</div>
               <div className="text-[13px] text-muted">
                 {s.label}
                 {s.sub ? <span className="text-basil"> · {s.sub}</span> : null}
@@ -103,7 +101,7 @@ export function AuditTable() {
           <div
             className={cn(
               "flex items-center gap-3 px-4 py-3",
-              trust.sentWithoutApproval === 0 ? "bg-basil/15" : "bg-tomato/20",
+              trust.sentWithoutApproval === 0 ? "bg-paper" : "bg-[color-mix(in_srgb,var(--qamar)_12%,var(--paper))]",
             )}
           >
             <ShieldCheck
@@ -115,7 +113,7 @@ export function AuditTable() {
             <div>
               <div
                 className={cn(
-                  "font-mono text-[26px] font-semibold tabular-nums",
+                  "text-[28px] font-bold tabular-nums",
                   trust.sentWithoutApproval === 0 ? "text-basil" : "text-tomato",
                 )}
               >
@@ -167,7 +165,7 @@ export function AuditTable() {
 
         <div className="surface overflow-x-auto rounded-[22px]">
           <table className="w-full text-left text-[13px]">
-            <thead className="bg-panel font-mono text-[11px] tracking-wider text-muted uppercase">
+            <thead className="bg-surface-2 text-[13px] font-semibold text-muted">
               <tr>
                 <th className="w-8 px-2 py-2" />
                 <th className="px-3 py-2">Time</th>

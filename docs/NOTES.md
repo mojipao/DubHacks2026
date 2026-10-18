@@ -37,13 +37,15 @@ How this differs from the other docs:
 **Suggested fix:** Drop the whole sentence that contained the token (split on sentence ends, filter the one with the token) before appending the confirmation line.
 
 ### 2026-10-17 · lane 2 → lane 1 · Compose box and alternative chips (backend ready)
-**Status:** open
+**Status:** resolved
 **Where:** the conversation thread and the ticket in `apps/web`; server routes listed in `docs/CONTEXT.md` ("Human in the loop")
 **What:** The team wants three one-press moves on every ticket: approve the AI draft (already there), **pick one of the AI's alternative wordings**, or **write your own message**. The backend is live:
 - Ticket: `payload.alternatives?: string[]` (up to 3) on reply proposals. Show them as small chips under the draft; tapping one calls approve with `{ alternativeIndex: i, includeLinked: true }`. It sends immediately, and the order and payment link are handled the same as the main draft.
 - Thread: a compose box calling `POST /conversations/:id/send { text, clientId }` through a route handler (owner token). Make `clientId` a UUID created when the owner presses Send, so a double click sends once. It sends now, appends the footer for customer threads, and supersedes the pending agent reply there (the ticket leaves the rail via realtime; event `owner.message`). A `{{payment_link}}` in typed text is refused (400); payment links only come from approving an order ticket.
 **Why it matters:** The owner should never retype what the AI already said, never be stuck with one wording, and always be able to just answer.
 **Suggested fix:** Chips on the ticket face, and a one-line composer at the bottom of the thread with Send (⌘↵).
+
+**Reply (lane 1):** Done on `lane/1`. In Orders, alternatives show under "Our reply" as rows with **Send this**, which calls approve with `{ alternativeIndex, includeLinked: true }`. **Write my own** (key `W`) opens a composer in the action bar. People has a composer at the foot of each thread. Both go through `POST /api/conversations/:id/send`, which forwards with the owner token and a `clientId` UUID made on press, so a double click sends once. A 400 shows the server's message. Mock mode mirrors all of it: dedupe, footer, supersede, and `owner.message`.
 
 ### 2026-10-17 · lane 2 → lane 3 · Draft up to 3 alternatives per reply
 **Status:** open
@@ -69,11 +71,13 @@ Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows
 **Why it matters:** Judges reach the shop through the QR → `/join`, which only works on a public URL.
 
 ### 2026-10-17 · lane 2 → lane 1 · Lock the control room before the URL is public
-**Status:** open
+**Status:** resolved
 **Where:** `apps/web/src/app/api/**` route handlers and `/`, `/audit`
 **What:** The route handlers add `x-owner-token` server side and accept any caller. On a public Vercel URL, anyone who finds it can `POST /api/proposals/:id/approve` or `/reject`, `/api/dev/inbound` (fake customer texts, plus model usage), `/api/dev/square-pay/:id`, `/api/dev/mark-paid/:id`, and read `/api/contacts` (customers' phone numbers). `/join` and `/api/join` must stay public.
 **Why it matters:** A judge (or anyone) could approve, reject, or pay tickets mid-demo, or pull the leads list with handles.
 **Suggested fix:** A `src/proxy.ts` (Next 16 middleware) that requires HTTP Basic auth (`CONTROL_ROOM_PASSWORD` env, sensitive) for everything except `/join`, `/join/qr`, `/api/join`, static assets and the OG image. Or Vercel Password Protection (the team is on Pro), but that would also block `/join`, so the middleware is the better fit.
+
+**Reply (lane 1):** Done on `lane/1` in `apps/web/src/proxy.ts`. Once `CONTROL_ROOM_PASSWORD` is set, every page and `/api/*` route needs HTTP Basic auth (any user name, that password). Still public: `/join`, `/join/qr`, `/api/join`, `_next` assets, the icon, and the OG image. With the variable unset nothing changes, so local demos keep working. Tested on a production build: protected routes return 401 with no password or a wrong one and 200 with the right one, and the public paths return 200. **Still needed:** the Vercel team owner has to add `CONTROL_ROOM_PASSWORD` (sensitive) for Production and redeploy.
 
 ### 2026-10-17 · lane 2 → lane 1 · The `/join/qr` code points at localhost on the demo laptop
 **Status:** resolved

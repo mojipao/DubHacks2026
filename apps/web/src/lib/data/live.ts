@@ -15,6 +15,7 @@ import {
   markPaid,
   receiveDelivery,
   rejectProposal,
+  sendOwnerMessage,
   retryProposal,
   runWinbackScan,
   simulateInbound,
@@ -404,6 +405,10 @@ export function createLiveSource(): DataSource {
     },
     async approve(id, opts) {
       await approveProposal(id, opts);
+      scheduleRefresh();
+    },
+    async sendMessage(conversationId, text, clientId) {
+      await sendOwnerMessage(conversationId, text, clientId);
       scheduleRefresh();
     },
     async reject(id, opts) {

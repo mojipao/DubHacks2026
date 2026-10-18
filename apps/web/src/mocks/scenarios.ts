@@ -73,6 +73,10 @@ export function scriptFor(text: string, firstName: string | null): ScriptedRun {
           rationale: "Can't fit 48 Saturday: split 24 Sat / 24 Sun, ghee reorder needed.",
           payload: {
             text: `${hi}Saturday only has 24 milk cakes left, so I can't do all 48 that morning. I can hold 24 Sat 9:00 and 24 Sun 9:00 behind one link ($216.00). Paying confirms the split. ${PAYMENT_LINK_TOKEN}${SIGN}`,
+            alternatives: [
+              `${hi}Saturday can only take 24 milk cakes. 24 Sat + 24 Sun 9:00, one link ($216.00): ${PAYMENT_LINK_TOKEN}${SIGN}`,
+              `${hi}we can do 24 milk cakes Saturday and the other 24 Sunday at 9:00 ($216.00), and we'll add a flask of Adeni chai for the office. ${PAYMENT_LINK_TOKEN}${SIGN}`,
+            ],
             orders: [
               { items: [{ productId: "milk-cake", qty: 24 }], pickupAt: FIXTURE_SAT_PICKUP },
               { items: [{ productId: "milk-cake", qty: 24 }], pickupAt: SUN_PICKUP },
@@ -159,6 +163,10 @@ export function scriptFor(text: string, firstName: string | null): ScriptedRun {
           rationale: "Usual order; last visit 42 days ago, so the welcome-back 10% applies.",
           payload: {
             text: `${hi}2 pistachio maamoul and an adeni chai for Saturday 9:00. It's been a while, so 10% off. ${PAYMENT_LINK_TOKEN}${SIGN}`,
+            alternatives: [
+              `${hi}your usual, Saturday 9:00, 10% off: ${PAYMENT_LINK_TOKEN}${SIGN}`,
+              `${hi}2 pistachio maamoul and an adeni chai for Saturday 9:00, 10% off since it's been a while. Want a qishr to go with it? ${PAYMENT_LINK_TOKEN}${SIGN}`,
+            ],
             orders: [
               {
                 items: [{ productId: "pistachio-maamoul", qty: 2 }, { productId: "adeni-chai", qty: 1 }],

@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T03:25:08+00:00",
+  "title": "Design System: Back of House",
+  "extensions": {
+    "colorMeta": {
+      "sand-cream": {
+        "role": "neutral",
+        "displayName": "Sand Cream",
+        "canonical": "#f6eee3",
+        "tonalRamp": [
+          "#3a2913",
+          "#644820",
+          "#8f662e",
+          "#b9843c",
+          "#cda165",
+          "#dcbd93",
+          "#ebdac1",
+          "#f9f3ec"
+        ]
+      },
+      "sand-deep": {
+        "role": "neutral",
+        "displayName": "Sand Deep",
+        "canonical": "#ede2d3",
+        "tonalRamp": [
+          "#362916",
+          "#5e4726",
+          "#866437",
+          "#ae8247",
+          "#c4a06e",
+          "#d6bc9a",
+          "#e7d9c5",
+          "#f8f3ed"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#fffcf7",
+        "tonalRamp": [
+          "#4c3000",
+          "#855300",
+          "#bd7600",
+          "#f59900",
+          "#ffb333",
+          "#ffc970",
+          "#ffe0ad",
+          "#fff5e5"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e3d3bf",
+        "tonalRamp": [
+          "#352817",
+          "#5c4528",
+          "#836239",
+          "#aa804b",
+          "#c19d71",
+          "#d4bb9c",
+          "#e6d8c6",
+          "#f7f3ed"
+        ]
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "#cbb59b",
+        "tonalRamp": [
+          "#32271a",
+          "#57442d",
+          "#7c6141",
+          "#a17e54",
+          "#b99c79",
+          "#ceb9a1",
+          "#e3d7c9",
+          "#f6f3ee"
+        ]
+      },
+      "coffee-ink": {
+        "role": "neutral",
+        "displayName": "Coffee Ink",
+        "canonical": "#2b1a10",
+        "tonalRamp": [
+          "#382215",
+          "#613a24",
+          "#8a5333",
+          "#b26c42",
+          "#c88d6a",
+          "#d8af97",
+          "#e9d1c4",
+          "#f8f1ec"
+        ]
+      },
+      "roast-muted": {
+        "role": "neutral",
+        "displayName": "Roast Muted",
+        "canonical": "#6b4f3c",
+        "tonalRamp": [
+          "#31241b",
+          "#553f30",
+          "#795944",
+          "#9d7458",
+          "#b6947c",
+          "#ccb4a4",
+          "#e2d4cb",
+          "#f6f2ef"
+        ]
+      },
+      "shell-brown": {
+        "role": "primary",
+        "displayName": "Shell Brown",
+        "canonical": "#3a2215",
+        "tonalRamp": [
+          "#382114",
+          "#613923",
+          "#8b5132",
+          "#b46941",
+          "#c98b69",
+          "#d9ae96",
+          "#e9d1c3",
+          "#f8f0ec"
+        ]
+      },
+      "brew": {
+        "role": "primary",
+        "displayName": "Brew",
+        "canonical": "#5a3016",
+        "tonalRamp": [
+          "#3d210f",
+          "#6b391a",
+          "#985125",
+          "#c56930",
+          "#d78a5b",
+          "#e3ad8c",
+          "#efd0bd",
+          "#faf0eb"
+        ]
+      },
+      "qishr-gold": {
+        "role": "secondary",
+        "displayName": "Qishr Gold",
+        "canonical": "#c9971f",
+        "tonalRamp": [
+          "#42320a",
+          "#735612",
+          "#a37b19",
+          "#d49f21",
+          "#e4b84e",
+          "#eccd83",
+          "#f4e3b8",
+          "#fcf6e9"
+        ]
+      },
+      "qishr-ink": {
+        "role": "secondary",
+        "displayName": "Qishr Ink",
+        "canonical": "#7d5a0c",
+        "tonalRamp": [
+          "#463207",
+          "#79570c",
+          "#ac7c11",
+          "#dfa115",
+          "#edb945",
+          "#f2ce7d",
+          "#f8e3b5",
+          "#fdf6e8"
+        ]
+      },
+      "qamariya-red": {
+        "role": "tertiary",
+        "displayName": "Qamariya Red",
+        "canonical": "#8e2328",
+        "tonalRamp": [
+          "#3d0f11",
+          "#6a1a1e",
+          "#97252b",
+          "#c43037",
+          "#d75b61",
+          "#e38c90",
+          "#efbec0",
+          "#faebeb"
+        ]
+      },
+      "terrace-green": {
+        "role": "tertiary",
+        "displayName": "Terrace Green",
+        "canonical": "#3f6b45",
+        "tonalRamp": [
+          "#1c301f",
+          "#315336",
+          "#46774d",
+          "#5b9a63",
+          "#7fb386",
+          "#a5caaa",
+          "#cce1cf",
+          "#eff6f0"
+        ]
+      },
+      "bubble-in": {
+        "role": "neutral",
+        "displayName": "Bubble In",
+        "canonical": "#f6ead2",
+        "tonalRamp": [
+          "#402f0d",
+          "#6f5116",
+          "#9d731f",
+          "#cc9629",
+          "#ddb055",
+          "#e7c788",
+          "#f1dfbb",
+          "#fbf5ea"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles: the date on Today, People."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Shop name in the band; the person in view."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section heads."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Messages, rationale, rows."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Timestamps and captions, sentence case."
+      },
+      "arabic": {
+        "displayName": "Arabic",
+        "purpose": "قهوة المخا beside the wordmark, in qishr gold."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating-menu",
+        "value": "0 12px 32px -12px rgba(43,26,16,0.35)",
+        "purpose": "Dropdown menu, tooltips, dialogs. Nothing in page flow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state",
+        "value": "150ms ease",
+        "purpose": "Colour shifts on hover and selection."
+      },
+      {
+        "name": "settle",
+        "value": "~900ms hold",
+        "purpose": "A decided order shows Sent or Skipped before leaving the queue."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Approve Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one decision per view.",
+      "html": "<button class=\"ds-btn-primary\">Approve</button>",
+      "css": ".ds-btn-primary{background:#5a3016;color:#fffcf7;height:42px;padding:0 20px;border:none;border-radius:999px;font:600 15px Manrope,system-ui,sans-serif;transition:background .15s}.ds-btn-primary:hover{background:#3a2215}.ds-btn-primary:focus-visible{outline:2px solid #5a3016;outline-offset:2px}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Write my own, Send this, Customer pays.",
+      "html": "<button class=\"ds-btn-outline\">Write my own</button>",
+      "css": ".ds-btn-outline{background:#fffcf7;color:#2b1a10;height:42px;padding:0 20px;border:1px solid #cbb59b;border-radius:999px;font:600 15px Manrope,system-ui,sans-serif;transition:background .15s}.ds-btn-outline:hover{background:#ede2d3}.ds-btn-outline:focus-visible{outline:2px solid #5a3016;outline-offset:2px}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Find a name or message.",
+      "html": "<input class=\"ds-input\" placeholder=\"Find a name or message\">",
+      "css": ".ds-input{background:#fffcf7;color:#2b1a10;height:40px;padding:0 16px;border:1px solid #cbb59b;border-radius:999px;font:400 15px Manrope,system-ui,sans-serif;caret-color:#5a3016}.ds-input:focus-visible{outline:2px solid #5a3016;outline-offset:2px}"
+    },
+    {
+      "name": "Top Band",
+      "kind": "nav",
+      "refersTo": "top-band",
+      "description": "Wordmark, text tabs, Phone.",
+      "html": "<nav class=\"ds-band\"><span class=\"ds-mark\">Mokha Coffee House</span><a class=\"ds-tab ds-on\">Orders <b>3</b></a><a class=\"ds-tab\">Today</a><a class=\"ds-tab\">People</a></nav>",
+      "css": ".ds-band{display:flex;align-items:center;gap:24px;height:64px;padding:0 32px;background:#3a2215;color:#f6eee3;font:500 15px Manrope,system-ui,sans-serif}.ds-mark{font:400 24px Marcellus,Georgia,serif}.ds-tab{opacity:.7;padding:20px 0;border-bottom:2px solid transparent;cursor:pointer}.ds-tab:hover{opacity:1}.ds-on{opacity:1;border-color:#c9971f}.ds-tab b{background:#c9971f;color:#2b1a10;border-radius:999px;padding:1px 7px;font-size:12px;margin-left:4px}"
+    },
+    {
+      "name": "Menu Row",
+      "kind": "custom",
+      "refersTo": "queue-row-selected",
+      "description": "Item, dotted leader, price.",
+      "html": "<div class=\"ds-row\"><span>5 milk cake</span><span class=\"ds-leader\"></span><span>$22.50</span></div>",
+      "css": ".ds-row{display:flex;align-items:baseline;padding:16px 24px;border-bottom:1px solid #e3d3bf;color:#2b1a10;font:400 15px Manrope,system-ui,sans-serif;font-variant-numeric:tabular-nums}.ds-row:hover{background:#ede2d3}.ds-leader{flex:1;min-width:24px;margin:0 8px;border-bottom:2px dotted #cbb59b;transform:translateY(-.32em)}"
+    },
+    {
+      "name": "Customer Bubble",
+      "kind": "custom",
+      "refersTo": "bubble-customer",
+      "description": "The customer's words.",
+      "html": "<p class=\"ds-bubble\">Can I get 4 dozen milk cakes for Saturday 9am?</p>",
+      "css": ".ds-bubble{display:inline-block;background:#f6ead2;color:#2b1a10;padding:8px 16px;border-radius:12px;font:400 15px Manrope,system-ui,sans-serif;margin:0}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Menu Board at Mokha",
+    "overview": "The control room is the back wall of an Old Sana'a coffee house. The walls are sand-cream, a coffee-brown band runs across the top, and the work sits on paper. Every order reads like a line on a hand-lettered menu: the item, a dotted leader, the price. The owner is busy mid-service and decides one thing at a time, so the screen shows one decision at full size and keeps everything else as quiet text.\n\nThe density is calm, not sparse. Information sits in plain rows divided by hairline rules, never in cards, chips, or stat tiles. Colour carries meaning and nothing else: gold says something is waiting, red says risk, green says sent or paid. Anything that needs no attention stays brown on cream.\n\nThe first-surface composition (Orders queue beside a detail pane) is recorded in `.impeccable/surfaces/apps-web-src-app-page-tsx.md`. This file holds only the world those surfaces share.",
+    "keyCharacteristics": [
+      "Sand-cream ground, a coffee-brown band, paper for the active work.",
+      "A dotted menu leader from every line item and pickup to its price.",
+      "Three meaning colours (gold, red, green) and no blue anywhere.",
+      "Marcellus only for names and titles; Manrope for everything you act on.",
+      "One Yemeni motif: the Sana'a gypsum frieze under the band.",
+      "Hairlines instead of containers; no shadows at rest."
+    ],
+    "rules": [
+      {
+        "name": "The Three Spices Rule",
+        "body": "Gold means waiting, red means risk, green means done. A fourth hue, or one of these three used for decoration, is a bug.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Blue Rule",
+        "body": "Nothing cool enters the room. Links are Brew with an underline, and the simulator's phone is the only dark surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signboard Rule",
+        "body": "Marcellus appears only on the shop name, page titles, and a person's name. Buttons, numbers, and labels are always Manrope.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Kicker Rule",
+        "body": "No small uppercase labels stacked above headings, and no letter-spaced eyebrows. A heading stands on its own.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Forward Rule",
+        "body": "To raise something, make it paper. Never add a shadow to an element that sits in the page flow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** put a dotted leader between every item and its price.",
+      "**Do** use gold, red, and green only for waiting, risk, and done.",
+      "**Do** write plain verbs on controls: Approve, Skip, Write my own, Send this.",
+      "**Do** collapse what needs no attention into one sentence (\"10 other ingredients are fine\").",
+      "**Do** raise the active thing by making it Paper, not by adding a shadow."
+    ],
+    "donts": [
+      "**Don't** use cards, chips, stat tiles, or bordered boxes to group content. Use hairline rows.",
+      "**Don't** introduce blue or any cool colour, gradients, glows, or glassmorphism.",
+      "**Don't** set buttons, numbers, or labels in Marcellus.",
+      "**Don't** stack uppercase kickers or eyebrows above headings.",
+      "**Don't** show demo plumbing (platform, internal ids, stage codes) in owner-facing copy.",
+      "**Don't** repeat the frieze or add other ornament. The room has exactly one motif."
+    ]
+  }
+}

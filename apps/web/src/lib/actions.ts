@@ -30,9 +30,14 @@ async function post<T>(path: string, body?: unknown): Promise<T> {
 
 export function approveProposal(
   id: string,
-  body?: { editedText?: string; includeLinked?: boolean },
+  body?: { editedText?: string; alternativeIndex?: number; includeLinked?: boolean },
 ) {
   return post<{ proposals?: unknown[] }>(`/api/proposals/${id}/approve`, body);
+}
+
+/** Sends the owner's own words now; `clientId` makes a double press send once. */
+export function sendOwnerMessage(conversationId: string, text: string, clientId: string) {
+  return post<unknown>(`/api/conversations/${conversationId}/send`, { text, clientId });
 }
 
 export function rejectProposal(
