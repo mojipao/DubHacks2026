@@ -72,20 +72,15 @@ In a restaurant kitchen, the pass is where tickets hang on a rail and nothing le
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--bg` | `#0B0A09` | App background, near-black warm neutral with a faint dot grid |
-| `--surface` | `#131211` | Panels (bento columns, header, ticker), hairline border |
-| `--surface-2` | `#1B1A18` | Hover and selected rows |
-| `--line` / `--line-strong` | `#272523` / `#36332F` | Borders |
-| `--ticket` | `#FBF7EF` | Ticket paper |
-| `--ink` | `#191613` | Text on tickets; primary ticket button |
-| `--muted` | `#9D968E` | Secondary text on dark |
-| `--fg` | `#F2EDE6` | Primary text on dark |
-| `--amber` (saffron) | `#F5B14C` | The one brand accent: pending, focus, Ops stripe, primary action on dark |
-| `--tomato` | `#EF6A4C` | Risk, Guard, reject, low stock |
-| `--basil` | `#49C08A` | Approved, paid, minutes saved, Win-back stripe |
-| `--sky` | `#6AAEFF` | Customer messages, Intake stripe |
+| `--bg` | `#FFFFFF` | Page, with a faint dot grid |
+| `--surface` / `--surface-2` | `#F6F6F6` / `#ECECEC` | Rounded panels (28px) and hover |
+| `--line` / `--line-strong` | `#E6E6E6` / `#C5C5C5` | Hairlines, outlined pills |
+| `--ink` / `--fg` | `#171717` | Text, primary pill buttons, active tab |
+| `--muted` | `#6B6B6B` | Secondary text (AA on white) |
+| `--lime` | `#CBFB45` | The one accent, always a fill with black text: badges, pending, linked set |
+| `--tomato` / `--amber` / `--basil` / `--sky` | `#D4441F` / `#B45F06` / `#15803D` / `#1D6FE0` | Risk, Ops/pending, done, customer/Intake; text-safe on white |
 
-Redesign (Sat ~5:30 PM): "night service." Everything around the tickets is quiet so the paper carries the color; each ticket has a 4px agent stripe instead of a filled header; healthy stock bars are neutral so only low stock and on-order stand out. Wordmark and page headings use Instrument Serif.
+Design follows Webflow's Nova template (Sat ~5:15 PM): Inter, 500-weight tight headings, lime pill eyebrows, black pill buttons, frosted pill header, white outlined ticket cards on gray panels with a 4px agent stripe. Glow buttons are black Nova pills with bright lamp colors.
 
 - Typography: Geist Sans for UI, Geist Mono (or JetBrains Mono) for ticket bodies, timestamps, order lines, and the event ticker.
 - Tickets: paper color, slightly rounded (6px), a perforated top edge (CSS radial-gradient mask), a subtle drop shadow, and a 0.5° random rotation that straightens on hover.

@@ -102,18 +102,18 @@ export function Ticket({
       onClick={onFocus}
       onDoubleClick={onOpen}
       className={cn(
-        "ticket-paper ticket-shadow relative w-full overflow-hidden rounded-[8px]",
-        focused && "ring-2 ring-amber ring-offset-2 ring-offset-bg",
+        "ticket-paper ticket-shadow relative w-full overflow-hidden rounded-[20px]",
+        focused && "ring-2 ring-ink ring-offset-4 ring-offset-surface",
         proposal.status === "executing" && "ticket-executing",
         proposal.status === "failed" && "ring-2 ring-tomato",
       )}
     >
       {/* Agent stripe: the only strong color on the paper, so a glance tells you who drafted it. */}
       <div className={cn("h-1 w-full", AGENT_STRIPE[guardFlags.length > 0 ? "guard" : proposal.agent])} />
-      <div className="flex items-center justify-between gap-2 border-b border-dashed border-ink/15 px-3.5 pt-2.5 pb-2">
-        <span className="flex min-w-0 items-center gap-2 font-mono text-[11px] font-semibold tracking-[0.12em] uppercase">
+      <div className="flex items-center justify-between gap-2 border-b border-line px-4 pt-3 pb-2.5">
+        <span className="flex min-w-0 items-center gap-2 text-[12px] font-medium">
           <span className={cn("size-1.5 shrink-0 rounded-full", AGENT_STRIPE[proposal.agent])} />
-          <span className="whitespace-nowrap text-ink/55">
+          <span className="whitespace-nowrap text-ink/55 capitalize">
             {proposal.agent}
             <span className="hidden min-[1400px]:inline"> · {proposal.kind}</span>
           </span>
@@ -139,13 +139,13 @@ export function Ticket({
         <Stamp kind="rejected" delay={proposal.parentProposalId ? 0.35 : 0} />
       )}
 
-      <div className="space-y-3 px-3.5 py-3 text-ink">
+      <div className="space-y-3 px-4 py-3.5 text-ink">
         <div className="flex flex-wrap items-start gap-2">
-          <p className="min-w-0 flex-1 text-[15.5px] leading-snug font-semibold tracking-[-0.01em]">
+          <p className="min-w-0 flex-1 text-[17px] leading-snug font-medium tracking-[-0.02em]">
             {proposal.rationale}
           </p>
           {proposal.riskFlags.includes("counteroffer") && (
-            <span className="shrink-0 rounded-full bg-ink px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber uppercase">
+            <span className="shrink-0 rounded-full bg-lime px-2.5 py-0.5 text-[11px] font-semibold text-ink">
               Counteroffer
             </span>
           )}
@@ -171,9 +171,9 @@ export function Ticket({
         )}
 
         {guardFlags.length > 0 && (
-          <div className="flex gap-2 rounded-md bg-[#2a1712] px-3 py-2.5 text-[13px] leading-snug text-[#ffd9cc] ring-1 ring-tomato/50">
+          <div className="flex gap-2 rounded-xl bg-tomato px-3 py-2.5 text-[13px] leading-snug text-white">
             <span className="sr-only">Guard:</span>
-            <Shield className="mt-0.5 size-4 shrink-0 text-tomato" />
+            <Shield className="mt-0.5 size-4 shrink-0" />
             <p>
               {proposal.guardSummary ??
                 "Guard flagged this draft. Reply declines; no order."}
@@ -201,7 +201,7 @@ export function Ticket({
             {reply.orders.map((order, idx) => (
               <div
                 key={idx}
-                className="rounded-md border border-ink/10 bg-ink/[0.035] px-2.5 py-1.5 font-mono text-[12px]"
+                className="rounded-xl border border-line bg-surface px-3 py-2 font-mono text-[12px]"
               >
                 <div className="font-semibold">
                   {friendlyPickup(order.pickupAt)}
@@ -220,7 +220,7 @@ export function Ticket({
         )}
 
         {reorder && (
-          <div className="rounded-md border border-ink/10 bg-ink/[0.035] px-2.5 py-1.5 font-mono text-[12px]">
+          <div className="rounded-xl border border-line bg-surface px-3 py-2 font-mono text-[12px]">
             <div className="font-semibold">{reorder.supplier}</div>
             {reorder.lines.map((line) => (
               <div key={line.ingredientId}>

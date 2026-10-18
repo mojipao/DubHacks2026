@@ -28,7 +28,7 @@ export function EventTicker() {
       ref={ref}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      className="surface flex h-10 shrink-0 items-center gap-5 overflow-x-auto rounded-xl px-4 font-mono text-[12px] text-muted [mask-image:linear-gradient(90deg,transparent,black_4%,black_96%,transparent)] [scrollbar-width:none]"
+      className="surface flex h-10 shrink-0 items-center gap-5 overflow-x-auto rounded-full px-5 font-mono text-[12px] text-muted [mask-image:linear-gradient(90deg,transparent,black_4%,black_96%,transparent)] [scrollbar-width:none]"
     >
       {/* Events arrive newest first; the ticker reads left to right, so the newest sits at the right edge. */}
       {state.events.slice(0, 40).reverse().map((e) => (

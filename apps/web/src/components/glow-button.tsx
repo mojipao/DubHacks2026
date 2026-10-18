@@ -4,21 +4,22 @@ import type { ComponentProps, CSSProperties } from "react";
 import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
+// Bright lamp colors: these glow against a black pill, so they're lighter than the text-safe status tokens.
 const TONES = {
-  amber: "var(--amber)",
-  basil: "var(--basil)",
-  tomato: "var(--tomato)",
-  sky: "var(--sky)",
+  lime: "var(--lime)",
+  amber: "#ffb53d",
+  basil: "#3ee07f",
+  tomato: "#ff5a36",
+  sky: "#3b9bff",
 } as const;
 
 export type GlowTone = keyof typeof TONES;
 
 /**
- * Frosted glass pill with a colored glow on hover and focus. For dark surfaces only;
- * on ticket paper use the ink buttons instead. `asChild` renders a Link or <a> as the face.
+ * Black Nova pill with colored glow lamps on hover and focus. `asChild` renders a Link or <a> as the face.
  */
 export function GlowButton({
-  tone = "amber",
+  tone = "lime",
   size = "md",
   block = false,
   asChild = false,

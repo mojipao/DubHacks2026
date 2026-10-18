@@ -39,17 +39,17 @@ export function PickupsBoard() {
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="eyebrow">Pickups</h3>
+        <h3 className="text-[22px] font-medium tracking-[-0.02em] text-fg">Pickups</h3>
       </div>
       <Tabs value={tab} onValueChange={setTab}>
-        <TabsList className="mb-3 h-8 w-full rounded-full border border-line bg-bg/60 p-0.5">
-          <TabsTrigger value="today" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-surface-2 data-[state=active]:text-fg">
+        <TabsList className="mb-3 h-9 w-full rounded-full border border-line bg-white p-1">
+          <TabsTrigger value="today" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-ink data-[state=active]:text-white">
             Today
           </TabsTrigger>
-          <TabsTrigger value="tomorrow" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-surface-2 data-[state=active]:text-fg">
+          <TabsTrigger value="tomorrow" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-ink data-[state=active]:text-white">
             Tomorrow
           </TabsTrigger>
-          <TabsTrigger value="saturday" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-surface-2 data-[state=active]:text-fg">
+          <TabsTrigger value="saturday" className="flex-1 rounded-full text-[12px] text-muted data-[state=active]:bg-ink data-[state=active]:text-white">
             Saturday
           </TabsTrigger>
         </TabsList>
@@ -68,7 +68,7 @@ export function PickupsBoard() {
           return (
             <li
               key={o.id}
-              className="group flex items-center justify-between gap-2 rounded-lg border border-line bg-bg/40 px-3 py-2 transition-colors hover:border-line-strong"
+              className="group flex items-center justify-between gap-2 rounded-2xl border border-line bg-white px-4 py-2.5 transition-colors hover:border-line-strong"
             >
               <div className="min-w-0">
                 <div className="truncate text-[13px] text-fg">

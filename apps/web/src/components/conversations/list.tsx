@@ -27,8 +27,8 @@ export function ConversationList() {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="flex items-center justify-between px-4 pt-3.5 pb-2">
-        <h2 className="eyebrow">Conversations</h2>
+      <div className="flex items-center justify-between px-5 pt-5 pb-3">
+        <h2 className="text-[24px] leading-none font-medium tracking-[-0.03em] text-fg">Conversations</h2>
         <span className="font-mono text-[11px] text-muted tabular-nums">{state.conversations.length}</span>
       </div>
       <ul className="min-h-0 flex-1 space-y-0.5 overflow-y-auto px-2 pb-2">
@@ -42,19 +42,19 @@ export function ConversationList() {
                 onClick={() => selectConversation(c.id)}
                 aria-current={selected || undefined}
                 className={cn(
-                  "relative flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2.5 text-left transition-colors hover:bg-surface-2",
-                  selected && "bg-surface-2",
+                  "relative flex w-full items-start gap-2.5 rounded-2xl px-3 py-3 text-left transition-colors hover:bg-white",
+                  selected && "bg-white shadow-[0_0_0_1px_var(--line),0_6px_16px_-10px_rgba(23,23,23,0.25)]",
                   flashing.has(c.id) && "bg-sky/10",
                 )}
               >
-                {selected && <span className="absolute top-2.5 bottom-2.5 left-0 w-0.5 rounded-full bg-amber" aria-hidden />}
+                {selected && <span className="absolute top-3 bottom-3 left-0 w-1 rounded-full bg-lime ring-1 ring-ink/10" aria-hidden />}
                 <Avatar name={name} owner={c.role === "owner"} />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center justify-between gap-2">
                     <span className="truncate text-[14px] font-medium text-fg">{name}</span>
                     <span className="flex shrink-0 items-center gap-1.5 font-mono text-[11px] text-muted">
                       {shortRelativeTime(c.lastMessageAt)}
-                      {c.hasPendingTicket && <span className="size-1.5 rounded-full bg-amber" aria-label="Ticket pending" />}
+                      {c.hasPendingTicket && <span className="size-2 rounded-full bg-lime ring-1 ring-ink/20" aria-label="Ticket pending" />}
                     </span>
                   </span>
                   <span className="mt-0.5 line-clamp-2 text-[13px] leading-snug text-muted">{c.lastPreview}</span>

@@ -7,16 +7,16 @@
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-heading: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --color-bg: var(--bg);
   --color-panel: var(--panel);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
+  --color-lime: var(--lime);
   --color-ticket: var(--ticket);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
@@ -55,30 +55,33 @@
 }
 
 :root {
-  /* Night service: near-black warm neutrals so the paper tickets carry the color. */
-  --bg: #0b0a09;
-  --surface: #131211;
-  --surface-2: #1b1a18;
-  --panel: #131211;
-  --line: #272523;
-  --line-strong: #36332f;
-  --ticket: #fbf7ef;
-  --ink: #191613;
-  --muted: #9d968e;
-  --fg: #f2ede6;
-  --tomato: #ef6a4c;
-  --amber: #f5b14c;
-  --basil: #49c08a;
-  --sky: #6aaeff;
+  /* Nova (Webflow template) language: white page, soft gray rounded panels, black type and
+     pill buttons, one lime accent used only as a fill with black text on it. */
+  --bg: #ffffff;
+  --surface: #f6f6f6;
+  --surface-2: #ececec;
+  --panel: #f6f6f6;
+  --line: #e6e6e6;
+  --line-strong: #c5c5c5;
+  --ticket: #ffffff;
+  --ink: #171717;
+  --muted: #6b6b6b;
+  --fg: #171717;
+  --lime: #cbfb45;
+  /* Status colors, dark enough to read as text on white. */
+  --tomato: #d4441f;
+  --amber: #b45f06;
+  --basil: #15803d;
+  --sky: #1d6fe0;
   --background: var(--bg);
   --foreground: var(--fg);
   --card: var(--ticket);
   --card-foreground: var(--ink);
-  --popover: var(--surface);
+  --popover: #ffffff;
   --popover-foreground: var(--fg);
-  --primary: var(--ticket);
-  --primary-foreground: var(--ink);
-  --secondary: var(--surface-2);
+  --primary: var(--ink);
+  --primary-foreground: #ffffff;
+  --secondary: var(--surface);
   --secondary-foreground: var(--fg);
   --muted-foreground: var(--muted);
   --accent: var(--surface-2);
@@ -86,8 +89,8 @@
   --destructive: var(--tomato);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--amber);
-  --radius: 8px;
+  --ring: var(--ink);
+  --radius: 12px;
 }
 
 @layer base {
@@ -97,26 +100,23 @@
 
   html {
     @apply font-sans h-full;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     @apply min-h-full bg-bg text-fg antialiased;
-    background-image:
-      radial-gradient(ellipse 70% 50% at 18% -10%, rgba(245, 177, 76, 0.07), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(106, 174, 255, 0.04), transparent 55%),
-      radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-    background-size: auto, auto, 22px 22px;
+    background-image: radial-gradient(rgba(23, 23, 23, 0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
     background-attachment: fixed;
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--amber) 40%, transparent);
+    background: var(--lime);
     color: var(--fg);
   }
 
   :focus-visible {
-    outline: 2px solid var(--amber);
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
   }
 }
@@ -131,27 +131,31 @@
 
   .ticket-paper {
     background-color: var(--ticket);
-    background-image:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent 30%),
-      radial-gradient(120% 80% at 100% 100%, rgba(185, 160, 120, 0.12), transparent 60%);
   }
 
-  /* Lifted paper: a contact shadow plus a long soft one, so tickets read as objects on the rail. */
+  /* Cards on the gray pass: a hairline outline and a soft lift, Nova-style. */
   .ticket-shadow {
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.5) inset,
-      0 1px 2px rgba(0, 0, 0, 0.4),
-      0 12px 28px -6px rgba(0, 0, 0, 0.55),
-      0 30px 60px -20px rgba(0, 0, 0, 0.5);
+      0 0 0 1px var(--line),
+      0 1px 2px rgba(23, 23, 23, 0.06),
+      0 12px 32px -12px rgba(23, 23, 23, 0.18);
   }
 
-  /* A raised dark surface: hairline border plus a faint top highlight. */
+  /* A soft gray panel, like Nova's rounded sections. */
   .surface {
     background-color: var(--surface);
-    border: 1px solid var(--line);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.03) inset,
-      0 8px 24px -12px rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(23, 23, 23, 0.04);
+  }
+
+  /* Small lime pill label ("Welcome to Nova!"). */
+  .badge-lime {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--lime);
+    padding: 2px 12px;
+    font-size: 13px;
+    color: var(--ink);
   }
 
   .eyebrow {
@@ -168,7 +172,7 @@
 
   .ticket-executing {
     background-image:
-      linear-gradient(100deg, transparent 20%, rgba(245, 177, 76, 0.3) 50%, transparent 80%),
+      linear-gradient(100deg, transparent 20%, rgba(203, 251, 69, 0.55) 50%, transparent 80%),
       linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 28%);
     background-size: 220% 100%, auto;
     animation: ticket-shimmer 1.1s linear infinite;
@@ -188,8 +192,8 @@
       -45deg,
       transparent,
       transparent 3px,
-      rgba(245, 177, 76, 0.55) 3px,
-      rgba(245, 177, 76, 0.55) 6px
+      rgba(180, 95, 6, 0.6) 3px,
+      rgba(180, 95, 6, 0.6) 6px
     );
   }
 }
@@ -198,7 +202,7 @@
    colored "lamps" above and below swell into a glow on hover or keyboard focus. */
 @layer components {
   .glow-btn {
-    --glow: var(--amber);
+    --glow: var(--lime);
     position: relative;
     display: inline-flex;
     isolation: isolate;
@@ -274,13 +278,13 @@
     overflow: hidden;
     padding: 0 1.4rem;
     border-radius: 999px;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(23, 23, 23, 0.92);
+    box-shadow: 0 12px 20px -8px rgba(23, 23, 23, 0.45);
     -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
-    color: var(--fg);
+    color: #ffffff;
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.4px;
@@ -305,7 +309,7 @@
     left: 0;
     width: 50%;
     height: 100%;
-    background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.22), transparent);
     transform: skewX(45deg) translateX(-120%);
     transition: transform 0.5s;
     pointer-events: none;
@@ -314,7 +318,7 @@
   .glow-btn:hover .glow-btn__face,
   .glow-btn:has(.glow-btn__face:focus-visible) .glow-btn__face {
     letter-spacing: 1.6px;
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(23, 23, 23, 0.55);
   }
 
   .glow-btn:hover .glow-btn__face::before,

@@ -15,7 +15,7 @@ const SHORTCUTS: [string, string][] = [
 export function ShortcutHelp({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="border-line bg-panel text-fg sm:max-w-md">
+      <DialogContent className="rounded-[28px] border-line bg-white text-fg sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Keyboard at the pass</DialogTitle>
           <DialogDescription className="text-muted">Nothing leaves the kitchen until you call it.</DialogDescription>
@@ -24,7 +24,7 @@ export function ShortcutHelp({ open, onOpenChange }: { open: boolean; onOpenChan
           {SHORTCUTS.map(([key, what]) => (
             <div key={key} className="contents">
               <dt>
-                <kbd className="inline-flex min-w-8 justify-center rounded border border-line bg-bg px-1.5 py-0.5 font-mono text-[12px] text-fg shadow-[0_2px_0_var(--line)]">
+                <kbd className="inline-flex min-w-8 justify-center rounded border border-line bg-surface px-1.5 py-0.5 font-mono text-[12px] text-fg shadow-[0_2px_0_var(--line-strong)]">
                   {key}
                 </kbd>
               </dt>

@@ -18,19 +18,18 @@ export function EmptyPass({ onOpenSim }: { onOpenSim: () => void }) {
             animate={reduce ? { rotate: rot } : { rotate: [rot, -rot, rot] }}
             transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut" }}
           >
-            <div className="mx-auto mb-[-3px] h-2.5 w-6 rounded-sm bg-[#5b524b]" />
-            <div className="ticket-paper h-28 rounded-[5px] opacity-[0.16] shadow-[0_10px_24px_rgba(0,0,0,0.4)]">
-              <div className="ticket-perforation h-2" />
+            <div className="mx-auto mb-[-3px] h-2.5 w-6 rounded-sm bg-line-strong" />
+            <div className="ticket-paper ticket-shadow h-28 rounded-[16px] opacity-80">
               <div className="mx-3 mt-3 space-y-2">
-                <div className="h-1.5 w-3/4 rounded bg-ink/60" />
-                <div className="h-1.5 w-1/2 rounded bg-ink/40" />
-                <div className="h-1.5 w-2/3 rounded bg-ink/40" />
+                <div className="h-1.5 w-3/4 rounded bg-ink/25" />
+                <div className="h-1.5 w-1/2 rounded bg-ink/12" />
+                <div className="h-1.5 w-2/3 rounded bg-ink/12" />
               </div>
             </div>
           </motion.div>
         ))}
       </div>
-      <p className="max-w-sm text-[17px] font-semibold text-fg">Quiet at the pass.</p>
+      <p className="max-w-sm text-[28px] leading-tight font-medium tracking-[-0.03em] text-fg">Quiet at the pass.</p>
       <p className="mt-1 max-w-sm text-[14px] text-muted">
         Text the shop to see the agents work. Every reply waits here for your call.
       </p>

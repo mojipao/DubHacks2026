@@ -145,11 +145,9 @@ export function PassRail({
   );
 
   return (
-    <section className="surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-xl">
-      {/* Warm work light over the rail. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(245,177,76,0.08),transparent)]" />
+    <section className="surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[28px]">
       <div className="relative flex items-center justify-between px-5 pt-3.5 pb-1">
-        <h2 className="eyebrow">The pass</h2>
+        <h2 className="text-[28px] leading-none font-medium tracking-[-0.03em] text-fg">The pass</h2>
         <span className="font-mono text-[12px] text-muted">
           {pendingCount} pending
           {hiddenCount > 0 ? ` · +${hiddenCount} more` : ""}
@@ -158,7 +156,7 @@ export function PassRail({
 
       <div className="relative min-h-0 flex-1 overflow-y-auto px-5 pt-2 pb-4">
         {/* The rail itself: a brushed steel bar the tickets hang from. */}
-        <div className="mb-5 h-[5px] rounded-full bg-gradient-to-b from-[#6b645d] via-[#3b3733] to-[#24211f] shadow-[0_1px_0_rgba(255,255,255,0.08)_inset,0_3px_8px_rgba(0,0,0,0.6)]" />
+        <div className="mt-2 mb-5 h-[5px] rounded-full bg-gradient-to-b from-[#d9d9d9] via-[#bdbdbd] to-[#a8a8a8] shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_2px_5px_rgba(23,23,23,0.15)]" />
 
         {visibleGroups.length === 0 ? (
           state.loaded ? (
@@ -176,13 +174,15 @@ export function PassRail({
                 >
                   {children.length > 0 ? (
                     <div className="relative">
-                      <div className="mb-2.5 flex items-center gap-2 font-mono text-[11px] tracking-[0.14em] text-amber/90 uppercase">
-                        <Link2 className="size-3.5" />
-                        Linked · one decision
-                        <span className="h-px flex-1 bg-gradient-to-r from-amber/40 to-transparent" />
+                      <div className="mb-3 flex items-center gap-2">
+                        <span className="badge-lime gap-1.5">
+                          <Link2 className="size-3.5" />
+                          Linked · one decision
+                        </span>
+                        <span className="h-px flex-1 bg-line-strong" />
                       </div>
                       {/* Rail clip: one bar spanning the pair, so they read as one decision. */}
-                      <div className="pointer-events-none absolute top-[27px] right-8 left-8 z-20 hidden h-[3px] rounded-full bg-amber shadow-[0_0_12px_rgba(245,177,76,0.5)] md:block" />
+                      <div className="pointer-events-none absolute top-[38px] right-8 left-8 z-20 hidden h-[4px] rounded-full bg-lime ring-1 ring-ink/15 md:block" />
                       <div className="grid gap-3 md:grid-cols-2">
                         {ticket(parent, {
                           onApproveBoth: () =>
@@ -213,7 +213,7 @@ export function PassRail({
         <p className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] text-muted">
           {[["A", "approve"], ["E", "edit"], ["R", "reject"], ["J/K", "focus"], ["S", "simulator"], ["?", "help"]].map(([k, v]) => (
             <span key={k}>
-              <kbd className="rounded border border-line-strong bg-surface-2 px-1 text-fg/80">{k}</kbd> {v}
+              <kbd className="rounded border border-line-strong bg-white px-1 text-fg/80">{k}</kbd> {v}
             </span>
           ))}
         </p>

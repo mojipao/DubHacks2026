@@ -14,7 +14,7 @@ export function ControlRoomSkeleton() {
         </div>
         <div className="grid flex-1 grid-cols-2 content-start gap-4 p-4">
           {Array.from({ length: 2 }).map((_, i) => (
-            <Skeleton key={i} className="h-80 rounded-[6px] bg-ticket/10" />
+            <Skeleton key={i} className="h-80 rounded-[20px] bg-surface-2" />
           ))}
         </div>
         <div className="w-[340px] shrink-0 space-y-3 p-4">
@@ -23,7 +23,7 @@ export function ControlRoomSkeleton() {
           ))}
         </div>
       </div>
-      <div className="h-10 border-t border-line bg-[#100e0c]" />
+      <div className="h-10 border-t border-line bg-surface" />
     </div>
   );
 }
