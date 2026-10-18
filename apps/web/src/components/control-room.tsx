@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AssistantView } from "@/components/assistant/assistant-view";
 import { ConversationList } from "@/components/conversations/list";
 import { ConversationThread } from "@/components/conversations/thread";
 import { LeadsView } from "@/components/leads/leads-view";
@@ -123,6 +124,7 @@ export function ControlRoom() {
     pass: { n: state.proposals.filter((p) => p.status === "pending").length, alert: true },
     conversations: { n: state.conversations.filter((c) => c.hasPendingTicket).length },
     customers: { n: 0 },
+    assistant: { n: 0 },
     today: {
       n: state.orders.filter(
         (o) => localDateKey(o.pickupAt) === todayKey && (o.status === "paid" || o.status === "awaiting_payment"),
@@ -190,6 +192,12 @@ export function ControlRoom() {
         {view === "customers" && (
           <div id="view-customers" role="tabpanel" className="flex min-h-0 min-w-0 flex-1">
             <LeadsView onOpenConversation={openConversation} />
+          </div>
+        )}
+
+        {view === "assistant" && (
+          <div id="view-assistant" role="tabpanel" className="flex min-h-0 min-w-0 flex-1">
+            <AssistantView />
           </div>
         )}
 

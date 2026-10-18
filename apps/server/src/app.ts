@@ -4,6 +4,7 @@ import { env, features } from "./env.ts";
 import { HttpError } from "./execute.ts";
 import { maskHandle } from "./inbound.ts";
 import { photonStatus } from "./photon/inbound.ts";
+import { assistant } from "./routes/assistant.ts";
 import { contacts } from "./routes/contacts.ts";
 import { conversations } from "./routes/conversations.ts";
 import { dev } from "./routes/dev.ts";
@@ -36,6 +37,8 @@ app.get("/health", (c) =>
     ownerNotify: env.OWNER_NOTIFY,
     squareWebhook: Boolean(env.SQUARE_WEBHOOK_SIGNATURE_KEY && env.SQUARE_WEBHOOK_URL),
     voiceTools: Boolean(env.VOICE_TOOL_SECRET),
+    autonomy: env.AUTONOMY,
+    callSync: Boolean(env.ELEVENLABS_API_KEY && env.ELEVENLABS_AGENT_ID),
   }),
 );
 
@@ -46,3 +49,4 @@ app.route("/conversations", conversations);
 app.route("/join", join);
 app.route("/webhooks", webhooks);
 app.route("/voice", voice);
+app.route("/assistant", assistant);

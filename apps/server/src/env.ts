@@ -29,7 +29,12 @@ const Env = z.object({
   SQUARE_WEBHOOK_URL: optional,
 
   AGENT_MODE: z.enum(["live", "stub"]).default("stub"),
+  /** on: the agent answers questions itself and checks orders with the customer first. off: every draft waits for the owner. */
+  AUTONOMY: z.enum(["on", "off"]).default("on"),
   AGENT_MODEL: optional,
+
+  ELEVENLABS_API_KEY: optional,
+  ELEVENLABS_AGENT_ID: optional,
 });
 
 const parsed = Env.safeParse(process.env);

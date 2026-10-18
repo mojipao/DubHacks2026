@@ -1,16 +1,17 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { CalendarClock, ClipboardCheck, MessagesSquare, Users } from "lucide-react";
+import { CalendarClock, ClipboardCheck, MessagesSquare, Sparkles, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type View = "pass" | "conversations" | "customers" | "today";
+export type View = "pass" | "conversations" | "customers" | "today" | "assistant";
 
 export const VIEWS: { id: View; label: string; key: string; icon: typeof ClipboardCheck; hint: string }[] = [
   { id: "pass", label: "Pass", key: "1", icon: ClipboardCheck, hint: "Replies and restocks waiting for you" },
   { id: "conversations", label: "Messages", key: "2", icon: MessagesSquare, hint: "Every text thread" },
   { id: "customers", label: "Leads", key: "3", icon: Users, hint: "Everyone who has texted, and whether they ordered" },
   { id: "today", label: "Today", key: "4", icon: CalendarClock, hint: "Pickups, money, stock, time saved" },
+  { id: "assistant", label: "Ask", key: "5", icon: Sparkles, hint: "Ask the agent: stock, texts to customers, calls" },
 ];
 
 /** Editorial nav — underline active state, not cream pills. */

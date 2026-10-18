@@ -2,7 +2,8 @@
 
 import type { ReplyPayload, ReorderPayload } from "@boh/shared";
 import { motion, useReducedMotion } from "motion/react";
-import { ChevronRight, Shield } from "lucide-react";
+import { ChevronRight, Phone, Shield } from "lucide-react";
+import { callConversationIds } from "@/lib/data/derive";
 import { RiskChip } from "@/components/pass/risk-chip";
 import { Stamp } from "@/components/pass/stamp";
 import { INGREDIENT_COSTS, INGREDIENT_NAMES, PRODUCT_NAMES, PRODUCT_PRICES } from "@/lib/business";
@@ -77,6 +78,8 @@ export function Ticket({
   const keyFlags = FLAG_PRIORITY.filter((f) => proposal.riskFlags.includes(f as never) && !isGuardFlag(f)).slice(0, 2);
   const kind = KIND_LABEL[proposal.agent] ?? KIND_LABEL.intake;
   const who = proposal.customerName ?? "New customer";
+  // A ticket from a phone order: its call card and transcript are in the thread next to the pass.
+  const fromCall = Boolean(proposal.conversationId && callConversationIds(state.events).has(proposal.conversationId));
   const steps = getTrace(proposal);
   const stepMs = steps.reduce((n, s) => n + (s.ms || 0), 0);
   const readTables = [
@@ -137,6 +140,14 @@ export function Ticket({
               <span className={cn("mr-1.5 inline-block size-1.5 rounded-full align-middle", guardFlags.length ? "bg-tomato" : kind.dot)} />
               {kind.label}
             </span>
+            {fromCall && (
+              <span
+                className="inline-flex shrink-0 items-center gap-1 self-center rounded-full bg-sky/15 px-2 py-0.5 text-[10.5px] font-semibold tracking-wide text-sky uppercase"
+                title="Placed on a phone call. The call transcript is in the conversation."
+              >
+                <Phone className="size-3" aria-hidden /> Phone order
+              </span>
+            )}
             <span className="truncate font-[family-name:var(--font-heading)] text-[22px] font-semibold tracking-[-0.02em]">
               {who}
             </span>

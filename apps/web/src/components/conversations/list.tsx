@@ -2,9 +2,10 @@
 
 import { useMemo } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { Shield } from "lucide-react";
+import { Phone, Shield } from "lucide-react";
 import { isGuardFlag } from "@/lib/flags";
 import { useFlash } from "@/lib/use-flash";
+import { callConversationIds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 import { maskHandle, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,8 @@ export function ConversationList() {
       ),
     [state.proposals],
   );
+
+  const callIds = useMemo(() => callConversationIds(state.events), [state.events]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -65,8 +68,13 @@ export function ConversationList() {
                         c.platform === "imessage" ? "border-sky/30 text-sky" : "border-line-strong text-muted",
                       )}
                     >
-                      {c.platform === "imessage" ? "iMessage" : "simulated"}
+                      {c.platform === "imessage" ? "iMessage" : callIds.has(c.id) ? "call" : "simulated"}
                     </span>
+                    {callIds.has(c.id) && (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-sky/10 px-1.5 py-px text-[10px] font-medium text-sky">
+                        <Phone className="size-2.5" /> Phone
+                      </span>
+                    )}
                     {guarded.has(c.id) && (
                       <span className="inline-flex items-center gap-0.5 rounded-full bg-tomato/10 px-1.5 py-px text-[10px] font-medium text-tomato">
                         <Shield className="size-2.5" /> Guard

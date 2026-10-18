@@ -11,6 +11,8 @@ import { env, features } from "../env.ts";
 import { logEvent } from "../events.ts";
 import { agentContext, ingestInbound, storeDrafts } from "../inbound.ts";
 import { localDateOf, resolveSpokenDay, weekdayOf } from "../time.ts";
+import { productFacts } from "../facts.ts";
+import { linkCall } from "../voice/calls.ts";
 
 /**
  * Tools the ElevenLabs phone agent calls mid-call. They answer from the same live data the text
@@ -50,6 +52,8 @@ const AvailabilityRequest = z.object({
   items: z.array(z.object({ item: z.string().min(1), quantity: z.coerce.number().int().positive().optional() })).max(10).default([]),
   /** "today", "tomorrow", "Saturday", or YYYY-MM-DD. Defaults to today. */
   day: z.string().optional(),
+  /** ElevenLabs' conversation id, so the call's transcript joins the same thread. */
+  callId: z.string().optional(),
 });
 
 /** Is it on the menu, what does it cost, can the shop make that many that day, and is there stock? */
@@ -115,6 +119,9 @@ voice.post("/tools/availability", async (c) => {
       productId: a.product.id,
       name: a.product.name,
       price: money(a.product.priceCents),
+      size: productFacts[a.product.id]?.size ?? null,
+      ingredients: productFacts[a.product.id]?.ingredients ?? [],
+      allergens: productFacts[a.product.id]?.allergens ?? [],
       quantity: a.quantity,
       leftThatDay: left,
       fitsThatDay: left >= a.quantity,
@@ -124,7 +131,10 @@ voice.post("/tools/availability", async (c) => {
 
   for (const i of items) {
     if (!i.onMenu) facts.push(`"${i.asked}" is not on the menu`);
-    else facts.push(`${i.name} ${i.price} each; ${i.leftThatDay} more can be made ${dayName}${i.fitsThatDay ? "" : ` (asked for ${i.quantity})`}`);
+    else {
+      facts.push(`${i.name} ${i.price} each${i.size ? ` (${i.size})` : ""}; ${i.leftThatDay} more can be made ${dayName}${i.fitsThatDay ? "" : ` (asked for ${i.quantity})`}`);
+      if (body.data.items.length) facts.push(`${i.name} contains: ${i.ingredients.join(", ")}. Allergens: ${i.allergens.length ? i.allergens.join(", ") : "none listed"}`);
+    }
   }
   for (const n of short) facts.push(`Not enough ${n.name} in stock for that; a reorder from ${n.supplier} would be needed`);
 
@@ -171,8 +181,9 @@ voice.post("/tools/order", async (c) => {
   const { ctx, flush } = agentContext(null);
   const { response, drafts } = await handleVoiceTurn(parsed.data, ctx, async (input) => {
     // Voice rides on the 'simulated' platform until a migration adds 'voice'; the handle carries the caller.
-    thread = await ingestInbound({ platform: "simulated", handle: input.handle, name: input.name, text: input.text, runAgents: false });
+    thread = await ingestInbound({ platform: "simulated", handle: input.handle, name: input.name, text: input.text, runAgents: false, voice: true });
     if (!thread) throw new Error("Could not store the caller's message");
+    await linkCall(input.callId, thread.conversationId);
     return thread;
   });
   await flush();

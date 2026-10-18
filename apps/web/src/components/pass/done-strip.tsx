@@ -6,9 +6,12 @@ import { cn } from "@/lib/utils";
 export function DoneStrip({
   tickets,
   onOpen,
+  agentSent,
 }: {
   tickets: UiProposal[];
   onOpen: (id: string) => void;
+  /** Tickets the agent sent on its own (answers, no orders); marked so the owner can tell. */
+  agentSent?: Set<string>;
 }) {
   if (tickets.length === 0) return null;
 
@@ -33,6 +36,7 @@ export function DoneStrip({
         >
           {t.status === "executed" ? "✓" : "×"}{" "}
           {t.customerName ?? t.title.slice(0, 18)}
+          {agentSent?.has(t.id) && <span className="ml-1 text-amber">· agent</span>}
         </button>
       ))}
     </div>
