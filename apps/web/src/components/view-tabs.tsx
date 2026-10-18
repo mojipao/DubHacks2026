@@ -2,15 +2,14 @@
 
 import { cn } from "@/lib/utils";
 
-export type View = "orders" | "today" | "people" | "calls" | "ask" | "ops";
+export type View = "orders" | "today" | "people" | "ask" | "ops";
 
 export const VIEWS: { id: View; label: string; key: string; hint: string }[] = [
   { id: "orders", label: "Orders", key: "1", hint: "Replies and restocks waiting for you" },
   { id: "today", label: "Today", key: "2", hint: "Pickups, money, and anything running low" },
   { id: "people", label: "People", key: "3", hint: "Everyone who has texted or called, and their messages" },
-  { id: "calls", label: "Calls", key: "4", hint: "Call transcripts, tap-to-call-backs, approve or skip" },
-  { id: "ask", label: "Ask", key: "5", hint: "Ask the agent about stock, text customers, or place a call" },
-  { id: "ops", label: "House", key: "6", hint: "Leads, Square-paid sales, stock replenish dates" },
+  { id: "ask", label: "Ask", key: "4", hint: "Ask the agent about stock, text customers, or place a call" },
+  { id: "ops", label: "House", key: "5", hint: "Leads, Square-paid sales, stock replenish dates" },
 ];
 
 /** Plain text tabs on the brown band; waiting counts are the only colour. */
@@ -18,20 +17,17 @@ export function ViewTabs({
   view,
   onChange,
   waiting,
-  callsWaiting = 0,
 }: {
   view: View;
   onChange: (view: View) => void;
   /** Orders waiting on the owner. */
   waiting: number;
-  /** Transcribed calls not yet reviewed. */
-  callsWaiting?: number;
 }) {
   return (
     <nav role="tablist" aria-label="Views" className="flex h-full items-stretch gap-0.5 sm:gap-1">
       {VIEWS.map((v) => {
         const active = v.id === view;
-        const n = v.id === "orders" ? waiting : v.id === "calls" ? callsWaiting : 0;
+        const n = v.id === "orders" ? waiting : 0;
         return (
           <button
             key={v.id}
