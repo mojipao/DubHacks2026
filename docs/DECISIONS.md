@@ -4,6 +4,7 @@ Append-only. Newest row at the top. Do not edit someone else’s row; add a new 
 
 | Date | Lane | Decision | Why |
 | --- | --- | --- | --- |
+| 2026-10-17 | 2 | The demo host stays on **one laptop** (`pnpm demo:host`). No Railway / always-on server this weekend. Runbook is in the README. | Photon inbound is a long-lived socket (not Vercel Functions). A second host double-replies. Closing the laptop is not worth the cutover (Square webhook, `SERVER_URL`, ElevenLabs) tonight. |
 | 2026-10-17 | 2 | Drop the **Calls** tab. People is the CRM/thread (texts + call transcripts); phone orders stay on Orders; House is the funnel/sales/stock board (now key 5). Ask is key 4. `?tab=calls` redirects to People. | Six tabs crowded the band, and People already shows the mixed thread, call summary, and phone icon. A second queue for the same conversation was redundant. |
 | 2026-10-17 | 2 | A **House** tab (key 6) shows leads, Square-paid text sales, and stock replenish dates from `GET /ops`. Menu questions get catalog prices in the chat, never hours or a website. | The control room had drifted to tickets only; paid orders and recipes were already in Postgres. A live "what's the menu?" thread answered with hours. |
 | 2026-10-17 | 2 | The shop takes orders by iMessage. Drafts must never say otherwise, and Guard redrafts (then composes) if they do. A pickup time in one text and an item in the next are one order. | A live QR thread promised coffee with no ticket, then refused chat orders when given a time. Autonomy sent both because `orders` was empty. |
