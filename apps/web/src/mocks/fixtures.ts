@@ -91,6 +91,17 @@ export const FIXTURE_CONVERSATIONS: UiConversation[] = [
     lastPreview: "2 pistachio maamoul Sunday?",
     hasPendingTicket: true,
   },
+  {
+    id: "conv-call",
+    customerId: null,
+    handle: "+12065550190",
+    customerName: "Alex Rivera",
+    platform: "simulated",
+    role: "customer",
+    lastMessageAt: minutesAgo(4),
+    lastPreview: "Two cold brews and a sesame kaak for tomorrow morning",
+    hasPendingTicket: true,
+  },
 ];
 
 export const FIXTURE_MESSAGES: UiMessage[] = [
@@ -134,6 +145,38 @@ export const FIXTURE_MESSAGES: UiMessage[] = [
     body: "can I get 2 pistachio maamoul sunday?",
     status: "received",
     createdAt: hoursAgo(2),
+  },
+  {
+    id: "msg-call-1",
+    conversationId: "conv-call",
+    direction: "inbound",
+    body: "Hi, can I get two cold brews and a sesame kaak for tomorrow morning?",
+    status: "received",
+    createdAt: minutesAgo(8),
+  },
+  {
+    id: "msg-call-2",
+    conversationId: "conv-call",
+    direction: "outbound",
+    body: "Yes — two cold brews and a sesame kaak tomorrow. I'll send that to the owner to confirm and you'll get a text with the payment link.",
+    status: "sent",
+    createdAt: minutesAgo(7.4),
+  },
+  {
+    id: "msg-call-3",
+    conversationId: "conv-call",
+    direction: "inbound",
+    body: "Great, around nine?",
+    status: "received",
+    createdAt: minutesAgo(7),
+  },
+  {
+    id: "msg-call-4",
+    conversationId: "conv-call",
+    direction: "outbound",
+    body: "Nine works. I'll get that over to the owner.",
+    status: "sent",
+    createdAt: minutesAgo(6.6),
   },
 ];
 
@@ -320,6 +363,47 @@ export const FIXTURE_PROPOSALS: UiProposal[] = [
     customerName: "Priya Raman",
   },
   {
+    id: "prop-call",
+    agent: "intake",
+    kind: "reply",
+    status: "pending",
+    conversationId: "conv-call",
+    triggerMessageId: "msg-call-1",
+    parentProposalId: null,
+    title: "Phone order from Alex",
+    summary: "2 cold brew + 1 sesame kaak, tomorrow 9:00.",
+    rationale: "Placed on a phone call. Same ticket as a text; owner still approves before anything is charged.",
+    payload: {
+      text: `Hi Alex — 2 cold brew + sesame kaak tomorrow 9:00. Pay here: ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
+      orders: [
+        {
+          items: [
+            { productId: "cold-brew", qty: 2 },
+            { productId: "sesame-kaak", qty: 1 },
+          ],
+          pickupAt: satPickup,
+        },
+      ],
+    },
+    evidence: [
+      { label: "Channel", value: "Phone call", source: { table: "conversations", id: "conv-call" } },
+      { label: "Asked", value: "2 cold brew + sesame kaak tomorrow 9:00", source: { table: "messages", id: "msg-call-1" } },
+    ],
+    reads: [
+      { table: "products", id: "cold-brew" },
+      { table: "products", id: "sesame-kaak" },
+      { table: "messages", id: "msg-call-1" },
+    ],
+    confidence: 0.88,
+    riskFlags: ["new_customer"],
+    shortCode: "V1",
+    createdAt: minutesAgo(5),
+    decidedAt: null,
+    executedAt: null,
+    error: null,
+    customerName: "Alex Rivera",
+  },
+  {
     id: "prop-maya-done",
     agent: "intake",
     kind: "reply",
@@ -445,6 +529,31 @@ export const FIXTURE_INGREDIENTS: UiIngredient[] = ingredientsJson.map((i) => ({
 
 /** Newest first, the same order the live source returns. */
 export const FIXTURE_EVENTS: UiEvent[] = ([
+  {
+    id: "evt-call-transcribed",
+    at: minutesAgo(4),
+    actor: "system",
+    type: "call.transcribed",
+    subjectType: "conversation",
+    subjectId: "conv-call",
+    data: {
+      callId: "call-alex-1",
+      caller: "+1 206 •••• 0190",
+      startedAt: minutesAgo(8.2),
+      durationSecs: 210,
+      turns: 4,
+      summary: "Two cold brews and a sesame kaak for tomorrow at nine. Agent sent it to the owner.",
+    },
+  },
+  {
+    id: "evt-callback-maya",
+    at: minutesAgo(3),
+    actor: "owner",
+    type: "call.callback_requested",
+    subjectType: "conversation",
+    subjectId: "conv-maya",
+    data: { handle: "+12065550100", name: "Maya Chen", purpose: "her order", conversationId: "conv-maya" },
+  },
   {
     id: "evt-1",
     at: minutesAgo(20),

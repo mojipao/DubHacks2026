@@ -2,30 +2,35 @@
 
 import { cn } from "@/lib/utils";
 
-export type View = "orders" | "today" | "people" | "ask";
+export type View = "orders" | "today" | "people" | "calls" | "ask";
 
 export const VIEWS: { id: View; label: string; key: string; hint: string }[] = [
   { id: "orders", label: "Orders", key: "1", hint: "Replies and restocks waiting for you" },
   { id: "today", label: "Today", key: "2", hint: "Pickups, money, and anything running low" },
   { id: "people", label: "People", key: "3", hint: "Everyone who has texted or called, and their messages" },
-  { id: "ask", label: "Ask", key: "4", hint: "Ask the agent about stock, text customers, or place a call" },
+  { id: "calls", label: "Calls", key: "4", hint: "Call transcripts, tap-to-call-backs, approve or skip" },
+  { id: "ask", label: "Ask", key: "5", hint: "Ask the agent about stock, text customers, or place a call" },
 ];
 
-/** Plain text tabs on the brown band; the waiting count is the only colour. */
+/** Plain text tabs on the brown band; waiting counts are the only colour. */
 export function ViewTabs({
   view,
   onChange,
   waiting,
+  callsWaiting = 0,
 }: {
   view: View;
   onChange: (view: View) => void;
   /** Orders waiting on the owner. */
   waiting: number;
+  /** Transcribed calls not yet reviewed. */
+  callsWaiting?: number;
 }) {
   return (
     <nav role="tablist" aria-label="Views" className="flex h-full items-stretch gap-0.5 sm:gap-1">
       {VIEWS.map((v) => {
         const active = v.id === view;
+        const n = v.id === "orders" ? waiting : v.id === "calls" ? callsWaiting : 0;
         return (
           <button
             key={v.id}
@@ -41,12 +46,11 @@ export function ViewTabs({
             )}
           >
             {v.label}
-            {v.id === "orders" && waiting > 0 && (
+            {n > 0 && (
               <span className="min-w-5 rounded-full bg-qishr px-1.5 text-center text-[12px] leading-5 font-bold text-shell tabular sm:min-w-6 sm:text-[13px] sm:leading-6">
-                {waiting}
+                {n}
               </span>
             )}
-            {/* The current tab sits on a gold sill, like a lit doorway on the band. */}
             <span
               aria-hidden
               className={cn(

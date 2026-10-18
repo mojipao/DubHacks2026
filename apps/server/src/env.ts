@@ -35,6 +35,8 @@ const Env = z.object({
 
   ELEVENLABS_API_KEY: optional,
   ELEVENLABS_AGENT_ID: optional,
+  /** The shop's phone line, put in "tap to call us back" texts while outbound calling is off. */
+  PHOTON_VOICE_NUMBER: optional,
 });
 
 const parsed = Env.safeParse(process.env);

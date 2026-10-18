@@ -49,8 +49,8 @@ export function AssistantView() {
         <div>
           <h1 className="heading text-[34px] text-ink">Ask the agent</h1>
           <p className="mt-1 max-w-[60ch] text-[15px] leading-relaxed text-muted">
-            Check stock and inventory, text customers about a special, or ask for a call. Texts are previewed first; nothing goes out until you press Send.
-            You can also text these to the shop line from the owner&apos;s phone.
+            Check stock, text customers, or ask for a call. We can&apos;t dial out yet, so &ldquo;call Maya&rdquo; texts her a tap-to-call-back. Transcripts and approve/skip live under Calls.
+
           </p>
         </div>
         <button
@@ -59,7 +59,7 @@ export function AssistantView() {
             mode === "mock"
               ? toast.message("Needs live mode")
               : void syncCalls()
-                  .then((r) => toast.success(r.imported ? `${r.imported} new call${r.imported > 1 ? "s" : ""} added to People` : "No new calls"))
+                  .then((r) => toast.success(r.imported ? `${r.imported} new call${r.imported > 1 ? "s" : ""} added to Calls` : "No new calls"))
                   .catch((e: Error) => toast.error(e.message))
           }
           className="inline-flex h-9 items-center gap-2 rounded-full border border-line-strong px-3.5 text-[14px] font-semibold text-ink hover:bg-surface-2"
@@ -129,8 +129,8 @@ function Answer({ answer }: { answer: AssistantAnswer }) {
   if (answer.kind === "campaign") return <CampaignAnswer answer={answer} />;
   if (answer.kind === "call")
     return (
-      <p className={cn("mt-2 flex items-start gap-2 text-[16px] leading-snug", answer.placed ? "text-ink" : "text-qamar")}>
-        {answer.placed ? <Phone className="mt-0.5 size-4 shrink-0" /> : <AlertTriangle className="mt-0.5 size-4 shrink-0" />}
+      <p className={cn("mt-2 flex items-start gap-2 text-[16px] leading-snug", answer.placed || answer.callback ? "text-ink" : "text-qamar")}>
+        {answer.placed || answer.callback ? <Phone className="mt-0.5 size-4 shrink-0" /> : <AlertTriangle className="mt-0.5 size-4 shrink-0" />}
         {answer.say}
       </p>
     );

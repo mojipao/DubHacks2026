@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AssistantView } from "@/components/assistant/assistant-view";
+import { CallsView } from "@/components/calls/calls-view";
 import { Frieze } from "@/components/frieze";
 import { OrdersView } from "@/components/orders/orders-view";
 import { PeopleView } from "@/components/people/people-view";
@@ -10,9 +11,15 @@ import { ShortcutHelp } from "@/components/shortcut-help";
 import { TodayView } from "@/components/today/today-view";
 import { TopBar } from "@/components/top-bar";
 import { VIEWS, ViewTabs, type View } from "@/components/view-tabs";
+import { allCalls, reviewedCallIds } from "@/lib/data/derive";
 import { useStore } from "@/lib/data/store";
 
-const LEGACY_TABS: Record<string, View> = { pass: "orders", conversations: "people", customers: "people", assistant: "ask" };
+const LEGACY_TABS: Record<string, View> = {
+  pass: "orders",
+  conversations: "people",
+  customers: "people",
+  assistant: "ask",
+};
 
 function initialView(): View {
   if (typeof window === "undefined") return "orders";
@@ -27,7 +34,6 @@ export function ControlRoom() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [simOpen, setSimOpen] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("sim") === "1");
 
-  // The view lives in the URL, so a reload or a shared link opens the same place.
   const setView = (next: View) => {
     setViewState(next);
     const url = new URL(window.location.href);
@@ -71,6 +77,7 @@ export function ControlRoom() {
   });
 
   const waiting = state.proposals.filter((p) => p.status === "pending" && !p.parentProposalId).length;
+  const callsWaiting = allCalls(state.events).filter((c) => !reviewedCallIds(state.events).has(c.callId)).length;
 
   return (
     <div className="flex h-dvh min-h-[640px] flex-col">
@@ -78,7 +85,7 @@ export function ControlRoom() {
         <TopBar
           onOpenSim={() => setSimOpen(true)}
           onOpenKeys={() => setHelpOpen(true)}
-          tabs={<ViewTabs view={view} onChange={setView} waiting={waiting} />}
+          tabs={<ViewTabs view={view} onChange={setView} waiting={waiting} callsWaiting={callsWaiting} />}
         />
         <Frieze />
       </div>
@@ -87,6 +94,7 @@ export function ControlRoom() {
         {view === "orders" && <OrdersView onOpenSim={() => setSimOpen(true)} onOpenPerson={openPerson} blocked={simOpen || helpOpen} />}
         {view === "today" && <TodayView />}
         {view === "people" && <PeopleView onOpenOrder={openOrder} />}
+        {view === "calls" && <CallsView onOpenPerson={openPerson} />}
         {view === "ask" && <AssistantView />}
       </main>
 

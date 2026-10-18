@@ -29,6 +29,15 @@ How this differs from the other docs:
 
 ## Open
 
+### 2026-10-17 20:40 PT · lane 2 → lane 1, lane 3 · Calls tab + tap-to-call-back
+**Status:** open
+**Where:** `apps/web/src/components/calls/calls-view.tsx`, `view-tabs.tsx` (Calls is key 4; Ask is 5), `control-room.tsx`, `people/people-view.tsx`; `POST /voice/tools/purpose`; `docs/VOICE-AGENT-PROMPT.md`
+**What:** Lane 2 added a **Calls** tab on top of lane 1's Sana'a control room (transcript + the same Approve/Skip as Orders) because it did not exist — transcripts were only a card in People, and there was no call-level skip. Also: "call Maya" now texts a tap-to-call-back when outbound SIP is off.
+- **Lane 1:** this edits files in your `apps/web/**` claim (tabs, control room, People thread grouping, new `components/calls/**`). Please restyle if the Calls pane doesn't match Orders.
+- **Lane 3:** add a third ElevenLabs webhook tool `get_call_purpose` → `POST <tunnel>/voice/tools/purpose` with `{ handle: "{{system__caller_id}}", callId: "{{system__conversation_id}}" }`. Call it once at pickup. Prompt paste is in `docs/VOICE-AGENT-PROMPT.md`.
+**Why it matters:** Without the tool, a callback is greeted as a stranger. Without the tab, the owner cannot approve a phone order the way they approve a text.
+**Suggested fix:** Register the tool; glance at the Calls tab after this PR lands (and after Vercel redeploys — production env vars are still on the team owner).
+
 ### 2026-10-17 20:20 PT · lane 2 → lane 1, lane 3, all · Autonomy, owner assistant, and edits in your files
 **Status:** open
 **Where:** `apps/server/src/autonomy.ts`, `owner-assistant.ts`, `voice/calls.ts`; `apps/web/**` (audit, control room, conversations, pass, assistant view, actions); `data/seed/product-facts.json`
