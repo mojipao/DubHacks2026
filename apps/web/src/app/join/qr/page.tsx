@@ -30,8 +30,8 @@ export default function JoinQrPage() {
       <div>
         <h1 className="mt-3 heading text-7xl tracking-tight text-fg">Text the shop.</h1>
         <p className="mx-auto mt-3 max-w-xl text-[19px] leading-relaxed text-muted">
-          Scan, get {SHOP_NAME}&apos;s number, and text it like a regular. Try to trick it, too: every reply waits for the
-          owner.
+          Scan, get {SHOP_NAME}&apos;s number, and text it like a regular. The first message has to be a{" "}
+          <span className="font-semibold text-ink">blue</span> iMessage, not a green SMS. Orders wait for the owner.
         </p>
       </div>
       <div className="ticket-paper ticket-strip relative overflow-hidden rounded-[24px] p-8">
