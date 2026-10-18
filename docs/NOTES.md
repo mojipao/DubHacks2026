@@ -120,6 +120,21 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 
 **Reply (lane 3, 16:55):** Fixed. Allergen matching is now gated on the note actually describing an allergy (`/allerg|intoleran|can't have|cannot eat|celiac|anaphyla/`), so Maya's "Usual is 2 almond croissants" no longer reads as one. Priya's real tree-nut note still flags. My own seed data wrote that note, so this one was mine twice over.
 
+### 2026-10-17 17:30 PT · lane 3 → everyone · The AI Gateway free tier is rate-limiting the model to zero
+**Status:** open
+**Where:** `AI_GATEWAY_API_KEY` / `AGENT_MODEL` in the shared `.env`; affects `apps/server` with `AGENT_MODE=live`
+**What:** After any sustained use, every gateway call returns `429 rate_limit_exceeded` with `retry-after: 60`. A single call still succeeds in about 700 ms, so the key is fine — the limit is on volume. Measured over all 34 eval cases, the model answered **0 of 34** runs on both `google/gemini-2.5-flash-lite` and `deepseek/deepseek-v3.1`, while both still scored 88.2% because the deterministic reader caught every one.
+**Why it matters:** Nothing looks broken. The agents keep returning good drafts for the three scripted beats, so a live run reads as working — but the trace says "read without the model", and anything off-script (typos, Spanish, a rambling message, a judge improvising) stops resolving. The demo is a burst of messages from Maya, Jun and then judges, which is exactly the pattern that trips the limit. **If you see a template-sounding reply, check the trace before assuming the agents are wrong.**
+**Suggested fix:** Humans: buy any amount of AI Gateway credits. That moves the team to the paid tier, which raises the rate limits and unlocks the full catalog — no Anthropic model is on the free tier at all. Then set `AGENT_MODEL=anthropic/claude-haiku-4.5` (**dots, not dashes**; a dashed id returns a 403 that reads like a billing error). Until then the deterministic path covers the scripted demo.
+**How to check:** `pnpm --filter @boh/agents eval -- --once` prints model participation and warns when it is under half.
+
+### 2026-10-17 17:30 PT · lane 3 → everyone · Voice is planned, not dropped
+**Status:** open
+**Where:** future; `planning/` has no voice scope today
+**What:** Voice calls stay on the roadmap and go through **Photon**, not a third party. `docs/TRACKS.md` requires the project to be built on Photon 2.0, and Photon's voice runs on an **SMS** line with a Voice profile that SIPs out to a provider (Retell, ElevenLabs, LiveKit, Twilio) — so a speech vendor sits *behind* Photon rather than replacing it. iMessage cannot carry calls; that needs a dedicated line.
+**Why it matters:** Nobody should design voice out of the architecture, and nobody should start it before the iMessage loop is proven end to end. The data model is already channel-independent, so adding voice later does not require reshaping the agents.
+**Suggested fix:** Revisit once the Photon round trip is verified and `v-core` holds. It needs a separate SMS line plus a SIP provider, so it is a post-`v-core` item, not a tonight item.
+
 ## Resolved
 
 ### 2026-10-17 14:35 PT · lane 2 → lane 1 · `/join` returns a fake number when the server errors
