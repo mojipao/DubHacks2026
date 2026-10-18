@@ -1,0 +1,80 @@
+{
+  "milk-cake": {
+    "size": "one square slice, about 4 in",
+    "description": "Soft sponge soaked in three milks and cardamom, topped with a thin caramel.",
+    "ingredients": ["whole milk", "evaporated milk", "sweetened condensed milk", "eggs", "wheat flour", "sugar", "ghee", "cardamom"],
+    "allergens": ["milk", "eggs", "wheat"]
+  },
+  "pistachio-maamoul": {
+    "size": "two cookies per order",
+    "description": "Semolina shortbread filled with pistachio and orange blossom.",
+    "ingredients": ["semolina", "ghee", "pistachios", "sugar", "orange blossom water"],
+    "allergens": ["tree nuts (pistachio)", "milk", "wheat"]
+  },
+  "bint-al-sahn": {
+    "size": "one wedge, about a sixth of a round",
+    "description": "Layered honey cake brushed with ghee and sidr honey, finished with black seed.",
+    "ingredients": ["wheat flour", "eggs", "ghee", "sidr honey", "black seed", "yeast"],
+    "allergens": ["wheat", "eggs", "milk"]
+  },
+  "sabaya": {
+    "size": "one square, shareable for two",
+    "description": "Flaky layered flatbread with honey and sesame.",
+    "ingredients": ["wheat flour", "ghee", "sidr honey", "sesame seeds"],
+    "allergens": ["wheat", "milk", "sesame"]
+  },
+  "sesame-kaak": {
+    "size": "one large ring",
+    "description": "Crisp sesame bread ring, lightly sweet.",
+    "ingredients": ["wheat flour", "sesame seeds", "sugar", "yeast", "ghee"],
+    "allergens": ["wheat", "sesame", "milk"]
+  },
+  "malawah": {
+    "size": "one 9 in flatbread",
+    "description": "Pan-fried layered flatbread with honey on the side.",
+    "ingredients": ["wheat flour", "ghee", "salt", "sidr honey"],
+    "allergens": ["wheat", "milk"]
+  },
+  "yemeni-coffee": {
+    "size": "8 oz cup",
+    "description": "Haraz single-origin coffee brewed with cardamom, served black.",
+    "ingredients": ["Yemeni coffee (Haraz)", "cardamom", "water"],
+    "allergens": []
+  },
+  "cold-brew": {
+    "size": "16 oz",
+    "description": "Yemeni coffee steeped cold for 18 hours.",
+    "ingredients": ["Yemeni coffee (Haraz)", "water"],
+    "allergens": []
+  },
+  "mokha-latte": {
+    "size": "12 oz",
+    "description": "Espresso of Yemeni beans with steamed milk, cardamom and a touch of honey.",
+    "ingredients": ["Yemeni coffee (Haraz)", "whole milk", "cardamom", "sidr honey"],
+    "allergens": ["milk"]
+  },
+  "adeni-chai": {
+    "size": "12 oz",
+    "description": "Black tea simmered with evaporated milk, cardamom and clove, Aden style.",
+    "ingredients": ["black tea", "evaporated milk", "sugar", "cardamom", "clove"],
+    "allergens": ["milk"]
+  },
+  "qishr": {
+    "size": "8 oz cup",
+    "description": "Tea of coffee-cherry husks with ginger and cinnamon. Low caffeine.",
+    "ingredients": ["coffee husk (qishr)", "ginger", "cinnamon", "sugar", "water"],
+    "allergens": []
+  },
+  "coffee-box": {
+    "size": "96 oz, serves 12, with cups",
+    "description": "A traveler of Yemeni coffee with cardamom for groups.",
+    "ingredients": ["Yemeni coffee (Haraz)", "cardamom", "water"],
+    "allergens": []
+  },
+  "yemeni-beans": {
+    "size": "250 g bag, whole bean",
+    "description": "Haraz beans, natural process, notes of dried fig and cocoa.",
+    "ingredients": ["Yemeni coffee beans (Haraz)"],
+    "allergens": []
+  }
+}

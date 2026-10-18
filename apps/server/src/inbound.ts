@@ -6,6 +6,8 @@ import { supabaseDataPort } from "./data-port.ts";
 import { db } from "./db.ts";
 import { env } from "./env.ts";
 import { logEvent, type Actor, type Subject } from "./events.ts";
+import { answerHold, routeDrafts } from "./autonomy.ts";
+import { ensureCustomer, parseGivenName, rememberCustomerName, weAskedForName } from "./identity.ts";
 import { handleOwnerCommand, notifyOwner } from "./owner.ts";
 
 export interface InboundMessage {
@@ -14,6 +16,10 @@ export interface InboundMessage {
   name?: string;
   text: string;
   photon?: { spaceId: string; agentUserId: string; messageId: string };
+  /** False when the caller runs the agents itself (the voice tool answers mid-call). */
+  runAgents?: boolean;
+  /** A phone call is always a customer talking, even from the owner's phone (that's how the team tests). */
+  voice?: boolean;
 }
 
 const DEBOUNCE_MS = 4000;
@@ -36,7 +42,7 @@ export function maskHandle(handle: string): string {
 /** Stores one inbound message and schedules the agents. Returns null for a redelivered Photon message. */
 export async function ingestInbound(input: InboundMessage): Promise<{ conversationId: string; messageId: string } | null> {
   const handle = normalizeHandle(input.handle);
-  const isOwner = Boolean(env.OWNER_HANDLE) && handle === normalizeHandle(env.OWNER_HANDLE!);
+  const isOwner = !input.voice && Boolean(env.OWNER_HANDLE) && handle === normalizeHandle(env.OWNER_HANDLE!);
   const customerId = isOwner ? null : await findOrCreateCustomer(handle, input.name);
   const conversationId = await upsertConversation(input, handle, customerId, isOwner);
 
@@ -53,8 +59,15 @@ export async function ingestInbound(input: InboundMessage): Promise<{ conversati
     .single();
   if (error?.code === "23505") return null;
   if (error) throw new Error(`insert message: ${error.message}`);
+  if (!isOwner) {
+    const asked = await weAskedForName(conversationId);
+    const parsed = parseGivenName(input.text, { theyWereAsked: asked });
+    if (parsed) await rememberCustomerName(handle, parsed, conversationId);
+  }
   // Arm the debounce before the slower bookkeeping so a burst of texts collapses into one run.
-  if (!isOwner) schedule(conversationId, message.id);
+  // A YES or NO to the agent's order check-in is answered here, without another agent run.
+  const answeredHold = !isOwner && input.runAgents !== false && (await answerHold(conversationId, message.id, input.text));
+  if (!isOwner && input.runAgents !== false && !answeredHold) schedule(conversationId, message.id);
 
   await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", conversationId);
   await logEvent(isOwner ? "owner" : "customer", "message.received", { type: "message", id: message.id }, {
@@ -68,24 +81,25 @@ export async function ingestInbound(input: InboundMessage): Promise<{ conversati
     return { conversationId, messageId: message.id };
   }
 
-  await supersedePendingReplies(conversationId);
+  if (!answeredHold) await supersedePendingReplies(conversationId);
   return { conversationId, messageId: message.id };
 }
 
 async function findOrCreateCustomer(handle: string, name?: string): Promise<string | null> {
-  const { data: existing } = await db().from("customers").select("id").eq("handle", handle).maybeSingle();
-  if (existing) return existing.id;
-  if (!name) return null;
-  const { data, error } = await db().from("customers").insert({ name, handle }).select("id").single();
-  if (error) throw new Error(`insert customer: ${error.message}`);
-  return data.id;
+  if (name) {
+    const saved = await rememberCustomerName(handle, name);
+    if (saved) return saved.customerId;
+  }
+  return ensureCustomer(handle);
 }
 
 async function upsertConversation(input: InboundMessage, handle: string, customerId: string | null, isOwner: boolean) {
   const query = db().from("conversations").select("id, customer_id, role");
   const { data: existing } = input.photon
     ? await query.eq("photon_space_id", input.photon.spaceId).maybeSingle()
-    : await query.eq("handle", handle).eq("platform", input.platform).maybeSingle();
+    : input.voice
+      ? await query.eq("handle", handle).eq("platform", input.platform).eq("role", "customer").maybeSingle()
+      : await query.eq("handle", handle).eq("platform", input.platform).maybeSingle();
   if (existing) {
     // The same phone can have texted as a customer before OWNER_HANDLE pointed at it; owner replies need this space.
     if (isOwner && existing.role !== "owner") {
@@ -175,7 +189,7 @@ async function runAgents(conversationId: string, messageId: string) {
     });
     return;
   }
-  await storeDrafts(drafts, conversationId, messageId);
+  await routeDrafts(drafts, conversationId, messageId);
 }
 
 /** A run that finishes after a newer text, or after the owner already answered, would leave a stale ticket. */
@@ -216,7 +230,14 @@ function completeDraftTimes(candidate: unknown): { draft: unknown; fixed: string
 }
 
 /** Validates and stores agent drafts as pending proposals. Returns the stored IDs in input order (null when invalid). */
-export async function storeDrafts(raw: unknown[], conversationId: string | null, messageId: string | null) {
+export async function storeDrafts(
+  raw: unknown[],
+  conversationId: string | null,
+  messageId: string | null,
+  /** Drafts the agent will send itself; the owner isn't texted a "Reply Y" for those. */
+  opts: { quiet?: (draft: ProposalDraft) => boolean } = {},
+) {
+  const quietIdx = new Set<number>();
   const ids: (string | null)[] = [];
   const parents: (number | undefined)[] = [];
   const subject = messageId ? { type: "message", id: messageId } : null;
@@ -242,6 +263,7 @@ export async function storeDrafts(raw: unknown[], conversationId: string | null,
       continue;
     }
     const d = parsed.data;
+    if (opts.quiet?.(d)) quietIdx.add(ids.length);
     const { data, error } = await db()
       .from("proposals")
       .insert({
@@ -279,7 +301,7 @@ export async function storeDrafts(raw: unknown[], conversationId: string | null,
   }
 
   for (const [i, id] of ids.entries()) {
-    if (id && parents[i] === undefined) await notifyOwner(id).catch((err) => console.error("notifyOwner failed", err));
+    if (id && parents[i] === undefined && !quietIdx.has(i)) await notifyOwner(id).catch((err) => console.error("notifyOwner failed", err));
   }
   return ids;
 }

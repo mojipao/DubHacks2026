@@ -27,7 +27,7 @@ import { planFulfillment, planReorder, type FulfillmentPlan } from "./ops.ts";
 import { checkInbound, checkReply } from "./guard.ts";
 import { Budget, generateStructured, isModelConfigured } from "./model.ts";
 import { DRAFT_SYSTEM, draftPrompt } from "./prompts/draft.ts";
-import { matchItems, understand, type Understanding } from "./understand.ts";
+import { matchItems, pendingFromHistory, understand, type Understanding } from "./understand.ts";
 import {
   allergyEvidence,
   capacityEvidence,
@@ -48,7 +48,7 @@ const DraftText = z.object({ text: z.string().min(1).max(600) });
 /**
  * Notes only count as an allergy when they say so.
  *
- * Maya's note is "Usual is 2 almond croissants…", and matching allergen words against
+ * Maya's note is "Usual is 2 pistachio maamoul…", and matching allergen words against
  * the whole note flagged her own favourite order as an allergy risk — wrong flag and a
  * wrong sentence on the demo's happiest ticket.
  */
@@ -56,10 +56,10 @@ const ALLERGY_INDICATOR = /\b(allerg(y|ic|ies)|intoleran(t|ce)|can'?t have|canno
 
 /** Allergen keywords per product, for matching a customer's noted allergy to the menu. */
 const ALLERGEN_KEYWORDS: Record<string, readonly string[]> = {
-  "almond-flour": ["nut", "almond", "tree nut"],
-  "oat-milk": ["oat", "gluten"],
-  butter: ["dairy", "milk", "lactose"],
-  "cream-cheese": ["dairy", "milk", "lactose"],
+  "pistachios": ["nut", "pistachio", "tree nut"],
+  "evaporated-milk": ["oat", "gluten"],
+  ghee: ["dairy", "milk", "lactose"],
+  "sesame-seeds": ["dairy", "milk", "lactose"],
   eggs: ["egg"],
   "bread-flour": ["gluten", "wheat"],
   "whole-milk": ["dairy", "milk", "lactose"],
@@ -138,7 +138,19 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
 
     // 3. Resolve ------------------------------------------------------------
     const step3 = Date.now();
-    const resolved = resolveRequest(reading.value, usual, catalog, customer, business, now, todayLocal, flags, text);
+    const recentTurns = conversation.messages.map((m) => ({ direction: m.direction, body: m.body }));
+    const resolved = resolveRequest(
+      reading.value,
+      usual,
+      catalog,
+      customer,
+      business,
+      now,
+      todayLocal,
+      flags,
+      text,
+      recentTurns,
+    );
 
     ctx.trace("resolve", {
       agent: "intake",
@@ -231,7 +243,7 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
     // 7. Guard --------------------------------------------------------------
     const step7 = Date.now();
     const otherNames = [...new Set(history.map(() => "").filter(Boolean))];
-    let guard = checkReply(drafted.text, {
+    const guardFacts = {
       hasOrder: Boolean(plan?.days.length),
       perkApplies,
       allergyFlagged: flags.has("allergy_mentioned"),
@@ -241,7 +253,8 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
       inboundText: text,
       modelFlags: reading.value,
       poweredByFooter: business.poweredByFooter,
-    });
+    };
+    let guard = checkReply(drafted.text, guardFacts);
 
     let finalText = drafted.text;
     if (!guard.ok && drafted.source === "model" && !budget.exhausted()) {
@@ -260,20 +273,33 @@ export async function handleInbound(input: InboundInput, ctx: AgentContext): Pro
         resolved,
         fixes: guard.blocking,
       });
-      const retryGuard = checkReply(retry.text, {
-        hasOrder: Boolean(plan?.days.length),
-        perkApplies,
-        allergyFlagged: flags.has("allergy_mentioned"),
-        catalog,
-        otherCustomerNames: otherNames,
-        customerFirstName: firstName(customer),
-        inboundText: text,
-        modelFlags: reading.value,
-        poweredByFooter: business.poweredByFooter,
-      });
+      const retryGuard = checkReply(retry.text, guardFacts);
       if (retryGuard.ok || retryGuard.blocking.length < guard.blocking.length) {
         finalText = retry.text;
         guard = retryGuard;
+      }
+    }
+
+    if (!guard.ok) {
+      // Autonomy sends order-less replies on its own. A hallucinated refusal must not
+      // reach the phone; the composed path is the last safe wording.
+      const composed = composeReply({
+        budget,
+        business,
+        customer,
+        text,
+        facts,
+        hasOrder: Boolean(plan?.days.length),
+        flags,
+        plan,
+        catalog,
+        reading: reading.value,
+        resolved,
+      });
+      const composedGuard = checkReply(composed, guardFacts);
+      if (composedGuard.ok || composedGuard.blocking.length <= guard.blocking.length) {
+        finalText = composed;
+        guard = composedGuard;
       }
     }
 
@@ -383,6 +409,7 @@ function resolveRequest(
   todayLocal: string,
   flags: Set<RiskFlag>,
   rawText: string,
+  recentTurns: { direction: "inbound" | "outbound"; body: string }[],
 ): Resolved {
   const known = new Map(catalog.map((p) => [p.id, p]));
 
@@ -405,6 +432,24 @@ function resolveRequest(
     }
   }
 
+  let pickupLocal = reading.pickupLocal;
+
+  const skipCarry =
+    reading.intent === "smalltalk" ||
+    reading.intent === "complaint" ||
+    reading.intent === "question_hours" ||
+    reading.intent === "question_menu" ||
+    reading.intent === "question_order_status" ||
+    reading.offTopic ||
+    reading.abusive;
+  if (!skipCarry) {
+    const pending = pendingFromHistory(recentTurns, catalog, todayLocal, business.timezone);
+    if (items.length === 0 && pending.items.length > 0) {
+      items = pending.items.filter((i) => known.has(i.productId));
+    }
+    if (!pickupLocal && pending.pickupLocal) pickupLocal = pending.pickupLocal;
+  }
+
   // The model sets needsClarification when it cannot tell what was ordered. If resolve
   // then recovered items anyway — most often from the customer's usual, which the model
   // has no way to know — the question has been answered and asking it again reads as
@@ -415,8 +460,12 @@ function resolveRequest(
   const totalCents = items.reduce((sum, i) => sum + (known.get(i.productId)?.priceCents ?? 0) * i.qty, 0);
   const isCatering = units >= business.cateringThresholdUnits;
 
-  let pickupLocal = reading.pickupLocal;
-  if (items.length > 0 && !pickupLocal) flags.add("needs_clarification");
+  const asking =
+    reading.intent === "question_menu" ||
+    reading.intent === "question_hours" ||
+    reading.intent === "question_order_status";
+  if (!asking && items.length > 0 && !pickupLocal) flags.add("needs_clarification");
+  if (!asking && pickupLocal && items.length === 0) flags.add("needs_clarification");
 
   if (pickupLocal) {
     const hours = checkHours(pickupLocal, business);
@@ -459,7 +508,7 @@ function allergenRisk(productId: string, notes: string): boolean {
     const stem = ingredientId.split("-")[0] ?? "";
     if (productId.includes(stem)) return true;
   }
-  return /\b(nut|almond)\b/.test(lower) && productId.includes("almond");
+  return /\b(nut|pistachio)\b/.test(lower) && productId.includes("pistachio");
 }
 
 // ---------------------------------------------------------------------------
@@ -527,7 +576,7 @@ function composeReply(args: DraftArgs): string {
     return "We'd rather keep things friendly here. Happy to help if you'd like to order something.";
   }
   if (reading.offTopic) {
-    return "We're just the coffee shop, so that one's outside our wheelhouse. Can we get you a coffee or something from the case?";
+    return "We're just the coffee house, so that one's outside our wheelhouse. Can we get you a Yemeni coffee or something from the case?";
   }
   if (reading.intent === "complaint") {
     return `${hi} — sorry that happened. The owner will take a look and get back to you today.`;
@@ -538,8 +587,30 @@ function composeReply(args: DraftArgs): string {
     const sun = business.hours.sun;
     return `${hi} — we're open Tuesday to Friday ${business.hours.tue?.open}–${business.hours.tue?.close}, Saturday ${sat?.open}–${sat?.close} and Sunday ${sun?.open}–${sun?.close}. Closed Mondays.${today ? "" : " We're closed today."}`;
   }
-  if (flags.has("needs_clarification") || !plan || plan.days.length === 0) {
-    return `${hi} — happy to help. What would you like, how many, and when would you like to pick it up?`;
+  if (reading.intent === "question_menu") {
+    const priced = (args.resolved.mentioned.length > 0 ? args.resolved.mentioned : args.resolved.items)
+      .map((item) => {
+        const product = catalog.find((p) => p.id === item.productId);
+        return product ? `${product.name} is $${(product.priceCents / 100).toFixed(2)}` : null;
+      })
+      .filter((line): line is string => Boolean(line));
+    if (priced.length > 0 && !/\bmenu\b/i.test(args.text)) {
+      return `${hi} — ${priced.join("; ")}. We take orders over this chat if you'd like one.`;
+    }
+    if (/\bdeliver/i.test(args.text)) {
+      return `${hi} — we don't deliver, pickup only. ${formatCatalogMenu(catalog)} What would you like, and when?`;
+    }
+    return `${hi} — ${formatCatalogMenu(catalog)} What would you like, and when will you pick it up?`;
+  }
+  if (!plan || plan.days.length === 0) {
+    if (args.resolved.items.length > 0 && !args.resolved.pickupLocal) {
+      const what = args.resolved.items.map(label).join(" and ");
+      return `${hi} — ${what}. When would you like to pick it up?`;
+    }
+    if (args.resolved.pickupLocal && args.resolved.items.length === 0) {
+      return `${hi} — we can do pickup ${friendlyPickup(args.resolved.pickupLocal, business.timezone)}. What would you like?${menuInvite(catalog)}`;
+    }
+    return `${hi} — we take orders over this chat. What would you like, and when will you pick it up?${menuInvite(catalog)}`;
   }
 
   const [first, second] = plan.days;
@@ -585,8 +656,13 @@ function factLines(args: {
     lines.push(`Cannot make at all in the next few days: ${missed.qty}x ${nameOf(missed.productId)}`);
   }
   if (perkApplies) lines.push("Perk: 10% off, welcome back (the customer has not ordered in over a month)");
-  if (reading.intent === "question_menu" || reading.intent === "question_hours") {
+  if (reading.intent === "question_hours") {
     lines.push(`Shop hours: Tue-Fri ${business.hours.tue?.open}-${business.hours.tue?.close}, Sat-Sun ${business.hours.sat?.open}-${business.hours.sat?.close}, closed Monday`);
+  }
+  if (reading.intent === "question_menu") {
+    lines.push(
+      `Full menu (quote these prices; do not give hours; do not mention a website or app): ${formatCatalogMenu(catalog, 900)}`,
+    );
   }
 
   // A price question only gets answered if the price is in the facts; the model is not
@@ -598,14 +674,57 @@ function factLines(args: {
       if (product) lines.push(`Menu price: ${product.name} is $${(product.priceCents / 100).toFixed(2)} each`);
     }
   }
-  if (reading.needsClarification && reading.clarifyingQuestion && resolved.items.length === 0) {
+  const refuseChat = /can'?t take orders|cannot take orders|through this (chat|message)|website or app/i;
+  if (reading.needsClarification && reading.clarifyingQuestion && resolved.items.length === 0 && !refuseChat.test(reading.clarifyingQuestion)) {
     lines.push(`Needs clarification: ${reading.clarifyingQuestion}`);
   }
-  if (resolved.items.length > 0 && !plan) {
-    lines.push("No pickup time was given, so nothing is scheduled yet.");
+  const asking =
+    reading.intent === "question_menu" ||
+    reading.intent === "question_hours" ||
+    reading.intent === "question_order_status";
+  if (!asking && resolved.items.length > 0 && !plan) {
+    lines.push(
+      `Heard: ${resolved.items.map((i) => `${i.qty}x ${nameOf(i.productId)}`).join(", ")}. Ask only for a pickup day and time. Do not confirm or prepare anything yet.`,
+    );
+  } else if (!asking && resolved.pickupLocal && resolved.items.length === 0) {
+    lines.push(
+      `Heard pickup ${friendlyPickup(resolved.pickupLocal, business.timezone)}. Ask what they would like. Suggest Yemeni coffee (Haraz), Adeni chai, or milk cake.`,
+    );
+  } else if (!plan || plan.days.length === 0) {
+    if (reading.intent === "complaint" || reading.offTopic || reading.abusive) {
+      if (lines.length === 0) lines.push("Answer briefly; do not take an order.");
+    } else {
+      lines.push(
+        "This shop takes orders by text. Invite an order: what they want, and a pickup time. Suggest Yemeni coffee (Haraz), Adeni chai, or milk cake. Never send them to a website or app.",
+      );
+    }
   }
-  if (lines.length === 0) lines.push("Nothing orderable in this message; answer the question or redirect politely.");
   return lines;
+}
+
+const menuInvite = (catalog: Product[]): string => {
+  const names = ["yemeni-coffee", "adeni-chai", "milk-cake"]
+    .map((id) => catalog.find((p) => p.id === id)?.name)
+    .filter((name): name is string => Boolean(name));
+  if (names.length === 0) return "";
+  if (names.length === 1) return ` ${names[0]} is easy to start with.`;
+  return ` ${names.slice(0, -1).join(", ")}, or ${names[names.length - 1]}?`;
+};
+
+/** A compact in-chat menu from the catalog. iMessage has no place for a link. */
+function formatCatalogMenu(catalog: Product[], budget = 360): string {
+  const active = catalog.filter((p) => p.active);
+  const price = (cents: number): string => `$${(cents / 100).toFixed(2).replace(/\.00$/, "")}`;
+  const short = (name: string): string => name.replace(/\s*\([^)]*\)/g, "").replace(/,.*/, "").trim();
+  const line = (items: Product[]): string => items.map((p) => `${short(p.name)} ${price(p.priceCents)}`).join(", ");
+  const drinks = active.filter((p) => p.category === "drink");
+  const food = active.filter((p) => p.category !== "drink");
+  const body = (d: Product[]): string => `Drinks: ${line(d)}. Case: ${line(food)}.`;
+  const full = body(drinks);
+  if (full.length <= budget) return full;
+  const core = drinks.filter((p) => p.id !== "coffee-box" && p.id !== "yemeni-beans");
+  const trimmed = body(core);
+  return trimmed.length <= budget ? trimmed : `${trimmed.slice(0, budget - 1)}…`;
 }
 
 // ---------------------------------------------------------------------------

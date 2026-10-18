@@ -9,6 +9,7 @@ import {
 import { business } from "./business.ts";
 import { db } from "./db.ts";
 import { logEvent, type Actor } from "./events.ts";
+import { imessageThread } from "./identity.ts";
 
 type Proposal = Tables<"proposals">;
 type Conversation = Tables<"conversations">;
@@ -71,7 +72,8 @@ export class HttpError extends Error {
 export interface DecisionOptions {
   includeLinked?: boolean;
   actor?: Actor;
-  via?: "control_room" | "imessage";
+  /** "agent" when the agent sent it on its own (no order, nothing flagged); "voice" for a phone order. */
+  via?: "control_room" | "imessage" | "agent";
 }
 
 /** Approves and executes a pending proposal, then its linked children when asked. A failed child does not undo the parent. */
@@ -178,23 +180,48 @@ async function executeReply(p: Proposal, editedText: string | undefined) {
   await sendAndRecord(conversation, body, p.id);
 }
 
+/**
+ * Phone-call tickets live on a simulated thread (no Photon space). If this number has also
+ * texted the shop, deliver through that iMessage space so Approve actually sends the payment link.
+ */
+async function deliveryConversation(conversation: Conversation): Promise<Conversation> {
+  if (conversation.platform === "imessage" && conversation.photon_space_id && conversation.photon_agent_user_id) {
+    return conversation;
+  }
+  return (await imessageThread(conversation.handle)) ?? conversation;
+}
+
 /** Sends through the active Messenger (Photon for iMessage, nothing for simulated), then stores the outbound row and event. */
 export async function sendAndRecord(conversation: Conversation, body: string, proposalId: string | null, idempotencyKey?: string) {
-  const sent = await messenger.send({ conversation, text: body, proposalId: proposalId ?? "", idempotencyKey });
-  const { data: message, error } = await db()
-    .from("messages")
-    .insert({
-      conversation_id: conversation.id,
-      direction: "outbound",
-      body,
-      photon_message_id: sent.photonMessageId,
-      status: "sent",
-    })
-    .select("id")
-    .single();
-  if (error) throw new Error(`store outbound message: ${error.message}`);
-  await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", conversation.id);
-  await logEvent("system", "message.sent", { type: "message", id: message.id }, { proposalId, platform: conversation.platform });
+  const via = await deliveryConversation(conversation);
+  const sent = await messenger.send({ conversation: via, text: body, proposalId: proposalId ?? "", idempotencyKey });
+  const write = async (convId: string) => {
+    const { data: message, error } = await db()
+      .from("messages")
+      .insert({
+        conversation_id: convId,
+        direction: "outbound",
+        body,
+        photon_message_id: sent.photonMessageId,
+        status: "sent",
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(`store outbound message: ${error.message}`);
+    await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", convId);
+    return message;
+  };
+  const message = await write(conversation.id);
+  // The call transcript stays on the simulated thread; the iMessage thread also gets the text the phone received.
+  if (via.id !== conversation.id) await write(via.id);
+  // `key` says why it went out (hold:, hold-yes:, campaign:, owner-message:, owner-reply:, notify:), for the owner's log.
+  await logEvent("system", "message.sent", { type: "message", id: message.id }, {
+    proposalId,
+    platform: via.platform,
+    recordedPlatform: conversation.platform,
+    photonMessageId: sent.photonMessageId,
+    key: idempotencyKey ?? null,
+  });
   return message.id;
 }
 
@@ -307,7 +334,7 @@ export async function retry(id: string, opts: DecisionOptions = {}): Promise<Pro
 const WELCOME_BACK_RATE = 0.1;
 
 /** The server, not the agent, decides perk eligibility: a returning customer whose last past pickup is old enough. */
-async function perkEligible(customerId: string | null): Promise<boolean> {
+export async function perkEligible(customerId: string | null): Promise<boolean> {
   if (!customerId) return false;
   const { data } = await db()
     .from("orders")

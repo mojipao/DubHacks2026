@@ -28,11 +28,10 @@ export default function JoinQrPage() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-10 px-6 py-10 text-center">
       <div>
-        <p className="badge-brand !text-[15px]">{SHOP_NAME} · Back of House</p>
         <h1 className="mt-3 heading text-7xl tracking-tight text-fg">Text the shop.</h1>
         <p className="mx-auto mt-3 max-w-xl text-[19px] leading-relaxed text-muted">
-          Scan, get the shop&apos;s number, and text it like a regular. Try to trick it, too: every reply waits for the
-          owner.
+          Scan, get {SHOP_NAME}&apos;s number, and text it like a regular. The first message has to be a{" "}
+          <span className="font-semibold text-ink">blue</span> iMessage, not a green SMS. Orders wait for the owner.
         </p>
       </div>
       <div className="ticket-paper ticket-strip relative overflow-hidden rounded-[24px] p-8">
@@ -42,15 +41,15 @@ export default function JoinQrPage() {
           <div className="size-[320px]" />
         )}
       </div>
-      <ol className="flex flex-wrap justify-center gap-x-8 gap-y-2 font-mono text-[15px] text-fg/80">
+      <ol className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-[16px] text-ink/80">
         <li>
-          <span className="rounded-full bg-cherry px-1.5 text-ink">1</span> scan
+          <span className="mr-1 inline-flex size-6 items-center justify-center rounded-full bg-brew text-[13px] font-bold text-paper">1</span> scan
         </li>
         <li>
-          <span className="rounded-full bg-cherry px-1.5 text-ink">2</span> enter your number
+          <span className="mr-1 inline-flex size-6 items-center justify-center rounded-full bg-brew text-[13px] font-bold text-paper">2</span> enter your number
         </li>
         <li>
-          <span className="rounded-full bg-cherry px-1.5 text-ink">3</span> text the shop
+          <span className="mr-1 inline-flex size-6 items-center justify-center rounded-full bg-brew text-[13px] font-bold text-paper">3</span> text the shop
         </li>
       </ol>
       <p className="font-mono text-[14px] text-muted">{url ?? " "}</p>

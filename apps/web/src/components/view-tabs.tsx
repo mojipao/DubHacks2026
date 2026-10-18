@@ -1,34 +1,33 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
-import { CalendarClock, ClipboardCheck, MessagesSquare, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type View = "pass" | "conversations" | "customers" | "today";
+export type View = "orders" | "today" | "people" | "ask" | "ops";
 
-export const VIEWS: { id: View; label: string; key: string; icon: typeof ClipboardCheck; hint: string }[] = [
-  { id: "pass", label: "Pass", key: "1", icon: ClipboardCheck, hint: "Replies and restocks waiting for you" },
-  { id: "conversations", label: "Messages", key: "2", icon: MessagesSquare, hint: "Every text thread" },
-  { id: "customers", label: "Leads", key: "3", icon: Users, hint: "Everyone who has texted, and whether they ordered" },
-  { id: "today", label: "Today", key: "4", icon: CalendarClock, hint: "Pickups, money, stock, time saved" },
+export const VIEWS: { id: View; label: string; key: string; hint: string }[] = [
+  { id: "orders", label: "Orders", key: "1", hint: "Replies and restocks waiting for you" },
+  { id: "today", label: "Today", key: "2", hint: "Pickups, money, and anything running low" },
+  { id: "people", label: "People", key: "3", hint: "Everyone who has texted or called, and their messages" },
+  { id: "ask", label: "Ask", key: "4", hint: "Ask the agent about stock, text customers, or place a call" },
+  { id: "ops", label: "House", key: "5", hint: "Leads, Square-paid sales, stock replenish dates" },
 ];
 
-/** Editorial nav — underline active state, not cream pills. */
+/** Plain text tabs on the brown band; waiting counts are the only colour. */
 export function ViewTabs({
   view,
   onChange,
-  counts,
+  waiting,
 }: {
   view: View;
   onChange: (view: View) => void;
-  counts: Record<View, { n: number; alert?: boolean }>;
+  /** Orders waiting on the owner. */
+  waiting: number;
 }) {
-  const reduce = useReducedMotion();
   return (
-    <nav role="tablist" aria-label="Views" className="flex items-center gap-1 overflow-x-auto">
+    <nav role="tablist" aria-label="Views" className="flex h-full items-stretch gap-0.5 sm:gap-1">
       {VIEWS.map((v) => {
         const active = v.id === view;
-        const c = counts[v.id];
+        const n = v.id === "orders" ? waiting : 0;
         return (
           <button
             key={v.id}
@@ -39,29 +38,23 @@ export function ViewTabs({
             onClick={() => onChange(v.id)}
             title={`${v.hint} (${v.key})`}
             className={cn(
-              "relative flex shrink-0 items-center gap-2 px-3 py-2 text-[14px] font-medium tracking-[0.04em] transition-colors",
-              active ? "text-fg" : "text-muted hover:text-fg",
+              "relative flex items-center gap-1.5 px-1.5 text-[14px] font-semibold transition-colors duration-150 sm:gap-2 sm:px-4 sm:text-[15px]",
+              active ? "text-shell-fg" : "text-shell-fg/60 hover:text-shell-fg",
             )}
           >
-            <v.icon className="relative size-4 opacity-80" />
-            <span className="relative">{v.label}</span>
-            {c.n > 0 && (
-              <span
-                className={cn(
-                  "relative min-w-5 rounded-full px-1.5 text-center text-[12px] leading-5 font-semibold tabular-nums",
-                  c.alert ? "bg-cherry text-white" : "bg-surface-2 text-fg/80",
-                )}
-              >
-                {c.n}
+            {v.label}
+            {n > 0 && (
+              <span className="min-w-5 rounded-full bg-qishr px-1.5 text-center text-[12px] leading-5 font-bold text-shell tabular sm:min-w-6 sm:text-[13px] sm:leading-6">
+                {n}
               </span>
             )}
-            {active && (
-              <motion.span
-                layoutId="view-tab-line"
-                className="absolute inset-x-2 -bottom-px h-px bg-crema"
-                transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 40 }}
-              />
-            )}
+            <span
+              aria-hidden
+              className={cn(
+                "absolute inset-x-3 bottom-0 h-[3px] rounded-t-full bg-qishr transition-opacity duration-150",
+                active ? "opacity-100" : "opacity-0",
+              )}
+            />
           </button>
         );
       })}

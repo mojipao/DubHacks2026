@@ -89,6 +89,7 @@ export function createMockSource(): DataSource {
   const listeners = new Set<(patch: Partial<DataSnapshot>) => void>();
   /** order id → its proposal's payment link, so a split counteroffer pays as one, like on the server. */
   const paymentLinkOf = new Map<string, string>();
+  const sentClientIds = new Set<string>();
 
   const log = (e: Omit<UiEvent, "id" | "at"> & { at?: string }) => {
     snap.events = [{ id: uid("evt"), at: e.at ?? new Date().toISOString(), ...e }, ...snap.events].slice(0, 500);
@@ -181,7 +182,11 @@ export function createMockSource(): DataSource {
     log({ actor: "system", type: "proposal.executed", subjectType: "proposal", subjectId: p.id, data: { kind: p.kind } });
   };
 
-  const approveIds = async (id: string, opts: { includeLinked?: boolean; editedText?: string }, via: "control_room" | "imessage") => {
+  const approveIds = async (
+    id: string,
+    opts: { includeLinked?: boolean; editedText?: string; alternativeIndex?: number },
+    via: "control_room" | "imessage",
+  ) => {
     const target = snap.proposals.find((p) => p.id === id);
     if (!target || target.status !== "pending") {
       throw Object.assign(new Error("Proposal is not pending"), { status: 409 });
@@ -200,7 +205,12 @@ export function createMockSource(): DataSource {
     // Parent first, then children, as the server does.
     for (const pid of ids) {
       const p = snap.proposals.find((x) => x.id === pid);
-      if (p) executeOne(p, via, pid === id ? opts.editedText : undefined);
+      // An alternative wording goes out exactly like an edit of the main draft, as on the server.
+      const alt =
+        pid === id && opts.alternativeIndex !== undefined && p?.kind === "reply"
+          ? (p.payload as ReplyPayload).alternatives?.[opts.alternativeIndex]
+          : undefined;
+      if (p) executeOne(p, via, pid === id ? (alt ?? opts.editedText) : undefined);
     }
     commit("proposals", "events", "messages", "orders", "ingredients");
     return ids;
@@ -306,6 +316,19 @@ export function createMockSource(): DataSource {
     async reject(id, opts) {
       rejectIds(id, opts ?? {}, "control_room");
     },
+    async sendMessage(conversationId, text, clientId) {
+      if (sentClientIds.has(clientId)) return;
+      sentClientIds.add(clientId);
+      const conv = snap.conversations.find((c) => c.id === conversationId);
+      // Same rules as the server: the footer on customer threads, and the pending agent reply steps aside.
+      const body = conv?.role === "owner" ? text : `${text}\n${BUSINESS.poweredByFooter}`;
+      const msg = addMessage(conversationId, "outbound", body);
+      log({ actor: "owner", type: "owner.message", subjectType: "message", subjectId: msg.id, data: { conversationId } });
+      const superseded = snap.proposals.filter((p) => p.conversationId === conversationId && p.status === "pending" && p.kind === "reply");
+      setProposals(superseded.map((p) => p.id), { status: "superseded" });
+      for (const p of superseded) log({ actor: "system", type: "proposal.superseded", subjectType: "proposal", subjectId: p.id, data: { by: "owner.message" } });
+      commit("messages", "events", "proposals");
+    },
     async retry(id) {
       const target = snap.proposals.find((p) => p.id === id);
       if (!target || target.status !== "failed") {
@@ -327,8 +350,13 @@ export function createMockSource(): DataSource {
         throw Object.assign(new Error("This order is already paid"), { status: 409 });
       }
       await sleep(700);
+      // One link covers both halves of a split, so the customer pays (and we report) the whole link.
+      const link = paymentLinkOf.get(orderId);
+      const onLink = snap.orders.filter(
+        (o) => o.status === "awaiting_payment" && (o.id === orderId || (link !== undefined && paymentLinkOf.get(o.id) === link)),
+      );
       settle(orderId, "square", "square-sandbox");
-      return { amountCents: order.totalCents - order.discountCents };
+      return { amountCents: onLink.reduce((n, o) => n + o.totalCents - o.discountCents, 0) };
     },
     async listContacts() {
       return snap.conversations.map((c): UiContact => {
@@ -408,12 +436,12 @@ export function createMockSource(): DataSource {
         rationale: "Elena came every other Saturday for four months, then stopped. Offer her usual cold brew, 10% off.",
         payload: {
           text: `Hi Elena, it's been a while. Want your cold brew on us at 10% off this Saturday? ${PAYMENT_LINK_TOKEN}\n— ${BRAND_SHORT}`,
-          orders: [{ items: [{ productId: "cold-brew", qty: 1 }, { productId: "cardamom-knot", qty: 1 }], pickupAt: FIXTURE_SAT_PICKUP, perk: "welcome_back_10" }],
+          orders: [{ items: [{ productId: "cold-brew", qty: 1 }, { productId: "sesame-kaak", qty: 1 }], pickupAt: FIXTURE_SAT_PICKUP, perk: "welcome_back_10" }],
         },
         evidence: [
           { label: "Cadence", value: "Every 14 days for four months", source: { table: "customers", id: elena.id } },
           { label: "Last order", value: "6 weeks ago (3× her usual gap)", source: { table: "orders", id: "elena-last" } },
-          { label: "Usual", value: "1× cold brew, 1× cardamom knot", source: { table: "orders", id: "elena-last" } },
+          { label: "Usual", value: "1× cold brew, 1× sesame kaak", source: { table: "orders", id: "elena-last" } },
         ],
         reads: [
           { table: "customers", id: elena.id },

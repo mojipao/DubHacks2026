@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { useStore } from "@/lib/data/store";
 import type { UiEvent } from "@/lib/data/types";
-import { maskHandle, shortRelativeTime } from "@/lib/format";
+import { personLabel, shortRelativeTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type Line = { id: string; at: string; text: string; tone: "fg" | "basil" | "cherry" | "sky" | "crema" };
@@ -17,7 +17,7 @@ export function Activity({ limit = 8 }: { limit?: number }) {
       const c = state.conversations.find((x) => x.id === id);
       if (!c) return "A customer";
       if (c.role === "owner") return "You";
-      return c.customerName?.split(" ")[0] ?? maskHandle(c.handle);
+      return personLabel(c.customerName).split(" ")[0];
     };
     const kindOf = (id: string | null) => state.proposals.find((p) => p.id === id)?.kind;
     const say = (e: UiEvent): Omit<Line, "id" | "at"> | null => {
@@ -57,26 +57,18 @@ export function Activity({ limit = 8 }: { limit?: number }) {
   }, [state.events, state.conversations, state.proposals, limit]);
 
   return (
-    <section className="border-t border-line/40 pt-6">
-      <h2 className="heading text-[15px] text-muted">What just happened</h2>
+    <section>
+      <h2 className="mb-3 text-[20px] font-bold text-ink">What happened</h2>
       {lines.length === 0 ? (
-        <p className="mt-3 text-[14px] text-muted">Nothing yet today.</p>
+        <p className="border-t border-line py-4 text-[15px] text-muted">Nothing yet today.</p>
       ) : (
-        <ol className="mt-3 space-y-2.5">
+        <ol className="divide-y divide-line border-t border-line">
           {lines.map((l) => (
-            <li key={l.id} className="flex items-center gap-3">
-              <span
-                className={cn(
-                  "size-2 shrink-0 rounded-full",
-                  l.tone === "basil" && "bg-basil",
-                  l.tone === "cherry" && "bg-cherry",
-                  l.tone === "sky" && "bg-sky",
-                  l.tone === "crema" && "bg-crema",
-                  l.tone === "fg" && "bg-fg/50",
-                )}
-              />
-              <span className="min-w-0 flex-1 truncate text-[14px] text-fg">{l.text}</span>
-              <span className="shrink-0 text-[12px] text-muted">{shortRelativeTime(l.at)}</span>
+            <li key={l.id} className="grid grid-cols-[4.75rem_1fr] gap-x-4 py-2.5 text-[15px]">
+              <span className="text-[14px] text-muted tabular">{shortRelativeTime(l.at)}</span>
+              <span className={cn("min-w-0 truncate", l.tone === "cherry" ? "font-semibold text-qamar" : l.tone === "basil" ? "text-terrace" : "text-ink")}>
+                {l.text}
+              </span>
             </li>
           ))}
         </ol>

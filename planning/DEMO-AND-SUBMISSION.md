@@ -29,15 +29,15 @@ Everyone reads this by Sunday 6:00 AM. Lane 3's agent drafts the written submiss
 
 | Time | Who | What happens | What we say |
 | --- | --- | --- | --- |
-| 0:00 | Presenter | Control room on screen, rail empty, QR facing judges | "Small bakeries run on texts: orders, catering, questions, all landing on the owner's phone while she's elbow-deep in dough. Back of House is the agent team behind her counter. Scan that code now; you'll get to text the bakery in a minute." |
+| 0:00 | Presenter | Control room on screen, rail empty, QR facing judges | "Small bakeries run on texts: orders, catering, questions, all landing on the owner's phone while she's elbow-deep in dough. Back of House is the agent team behind her counter. Scan that code now; you'll get to text the coffee house in a minute." |
 | 0:15 | Maya's phone | Texts the real iMessage number: "can I get the usual for Saturday 9am?" | "This is a real iMessage, through Photon." |
 | 0:25 | Screen | Ticket slides onto the pass: rationale line, "read 14 orders · 1 customer · Saturday capacity," confidence | "Intake recognized Maya, found her usual, checked Saturday's capacity and stock, and noticed she hasn't been in for six weeks, so it added a welcome-back perk." |
 | 0:35 | Owner's phone | Buzzes: "Maya wants the usual Sat 9am, $18.50... Reply Y K3." Owner replies Y. | "The owner has flour on her hands. She approves from her phone." |
 | 0:45 | Screen + Maya's phone | Ticket stamps "APPROVED BY TEXT." Maya gets the reply with a Square link and starts paying. | "Nothing goes out until the owner says so, from the dashboard or a one-letter text." |
-| 0:55 | Jun (simulator) | "Can I get 4 dozen croissants for Saturday 9am?" | "Now the hard one." |
-| 1:05 | Screen | Linked set: COUNTEROFFER reply ("Can't fit 48 Saturday: 24 Sat, 24 Sun") clipped to an Ops butter reorder | "A normal ordering system says yes and the bakery finds out Friday night. Our agent says no." |
-| 1:15 | Presenter | Opens the drawer trace | "Here's why: Saturday has 24 croissants of capacity left, Sunday has 30, and 48 would run us out of butter. So it split the order across both days behind one payment link, and drafted the butter reorder that makes Sunday possible. Every number links to the record it came from." |
-| 1:40 | Presenter | Approve both. Stamps in sequence; butter bar shows on-order hatching. Meanwhile Maya's payment lands: order paid, stock drops. | "One approval: the customer gets the plan, the supplier gets the order, and Square has already confirmed Maya's payment." |
+| 0:55 | Jun (simulator) | "Can I get 4 dozen milk cakes for Saturday 9am?" | "Now the hard one." |
+| 1:05 | Screen | Linked set: COUNTEROFFER reply ("Can't fit 48 Saturday: 24 Sat, 24 Sun") clipped to an Ops ghee reorder | "A normal ordering system says yes and the coffee house finds out Friday night. Our agent says no." |
+| 1:15 | Presenter | Opens the drawer trace | "Here's why: Saturday has 24 milk cakes of capacity left, Sunday has 30, and 48 would run us out of ghee. So it split the order across both days behind one payment link, and drafted the ghee reorder that makes Sunday possible. Every number links to the record it came from." |
+| 1:40 | Presenter | Approve both. Stamps in sequence; ghee bar shows on-order hatching. Meanwhile Maya's payment lands: order paid, stock drops. | "One approval: the customer gets the plan, the supplier gets the order, and Square has already confirmed Maya's payment." |
 | 1:55 | Judge's phone | Judge texts whatever they want, often an attack | "Go ahead, try to break it." |
 | 2:10 | Screen | Guard banner: "Guard: asked to ignore instructions and for free bread. Reply declines; no order." | "Guard flags it, the reply politely declines, and prices are set by our server, never by the model, so there's nothing to win. VEYZL audits every pull request against AI controls, and it changed what we shipped:" one sentence on the real finding. |
 | 2:30 | Presenter | Points at the friction strip, then `/audit` | "Seven messages handled, three orders, one reorder, one attack caught, roughly forty minutes of an owner's morning, and zero messages sent without a human approving them." |
@@ -76,7 +76,7 @@ Never pretend a fallback is live. Judges respect honesty and punish being caught
 
 ## Devpost checklist
 
-- [ ] Project name, tagline: "The agent team behind a small bakery's counter."
+- [ ] Project name, tagline: "The agent team behind a small coffee house's counter."
 - [ ] Description from `submission/devpost.md`.
 - [ ] Demo video, 2 to 3 minutes, uploaded unlisted, recorded from a real run (screen plus phone).
 - [ ] Repo link (public, or access granted per organizer rules).

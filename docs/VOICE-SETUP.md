@@ -8,7 +8,7 @@ Steps verified against the Photon beta cookbook and our own project on 2026-10-1
 
 ```
 caller ──phone──> Photon SMS number ──SIP──> ElevenLabs ──tool call──> our server
-                  (carrier only)             (runs the conversation)   (the bakery brain)
+                  (carrier only)             (runs the conversation)   (the coffee house brain)
 ```
 
 Photon does **not** do speech-to-text, the AI turn, or text-to-speech. It connects the phone network to a voice provider over SIP, and ElevenLabs runs the live conversation. Our agents stay where they are: ElevenLabs calls our server mid-conversation, the same `handleInbound` pipeline runs, and **a ticket appears on the same pass the texts land on**, for the same owner approval.
@@ -18,7 +18,7 @@ That is the point of doing this at all. A voice bot that recites opening hours i
 ## Before you start
 
 - **A shared iMessage line cannot take calls.** Our current line is shared, so voice needs its own number. This does not affect the iMessage demo at all.
-- Area code **206** is available, which is the right area code for a Seattle bakery.
+- Area code **206** is available, which is the right area code for a Seattle coffee house.
 - Photon's free plan covers iMessage sends; **a purchased SMS number may bill**. Check the price in the dialog before confirming, and say so in the team chat.
 
 ## Part 1 — Photon
@@ -42,12 +42,12 @@ node --env-file=.env -e 'const P=process.env.PHOTON_PROJECT_ID,K=process.env.PHO
 
 **So the Photon half is finished.** A call to that number is already being handed to `sips:sip.rtc.elevenlabs.io:5061`. Until an ElevenLabs agent is listening there, the call will not be answered — that is expected, and it is the only thing left.
 
-**Outbound SIP is still not configured and is not needed.** It returns `402 ENTITLEMENT_REQUIRED` without a card on the organization, and Photon's docs call outbound credentials "not required for incoming-only setup". Our demo is a judge calling the bakery.
+**Outbound SIP is still not configured.** It returns `402 ENTITLEMENT_REQUIRED` without a card on the organization. The workaround is tap-to-call-back: asking the agent to "call Maya" texts her `PHOTON_VOICE_NUMBER` as a tappable line, and `POST /voice/tools/purpose` tells the voice agent why she rang.
 
 ## Part 2 — ElevenLabs (about 15 minutes)
 
 6. **Sign up** at `elevenlabs.io`. The free tier is enough for a demo; check the included minutes before relying on it.
-7. **Create the agent.** Conversational AI → new agent. Give it the bakery's voice and the hard rules below.
+7. **Create the agent.** Conversational AI → new agent. Give it the coffee house's voice and the hard rules below.
 8. **Import the number.** Phone Numbers → **Deploy** → **Import number** → **From SIP Trunk**, and enter the Photon number in international format (`+1206…`).
 9. **Inbound config:** Media Encryption **Allowed**. Leave allowed numbers, IPs, domains and credentials empty for now.
 10. **Outbound config: skip it.** It needs SIP credentials that require a payment method, and an incoming-only setup does not use them. Come back to this only if the agent must place outbound calls.
@@ -87,7 +87,7 @@ The voice agent is a customer-facing surface with the same obligations as the te
 Record under "Voice facts verified" in `docs/CONTEXT.md`:
 
 - Whether an inbound call connects at all, and how long the agent takes to answer
-- Transcription quality on the demo items, especially "pain au chocolat" and "4 dozen croissants"
+- Transcription quality on the demo items, especially "bint al-sahn" and "4 dozen milk cakes"
 - Whether the tool call reaches our server, and the round-trip latency
 - Any Photon or ElevenLabs error codes, verbatim
 

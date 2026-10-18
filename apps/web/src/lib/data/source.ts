@@ -28,7 +28,10 @@ export type DataSource = {
   mode: ConnectionMode;
   load(): Promise<DataSnapshot>;
   subscribe(onChange: (patch: Partial<DataSnapshot>) => void): () => void;
-  approve(id: string, opts?: { editedText?: string; includeLinked?: boolean }): Promise<void>;
+  /** `alternativeIndex` sends one of the agents' alternative wordings instead of the main draft. */
+  approve(id: string, opts?: { editedText?: string; alternativeIndex?: number; includeLinked?: boolean }): Promise<void>;
+  /** The owner's own message; it supersedes any pending agent reply in that thread. */
+  sendMessage(conversationId: string, text: string, clientId: string): Promise<void>;
   reject(id: string, opts?: { reason?: string; includeLinked?: boolean }): Promise<void>;
   simulateInbound(input: { handle: string; name?: string; text: string }): Promise<void>;
   retry(id: string): Promise<void>;

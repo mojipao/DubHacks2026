@@ -67,3 +67,20 @@ export function nextWeekday(localDate: string, day: Weekday): string {
   }
   throw new Error("unreachable");
 }
+
+const WEEKDAY_WORDS: Record<string, Weekday> = {
+  monday: "mon", tuesday: "tue", wednesday: "wed", thursday: "thu", friday: "fri", saturday: "sat", sunday: "sun",
+  mon: "mon", tue: "tue", tues: "tue", wed: "wed", thu: "thu", thur: "thu", thurs: "thu", fri: "fri", sat: "sat", sun: "sun",
+};
+
+/** "today", "tomorrow", "Saturday" (the next one after today), or "2026-10-24" → a local date. Unrecognised → null. */
+export function resolveSpokenDay(spoken: string | undefined, today: string): string | null {
+  const s = (spoken ?? "today").trim().toLowerCase().replace(/^(this|next|on)\s+/, "");
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  if (s === "" || s === "today" || s === "now") return today;
+  if (s === "tomorrow") return addDays(today, 1);
+  const day = WEEKDAY_WORDS[s.replace(/s$/, "")] ?? WEEKDAY_WORDS[s];
+  if (!day) return null;
+  // Same rule as the agents and the seed: a weekday name means the first one strictly after today.
+  return nextWeekday(today, day);
+}

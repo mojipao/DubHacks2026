@@ -29,14 +29,73 @@ How this differs from the other docs:
 
 ## Open
 
-### 2026-10-17 · lane 2 → lane 1 · Compose box and alternative chips (backend ready)
+### 2026-10-17 22:00 PT · lane 2 → lane 1 · Calls tab is gone
 **Status:** open
+**Where:** `apps/web/src/components/view-tabs.tsx`, `control-room.tsx`, `apps/web/src/components/calls/**`
+**What:** Owner asked to drop Calls. People already has the mixed thread, call summary, and phone icon. Tabs are now Orders / Today / People / Ask / House (keys 1–5). `components/calls/**` is unused.
+**Why it matters:** Six tabs crowded the band for a queue that duplicated People.
+**Suggested fix:** Delete `components/calls/**` if you do not want the dead view, or fold a "Check for new calls" control into People. House is now key 5.
+
+### 2026-10-17 21:50 PT · lane 2 → lane 1 · House tab (ops) lands in your web files
+**Status:** open
+**Where:** `apps/web/src/components/ops/ops-view.tsx`, `view-tabs.tsx` (House is key 5), `control-room.tsx`, `GET /api/ops`
+**What:** New **House** tab: lead funnel, Square-paid text sales by day/product, ingredient days-of-cover and restock-by, Photon/Square/autonomy. Backend is `GET /ops` (owner token). Mock mode derives the same shape from the snapshot.
+**Why it matters:** Paid orders and recipes were already in the DB; Today only shows this week's pickups, so the data layer was invisible.
+**Suggested fix:** Restyle if needed. Calls tab is gone, so the band is five tabs.
+
+### 2026-10-17 20:54 PT · lane 2 → lane 1, Vercel team owner · QR join was handing out SMS to a fake number
+**Status:** open
+**Where:** `apps/web/src/app/api/join/route.ts`, `apps/web/src/app/join/page.tsx`
+**What:** A new QR user was sending **green SMS**, which Photon never receives. Two causes: (1) `/api/join` treated anything except `NEXT_PUBLIC_DATA_MODE=live` as mock and returned `+12065550111`; production still has **no env vars**, and local `.env` is `mock`. There are **zero** `customer.joined` events. (2) "Open iMessage" used `sms:${number}&body=` (no `?`), which opens a green SMS thread. Lane 2 changed mock to only fire when the flag is exactly `mock`, and fixed the Messages URL + blue-bubble copy.
+**Why it matters:** Judges think they are texting the shop; the conversation never enters Back of House.
+**Suggested fix:** Team owner: add the production env vars (note below), especially `NEXT_PUBLIC_DATA_MODE=live` and `SERVER_URL`. Demo host: set `NEXT_PUBLIC_DATA_MODE=live` in `.env` and restart web. Lane 1: restyle the join copy if needed.
+
+### 2026-10-17 20:50 PT · lane 2 → lane 3 · Ask for a name first (voice + text)
+**Status:** open
+**Where:** `docs/VOICE-AGENT-PROMPT.md`; `POST /voice/tools/identify`; `POST /voice/tools/purpose` now returns `askForName`
+**What:** The phone agent must ask for a name before taking an order, then call `identify_caller`. Paste the updated first message and system prompt. Add webhook tool `identify_caller` → `POST <tunnel>/voice/tools/identify` with `{ handle: "{{system__caller_id}}", name: "<what they said>", callId: "{{system__conversation_id}}" }`. `get_call_purpose` now includes `askForName` / `customerName`. Text already prepends "What's your name?" in `apps/server/src/autonomy.ts` when the customer is unnamed — no agent package change required, though `DRAFT_SYSTEM` may also say to ask if you want the model to do it itself.
+**Why it matters:** Orders and Calls were listing a phone number because unnamed inbound never created a `customers.name`.
+**Suggested fix:** Register `identify_caller`, paste the new first message ("Can I get your name?"), and call `get_call_purpose` then `identify_caller` as the prompt says.
+
+### 2026-10-17 20:40 PT · lane 2 → lane 1, lane 3 · Calls tab + tap-to-call-back
+**Status:** open
+**Where:** `apps/web/src/components/calls/calls-view.tsx`, `view-tabs.tsx` (Calls is key 4; Ask is 5), `control-room.tsx`, `people/people-view.tsx`; `POST /voice/tools/purpose`; `docs/VOICE-AGENT-PROMPT.md`
+**What:** Lane 2 added a **Calls** tab on top of lane 1's Sana'a control room (transcript + the same Approve/Skip as Orders) because it did not exist — transcripts were only a card in People, and there was no call-level skip. Also: "call Maya" now texts a tap-to-call-back when outbound SIP is off.
+- **Lane 1:** this edits files in your `apps/web/**` claim (tabs, control room, People thread grouping, new `components/calls/**`). Please restyle if the Calls pane doesn't match Orders.
+- **Lane 3:** add a third ElevenLabs webhook tool `get_call_purpose` → `POST <tunnel>/voice/tools/purpose` with `{ handle: "{{system__caller_id}}", callId: "{{system__conversation_id}}" }`. Call it once at pickup. Prompt paste is in `docs/VOICE-AGENT-PROMPT.md`.
+**Why it matters:** Without the tool, a callback is greeted as a stranger. Without the tab, the owner cannot approve a phone order the way they approve a text.
+**Suggested fix:** Register the tool; glance at the Calls tab after this PR lands (and after Vercel redeploys — production env vars are still on the team owner).
+
+### 2026-10-17 20:20 PT · lane 2 → lane 1, lane 3, all · Autonomy, owner assistant, and edits in your files
+**Status:** open
+**Where:** `apps/server/src/autonomy.ts`, `owner-assistant.ts`, `voice/calls.ts`; `apps/web/**` (audit, control room, conversations, pass, assistant view, actions); `data/seed/product-facts.json`
+**What:** Lane 2's PR changes behavior every lane relies on (decision row 2026-10-17 "Autonomy"):
+- Plain replies now go out **without** a ticket approval (`proposal.approved`, `via: "agent"`). Orders get a customer check-in first ("Reply YES"), then reach the pass. `AUTONOMY=off` brings back the old flow.
+- **Lane 1:** this PR edits files in your claim: `audit-table.tsx` (trust claim is now "orders or payments sent without you"), `control-room.tsx`, `view-tabs.tsx` (new "Ask" tab, key 5), `conversations/list.tsx` and `thread.tsx` (owner send box, who-sent-it labels, call transcripts), `pass/rail.tsx`, `ticket.tsx`, `done-strip.tsx`, new `pass/hold-strip.tsx`, `lib/actions.ts`, `lib/data/derive.ts`, and `app/api/assistant/*`, `app/api/conversations/*`. Please review after merge and take ownership of the styling.
+- **Lane 3:** new `data/seed/product-facts.json` (13 products, keyed by id; checked against `products.json`). Keep it in sync if the menu changes, and consider adding it to `check-seed.ts`.
+- **All / pitch:** the demo beat changes. Jun's counteroffer now goes customer → check-in → YES → pass → owner approves. The trust line is "no order or payment goes out without the owner", not "nothing goes out".
+**Why it matters:** The demo script, pitch, and `/audit` claim all quote the old rule.
+**Suggested fix:** Lane 1 reviews the web edits; lane 3 updates `submission/*` pitch lines; whoever owns the demo script updates `planning/DEMO-AND-SUBMISSION.md`. Run with `AUTONOMY=off` if the team prefers the old flow for judging.
+
+**Reply (lane 1):** Reviewed and merged into the Orders / Today / People redesign. Lane 1 owns the styling from here. The pass, the conversation list, and the thread components are gone, so each edit moved to its new home. **Waiting on the customer** (open holds) is now a short list under the Orders queue, and tapping a name opens the person. **Ask** is the fourth tab (key 4), restyled to the room. In **People**, callers get a phone icon, the thread starts with the call summary (length, turns, summary), and each outbound message says who sent it: agent on its own, agent checked the order, you, or approved by you. People already had the owner composer. The Orders detail says "Ordered on a phone call" for call tickets. Copy now says "No order or payment link goes out until you approve it." Your `audit-table.tsx` trust change is kept as is. Ask and call sync need live mode; in mock mode they show a toast.
+
+### 2026-10-17 · lane 2 → lane 3 · Voice `say` leaves a dangling "here:"
+**Status:** open
+**Where:** `packages/agents/src/voice.ts`, `speakable()`
+**What:** Removing `{{payment_link}}` leaves the sentence that introduced it: "…ready for you for Saturday pickup at 9am. You can complete your order here: I'll send that over to the owner to confirm…".
+**Why it matters:** The phone agent reads it aloud.
+**Suggested fix:** Drop the whole sentence that contained the token (split on sentence ends, filter the one with the token) before appending the confirmation line.
+
+### 2026-10-17 · lane 2 → lane 1 · Compose box and alternative chips (backend ready)
+**Status:** resolved
 **Where:** the conversation thread and the ticket in `apps/web`; server routes listed in `docs/CONTEXT.md` ("Human in the loop")
 **What:** The team wants three one-press moves on every ticket: approve the AI draft (already there), **pick one of the AI's alternative wordings**, or **write your own message**. The backend is live:
 - Ticket: `payload.alternatives?: string[]` (up to 3) on reply proposals. Show them as small chips under the draft; tapping one calls approve with `{ alternativeIndex: i, includeLinked: true }`. It sends immediately, and the order and payment link are handled the same as the main draft.
 - Thread: a compose box calling `POST /conversations/:id/send { text, clientId }` through a route handler (owner token). Make `clientId` a UUID created when the owner presses Send, so a double click sends once. It sends now, appends the footer for customer threads, and supersedes the pending agent reply there (the ticket leaves the rail via realtime; event `owner.message`). A `{{payment_link}}` in typed text is refused (400); payment links only come from approving an order ticket.
 **Why it matters:** The owner should never retype what the AI already said, never be stuck with one wording, and always be able to just answer.
 **Suggested fix:** Chips on the ticket face, and a one-line composer at the bottom of the thread with Send (⌘↵).
+
+**Reply (lane 1):** Done on `lane/1`. In Orders, alternatives show under "Our reply" as rows with **Send this**, which calls approve with `{ alternativeIndex, includeLinked: true }`. **Write my own** (key `W`) opens a composer in the action bar. People has a composer at the foot of each thread. Both go through `POST /api/conversations/:id/send`, which forwards with the owner token and a `clientId` UUID made on press, so a double click sends once. A 400 shows the server's message. Mock mode mirrors all of it: dedupe, footer, supersede, and `owner.message`.
 
 ### 2026-10-17 · lane 2 → lane 3 · Draft up to 3 alternatives per reply
 **Status:** open
@@ -62,11 +121,13 @@ Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows
 **Why it matters:** Judges reach the shop through the QR → `/join`, which only works on a public URL.
 
 ### 2026-10-17 · lane 2 → lane 1 · Lock the control room before the URL is public
-**Status:** open
+**Status:** resolved
 **Where:** `apps/web/src/app/api/**` route handlers and `/`, `/audit`
 **What:** The route handlers add `x-owner-token` server side and accept any caller. On a public Vercel URL, anyone who finds it can `POST /api/proposals/:id/approve` or `/reject`, `/api/dev/inbound` (fake customer texts, plus model usage), `/api/dev/square-pay/:id`, `/api/dev/mark-paid/:id`, and read `/api/contacts` (customers' phone numbers). `/join` and `/api/join` must stay public.
 **Why it matters:** A judge (or anyone) could approve, reject, or pay tickets mid-demo, or pull the leads list with handles.
 **Suggested fix:** A `src/proxy.ts` (Next 16 middleware) that requires HTTP Basic auth (`CONTROL_ROOM_PASSWORD` env, sensitive) for everything except `/join`, `/join/qr`, `/api/join`, static assets and the OG image. Or Vercel Password Protection (the team is on Pro), but that would also block `/join`, so the middleware is the better fit.
+
+**Reply (lane 1):** Done on `lane/1` in `apps/web/src/proxy.ts`. Once `CONTROL_ROOM_PASSWORD` is set, every page and `/api/*` route needs HTTP Basic auth (any user name, that password). Still public: `/join`, `/join/qr`, `/api/join`, `_next` assets, the icon, and the OG image. With the variable unset nothing changes, so local demos keep working. Tested on a production build: protected routes return 401 with no password or a wrong one and 200 with the right one, and the public paths return 200. **Still needed:** the Vercel team owner has to add `CONTROL_ROOM_PASSWORD` (sensitive) for Production and redeploy.
 
 ### 2026-10-17 · lane 2 → lane 1 · The `/join/qr` code points at localhost on the demo laptop
 **Status:** resolved
@@ -88,7 +149,7 @@ Then redeploy production (Deployments → latest → Redeploy). Check: `/` shows
 **Where:** the lane 2 → lane 3 notes below, `packages/agents/src/*`
 **What (updated 16:35, after [PR #37](https://github.com/mojipao/DubHacks2026/pull/37)):** Thanks. The allergy flag, the "what is your usual order?" reply, the zone-less `neededBy`, and the gateway note are resolved. Still open, in demo order:
 1. **"Saturday at 9am" becomes 8am** and is flagged `outside_hours`.
-2. **"hi" gets "We can't take orders through this message."**
+2. **"hi" gets "We can't take orders through this message."** — lane 2 applied the suggested fix on `lane/2` (draft facts, Guard, split-turn combine) after the live Aahil thread. Close when that PR merges.
 3. **Win-back:** lane 2 now fills `RegularCadence.daysSinceLastContact` from the newest inbound message per customer, simulated texts included (PR after #38). Please confirm Elena wins once Maya has texted, then close that note.
 
 Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredientNeeds` (with `reorderPoint`/`unitCostCents`), and `getNextOpenDays`. All of them, plus `getRegularCadences`, are on `SupabaseDataPort` (`apps/server/src/data-port.ts`); please drop that ask from your row.
@@ -126,6 +187,8 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **What:** A first "hi" from a new number got: "Hi there! We can't take orders through this message, but you can see our full menu on our website. Larch & Rye".
 **Why it matters:** Ordering by text is the product. Judges' first message is often "hi".
 **Suggested fix:** Greet and invite an order ("Hi! What can we get started for you? We're open Sat 8–2…"). Never say orders aren't taken by text.
+
+**Reply (lane 2):** Applied on `lane/2` at the human's request after a live QR thread (Aahil) promised coffee, then said "we can't take orders through this chat" when given a pickup time. Draft facts no longer say "nothing orderable, redirect"; Guard rejects that refusal and a ready-promise with no order; item-then-time turns now combine. Lane 3: merge `main` before the next agents PR. Move this to Resolved once that PR lands.
 
 ### 2026-10-17 15:10 PT · lane 2 → lane 1 · New route for a "customer pays" button
 **Status:** open
@@ -204,7 +267,7 @@ Also: your `docs/STATUS.md` row still asks lane 2 for `getDayLoad`, `getIngredie
 **If the 15-minute test fails:** keep the pull-mode fallback — owner texts `?`, gets the pending list as a reply. I will post the result here either way.
 
 ### 2026-10-18 18:20 PT · lane 3 → lane 2 · Voice: the agent side is ready, the route is yours
-**Status:** open
+**Status:** resolved
 **Where:** `apps/server` (new route); handler is `handleVoiceTurn` in `@boh/agents`. Setup runbook: `docs/VOICE-SETUP.md`
 **What:** We are adding voice through Photon's SIP path: Photon carries the call to **ElevenLabs**, which runs the live conversation, and ElevenLabs calls a tool on our server mid-call. That tool runs the normal pipeline, so **a phone order becomes the same ticket on the same pass**, waiting on the same owner approval. Photon does no speech-to-text, no AI and no text-to-speech — it is the carrier.
 **What I have done:** `packages/agents/src/voice.ts` exports `handleVoiceTurn(request, ctx, storeInbound)`. It normalises the spoken transcript ("four dozen" → "4 dozen"), runs `handleInbound`, and returns speech-safe output. 8 tests cover it. It has no database client, so the storage half is injected.
@@ -222,6 +285,7 @@ return c.json(response);
 **One schema question for you:** `conversations.platform` is `check (platform in ('imessage','simulated'))`, so a voice conversation needs `'voice'` added in a new migration. `supabase/**` is yours. If you would rather not migrate at this hour, voice can ride on `'simulated'` and we lose only the channel label on the ticket — your call, and either is fine by me.
 **Hard stop 3:00 AM PT.** If voice is not answering by then we drop it; everything here is additive and nothing touches the iMessage loop.
 
+**Reply (lane 2):** Done. `POST /voice/tools/order` runs `handleVoiceTurn` (platform `simulated` for now, no migration), plus `POST /voice/tools/availability` for live stock and capacity, the ability callers were missing. Both are registered on the ElevenLabs agent as tools. One wording issue: `speakable()` leaves "You can complete your order here:" dangling before the payment-link promise. See the new note.
 ### 2026-10-18 18:50 PT · lane 3 → everyone · Voice line is live; four new env vars to collect
 **Status:** open
 **Where:** the shared `.env`; setup in `docs/VOICE-SETUP.md`, agent config in `docs/VOICE-AGENT-PROMPT.md`

@@ -4,11 +4,14 @@ import { env, features } from "./env.ts";
 import { HttpError } from "./execute.ts";
 import { maskHandle } from "./inbound.ts";
 import { photonStatus } from "./photon/inbound.ts";
+import { assistant } from "./routes/assistant.ts";
 import { contacts } from "./routes/contacts.ts";
+import { ops } from "./routes/ops.ts";
 import { conversations } from "./routes/conversations.ts";
 import { dev } from "./routes/dev.ts";
 import { join } from "./routes/join.ts";
 import { proposals } from "./routes/proposals.ts";
+import { voice } from "./routes/voice.ts";
 import { webhooks } from "./routes/webhooks.ts";
 
 export const app = new Hono();
@@ -34,12 +37,19 @@ app.get("/health", (c) =>
     ownerHandle: env.OWNER_HANDLE ? maskHandle(env.OWNER_HANDLE) : null,
     ownerNotify: env.OWNER_NOTIFY,
     squareWebhook: Boolean(env.SQUARE_WEBHOOK_SIGNATURE_KEY && env.SQUARE_WEBHOOK_URL),
+    voiceTools: Boolean(env.VOICE_TOOL_SECRET),
+    autonomy: env.AUTONOMY,
+    callSync: Boolean(env.ELEVENLABS_API_KEY && env.ELEVENLABS_AGENT_ID),
+    voiceCallback: Boolean(env.PHOTON_VOICE_NUMBER),
   }),
 );
 
 app.route("/proposals", proposals);
 app.route("/dev", dev);
 app.route("/contacts", contacts);
+app.route("/ops", ops);
 app.route("/conversations", conversations);
 app.route("/join", join);
 app.route("/webhooks", webhooks);
+app.route("/voice", voice);
+app.route("/assistant", assistant);

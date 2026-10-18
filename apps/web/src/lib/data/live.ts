@@ -15,6 +15,7 @@ import {
   markPaid,
   receiveDelivery,
   rejectProposal,
+  sendOwnerMessage,
   retryProposal,
   runWinbackScan,
   simulateInbound,
@@ -294,7 +295,7 @@ async function fetchSnapshot(sb: BrowserDb): Promise<Omit<DataSnapshot, "connect
   };
 }
 
-const REALTIME_TABLES = ["conversations", "messages", "proposals", "orders", "ingredients", "events"] as const;
+const REALTIME_TABLES = ["conversations", "messages", "proposals", "orders", "ingredients", "events", "customers"] as const;
 const SUBSCRIBE_TIMEOUT_MS = 5000;
 const POLL_MS = 3000;
 /** A single agent run writes a burst of rows; one refetch covers the whole burst. */
@@ -404,6 +405,10 @@ export function createLiveSource(): DataSource {
     },
     async approve(id, opts) {
       await approveProposal(id, opts);
+      scheduleRefresh();
+    },
+    async sendMessage(conversationId, text, clientId) {
+      await sendOwnerMessage(conversationId, text, clientId);
       scheduleRefresh();
     },
     async reject(id, opts) {

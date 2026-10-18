@@ -18,23 +18,32 @@ const QUICK_TYPES = [
   { label: "Stock", value: "inventory." },
 ];
 
-/** The trust claim, from events only: every outbound message must trace back to an owner approval. */
+/**
+ * The trust claim, from events only: the agent may answer and check orders on its own, but no order
+ * or payment link ever goes out without the owner. `sentWithoutApproval` counts orders created
+ * from a ticket the owner didn't approve, and must stay 0.
+ */
 export function trustSummary(events: UiEvent[]) {
   const approved = events.filter((e) => e.type === "proposal.approved" && !e.data.retry);
-  const approvedIds = new Set(approved.map((e) => e.subjectId));
+  const byOwner = approved.filter((e) => e.data.via !== "agent");
+  const byAgent = new Set(approved.filter((e) => e.data.via === "agent").map((e) => e.subjectId));
   const sends = events.filter((e) => e.type === "message.sent");
+  const agentSends = sends.filter(
+    (e) => byAgent.has(String(e.data.proposalId ?? "")) || String(e.data.key ?? "").startsWith("hold"),
+  ).length;
   return {
     executed: events.filter((e) => e.type === "proposal.executed").length,
-    approved: approved.length,
-    approvedByText: approved.filter((e) => e.data.via === "imessage").length,
+    approved: byOwner.length,
+    approvedByText: byOwner.filter((e) => e.data.via === "imessage").length,
     sent: sends.length,
-    sentWithoutApproval: sends.filter((e) => !approvedIds.has(String(e.data.proposalId ?? ""))).length,
+    sentByAgent: agentSends,
+    sentWithoutApproval: events.filter((e) => e.type === "order.created" && byAgent.has(String(e.data.proposalId ?? ""))).length,
   };
 }
 
 function actorTone(actor: string) {
   if (actor === "owner") return "text-basil";
-  if (actor === "customer") return "text-sky";
+  if (actor === "customer") return "text-brew";
   if (actor === "agent:guard") return "text-tomato";
   if (actor.startsWith("agent:")) return "text-amber";
   return "text-fg/80";
@@ -69,12 +78,10 @@ export function AuditTable() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="badge-brand mb-2">
-              Audit {mode === "mock" ? "· fixtures" : ""}
-            </p>
             <h1 className="heading text-4xl text-fg">Every action, on the record</h1>
+            <p className="mt-2 text-[15px] text-muted">{mode === "mock" ? "Demo data. " : ""}Every message, approval, and payment, in order.</p>
           </div>
-          <Link href="/" className="rounded-full bg-ticket px-4 py-2 text-[13px] font-semibold text-ink hover:bg-ticket/90">
+          <Link href="/shop" className="rounded-full bg-ticket px-4 py-2 text-[13px] font-semibold text-ink hover:bg-ticket/90">
             ← Control room
           </Link>
         </div>
@@ -90,10 +97,10 @@ export function AuditTable() {
               label: "approved by the owner",
               sub: trust.approvedByText > 0 ? `${trust.approvedByText} by text` : undefined,
             },
-            { n: trust.sent, label: "messages sent" },
+            { n: trust.sent, label: "messages sent", sub: trust.sentByAgent > 0 ? `${trust.sentByAgent} by the agent on its own` : undefined },
           ].map((s) => (
             <div key={s.label} className="bg-panel px-4 py-3">
-              <div className="font-mono text-[26px] font-semibold text-fg tabular-nums">{s.n}</div>
+              <div className="text-[28px] font-bold text-ink tabular-nums">{s.n}</div>
               <div className="text-[13px] text-muted">
                 {s.label}
                 {s.sub ? <span className="text-basil"> · {s.sub}</span> : null}
@@ -103,7 +110,7 @@ export function AuditTable() {
           <div
             className={cn(
               "flex items-center gap-3 px-4 py-3",
-              trust.sentWithoutApproval === 0 ? "bg-basil/15" : "bg-tomato/20",
+              trust.sentWithoutApproval === 0 ? "bg-paper" : "bg-[color-mix(in_srgb,var(--qamar)_12%,var(--paper))]",
             )}
           >
             <ShieldCheck
@@ -115,13 +122,13 @@ export function AuditTable() {
             <div>
               <div
                 className={cn(
-                  "font-mono text-[26px] font-semibold tabular-nums",
+                  "text-[28px] font-bold tabular-nums",
                   trust.sentWithoutApproval === 0 ? "text-basil" : "text-tomato",
                 )}
               >
                 {trust.sentWithoutApproval}
               </div>
-              <div className="text-[13px] text-fg/80">sent without approval</div>
+              <div className="text-[13px] text-fg/80">orders or payments sent without you</div>
             </div>
           </div>
         </section>
@@ -167,7 +174,7 @@ export function AuditTable() {
 
         <div className="surface overflow-x-auto rounded-[22px]">
           <table className="w-full text-left text-[13px]">
-            <thead className="bg-panel font-mono text-[11px] tracking-wider text-muted uppercase">
+            <thead className="bg-surface-2 text-[13px] font-semibold text-muted">
               <tr>
                 <th className="w-8 px-2 py-2" />
                 <th className="px-3 py-2">Time</th>

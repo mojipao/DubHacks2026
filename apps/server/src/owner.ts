@@ -4,6 +4,7 @@ import { db } from "./db.ts";
 import { env } from "./env.ts";
 import { logEvent } from "./events.ts";
 import { approve, reject, sendAndRecord } from "./execute.ts";
+import { answerOwnerText } from "./owner-assistant.ts";
 
 type Proposal = Tables<"proposals">;
 type Conversation = Tables<"conversations">;
@@ -19,9 +20,9 @@ async function ownerConversation(): Promise<Conversation | null> {
     .from("conversations")
     .select("*")
     .eq("role", "owner")
-    .order("last_message_at", { ascending: false })
-    .limit(1);
-  return data?.[0] ?? null;
+    .order("last_message_at", { ascending: false });
+  const list = data ?? [];
+  return list.find((c) => c.platform === "imessage" && c.photon_space_id) ?? list[0] ?? null;
 }
 
 async function reply(text: string, key: string) {
@@ -117,8 +118,10 @@ export async function handleOwnerCommand(text: string, messageId: string) {
   const key = `owner-reply:${messageId}`;
 
   if (!match || !verb) {
-    await logEvent("owner", "owner.command", null, { command: "unknown", text: text.slice(0, 80) });
-    return reply(HELP, key);
+    // Not a ticket command: stock questions, texts to customers, calls.
+    const answer = await answerOwnerText(text).catch((err) => `Couldn't do that: ${err instanceof Error ? err.message : String(err)}`);
+    await logEvent("owner", "owner.command", null, { command: answer ? "assistant" : "unknown", text: text.slice(0, 80) });
+    return reply(answer ?? `${HELP} You can also ask "how's our stock?" or "text regulars: …".`, key);
   }
 
   if (verb === "?") {

@@ -5,8 +5,8 @@ Agents: read this file after `AGENTS.md` and before writing code. If you change 
 ## Status
 
 - **Product:** Back of House. An operations agent for small food businesses. Customers text the shop on iMessage through Photon; agents read the shop's customers, orders, capacity, and stock to propose replies, Square payment links, and supplier reorders, including counteroffers when a request can't be met as asked; nothing goes out until the owner approves it in the live control room or by replying to an iMessage.
-- **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-croissant counteroffer with a linked butter reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
-- **Demo business:** Kettle & Crow Coffee, a fictional Seattle coffee shop (switched from the Larch & Rye bakery on 2026-10-17; see `docs/DECISIONS.md`). All data synthetic. Demo numbers unchanged: Sat 12/36 butter croissants committed, 48 → 24 Sat + 24 Sun with a 3 kg butter reorder ($38.40), Maya's usual $18.50, Jun's 48 = $216.00.
+- **`v-core` scope (Sat 11 PM):** real-phone order and payment loop, the 4-dozen-milk-cake counteroffer with a linked ghee reorder, the agent trace, deterministic Guard flags, and the friction saved counter. See `planning/README.md`.
+- **Demo business:** **Mokha Coffee House**, a fictional Seattle Yemeni coffee house (2026-10-17: Larch & Rye bakery → Kettle & Crow Coffee → Mokha Coffee House; see `docs/DECISIONS.md`). Menu: milk cake, pistachio maamoul, bint al-sahn, sabaya, sesame kaak, malawah; Yemeni coffee (Haraz), Adeni chai, qishr, Mokha latte, cold brew, coffee box, beans. All data synthetic. Demo numbers unchanged: Sat 12/36 milk cakes committed, 48 → 24 Sat + 24 Sun with a 3 kg ghee reorder ($38.40), Maya's usual $18.50 (2 pistachio maamoul + Adeni chai), Jun's 48 = $216.00.
 - **Title track:** Cook Smarter
 - **Sponsored tracks:** Photon, VEYZL, SideShift
 - **Stack:** TypeScript on Node 24, pnpm workspaces. Next.js control room, Hono server, Supabase Postgres + Realtime, Photon 2.0 beta API, Square sandbox, Vercel AI SDK. Details: `planning/ARCHITECTURE.md`.
@@ -80,7 +80,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 - `SeedOrder` carries no status, as specced. Seed `kind: "history"` as `fulfilled` and `kind: "upcoming"` as `paid`; the committed load the counteroffer reads comes from the upcoming orders.
 - `daysAgo` and `pickupDay` resolve at **seed time**, in the business timezone. `next_sun` is **`next_sat` + 1 day**, not the first Sunday after the seed date, which for a Saturday seed would be demo day itself.
 - History orders are placed by offset from the seed day assuming a **Saturday seed**, so no pickup lands on a closed Monday. Seeding on another day rotates the pattern harmlessly.
-- The numbers the demo depends on: butter croissant capacity 36/day, 12 committed Saturday and 6 Sunday, butter on hand covering about 30 more croissants. So 4 dozen for Saturday splits into 24 Saturday + 24 Sunday with a 3 kg butter reorder from Rainier Dairy ($38.40). Maya's usual totals $18.50 and 48 butter croissants total $216.00, which is where `planning/ARCHITECTURE.md`'s example numbers come from.
+- The numbers the demo depends on: milk cake capacity 36/day, 12 committed Saturday and 6 Sunday, ghee on hand covering about 30 more milk cakes. So 4 dozen for Saturday splits into 24 Saturday + 24 Sunday with a 3 kg ghee reorder from Rainier Dairy ($38.40). Maya's usual totals $18.50 and 48 milk cakes total $216.00, which is where `planning/ARCHITECTURE.md`'s example numbers come from.
 - Phone numbers never appear in `data/`; demo personas are matched by `personaKey` against `DEMO_PERSONAS` at seed time. `check-seed.ts` fails if a number or email ever lands there.
 
 ## Interfaces other agents must not break
@@ -91,12 +91,23 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 
 ## Server (lane 2, live on `main`)
 
+- **Autonomy is on by default** (`AUTONOMY=on|off`; see `docs/DECISIONS.md`). Plain answers go out without the owner (`via: "agent"`); orders get a data-only customer check-in ("Reply YES"), then land on the pass for the owner. Orders, payment links, and reorders always need the owner. Demo scripts and pitch lines that say "nothing goes out without the owner" should say "no order or payment goes out without the owner".
+- Product facts (size, ingredients, allergens) live in `data/seed/product-facts.json`, keyed by product id, read by the order check-in and the voice tools.
+- Owner assistant: `POST /assistant/ask` (stock, previewed customer texts, calls), `POST /assistant/campaigns/send`, `POST /assistant/calls/sync`, `POST /assistant/calls/review`; `POST /conversations/:id/send` for the owner's own message. Owner token. Owner texts that aren't Y/N/? go to the same assistant.
+- Finished ElevenLabs calls are polled every 20 s (needs `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`) and land as messages plus a `call.transcribed` event. People shows the mixed thread (phone icon + call summary); phone-order tickets still go to Orders. There is no separate Calls tab.
+- Outbound SIP is off (Photon 402). "Call Maya" texts a tap-to-call-back using `PHOTON_VOICE_NUMBER` (`call.callback_requested`). When they dial in, `POST /voice/tools/purpose` tells the agent why.
+
 - Run: `pnpm --filter @boh/server dev` (port 8787). Demo host: `pnpm demo:host` (sets `PHOTON_INBOUND=on`, `OWNER_NOTIFY=on`). Missing Photon or Square keys fall back to simulated sends and payment links (`https://simulated.invalid/pay/...`), so every route works on any laptop.
 - **Square sandbox verified live** (payment link, signed webhook through ngrok, split orders paid together). Sandbox links can't be paid in a browser; `POST /dev/square-pay/:orderId` pays the link's order for real (see `docs/SQUARE-SANDBOX.md` step 8).
 - `pnpm seed` without `DEMO_PERSONAS` no longer clears persona phones another machine set.
 - **Web on Vercel:** team DubHacks26, project `dub-hacks2026`, root `apps/web`, auto-deploys from this repo; production URL `https://dub-hacks2026.vercel.app`. Preview env vars are set; production ones need the team owner (see NOTES).
 - **Human in the loop:** approve sends immediately; `POST /proposals/:id/approve { alternativeIndex }` sends one of the agent's alternative wordings (`ReplyPayload.alternatives`, optional, up to 3); `POST /conversations/:id/send { text, clientId }` sends the owner's own message, closes pending agent replies there, and the agents read it on the next text. Owner token.
+- **`/join`:** only `NEXT_PUBLIC_DATA_MODE=mock` may return a placeholder number. Any other value forwards to Photon. The join page's Messages link must keep the bubble blue; green SMS never reaches the shop.
+- **Names first:** the phone agent asks for a name before taking an order (`POST /voice/tools/identify`); texts from unnamed people get "What's your name?" on the first reply. The name is stored on `customers` so Orders, Calls, and People list a person instead of a number. `/join` still collects the name up front.
+- Phone-call tickets live on a `simulated` thread (there is no Photon space for SIP). Approve still **texts the payment link over iMessage** when that number has a Photon space (they texted or they are the owner). Without a space, the message is only stored on the call transcript.
+- **Voice tools (ElevenLabs → server):** `POST /voice/tools/availability` (live menu, prices, per-day capacity, stock; weekday names mean the next one, like the agents), `POST /voice/tools/order` (runs `handleVoiceTurn`, the ticket lands on the pass), `POST /voice/tools/purpose` (pending tap-to-call-back + caller name; `askForName` when unknown), and `POST /voice/tools/identify` (saves the name they just said). Header `x-voice-secret: $VOICE_TOOL_SECRET`. Register them on the ElevenLabs agent as `check_availability`, `place_order`, `get_call_purpose`, and `identify_caller`, pointing at the ngrok URL, with the secret in ElevenLabs' secret store. Voice conversations use platform `simulated` until a migration adds `voice`. First message: "Can I get your name?"
 - **Leads:** `GET /contacts` (stage, money, counts per conversation; `?format=csv` to export) and `GET /contacts/:conversationId/messages` (paged full history). Owner token.
+- **House / ops:** `GET /ops` rolls up the funnel, Square-paid text sales (by day and product), and ingredient days-of-cover / restock-by from paid order items × recipes. The control room **House** tab (key 5) reads it. Seeded history is labeled separately from online Square payments.
 - Every route in the architecture table exists, plus: `POST /proposals/:id/retry` (failed only; reuses stored orders and payment link), `POST /dev/receive-delivery` (moves `on_order` into `on_hand`, writes `inventory.received`).
 - `/dev/inbound` accepts `"handle": "owner"` for the simulator's Owner persona. `/health` shows the owner handle masked, never the number.
 - `/dev/winback-scan` returns `501` until `@boh/agents` exports `runWinbackScan`. **Lane 3:** each win-back draft must list the customer in `reads` (`{ table: "customers", id }`); the server uses the first one to pick the conversation.
@@ -124,7 +135,7 @@ The full table is in `planning/ARCHITECTURE.md` under "Environment variables." V
 **Unprompted sends work (2026-10-18, verified on a handset).** A message sent into an existing space **2 minutes after** the customer's last inbound, with nothing triggering it, was **delivered to the phone**. So a shared line *can* message an open conversation on its own.
 
 What that unblocks, both previously at risk:
-- **Owner approval by iMessage.** The server can push "Jun wants 48 croissants… Reply Y K7" to the owner's space. The owner must have texted the line once first, so that space exists.
+- **Owner approval by iMessage.** The server can push "Jun wants 48 milk cakes… Reply Y K7" to the owner's space. The owner must have texted the line once first, so that space exists.
 - **The win-back scan.** A drafted win-back can actually reach a customer who has an open conversation.
 
 Still true: a shared line **cannot start** a conversation. The other party must have texted first. So win-back reaches customers with an existing space and nobody else, and `RegularCadence.hasOpenConversation` is the field that decides which. A 15-minute gap is under test; if it fails, the owner channel falls back to pull mode (the owner texts `?` and gets the pending list as a reply).

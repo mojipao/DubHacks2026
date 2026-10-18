@@ -52,7 +52,7 @@ describe.skipIf(!live)(`live model path (${live ? modelId() : "skipped"})`, () =
 
     const result = await understand(
       {
-        text: "Can I get 4 dozen croissants for Saturday 9am?",
+        text: "Can I get 4 dozen milk cakes for Saturday 9am?",
         catalog,
         todayLocal: "2026-10-17",
         timezone: w.business.timezone,
@@ -66,8 +66,8 @@ describe.skipIf(!live)(`live model path (${live ? modelId() : "skipped"})`, () =
     // path quietly catch a failure and hand back a keyword reading?
     expect(result.source).toBe("model");
     expect(result.value.items.length).toBeGreaterThan(0);
-    // "4 dozen croissants" has to resolve to 48 butter croissants through the aliases.
-    expect(result.value.items[0]?.productId).toBe("butter-croissant");
+    // "4 dozen milk cakes" has to resolve to 48 milk cakes through the aliases.
+    expect(result.value.items[0]?.productId).toBe("milk-cake");
     expect(result.value.items[0]?.qty).toBe(48);
     expect(result.value.pickupLocal).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
     // Saturday means the next one, never today.
@@ -94,7 +94,7 @@ describe.skipIf(!live)(`live model path (${live ? modelId() : "skipped"})`, () =
   }, 30_000);
 
   it("drafts Jun's counteroffer with one payment link and no invented total", async () => {
-    const w = world("Can I get 4 dozen croissants for Saturday 9am?", JUN);
+    const w = world("Can I get 4 dozen milk cakes for Saturday 9am?", JUN);
     const steps: { step: string; detail: Record<string, unknown> }[] = [];
     const ctx: AgentContext = {
       data: w.port,

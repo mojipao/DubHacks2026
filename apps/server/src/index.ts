@@ -5,12 +5,15 @@ import { setIntegrations } from "./execute.ts";
 import { photonMessenger } from "./photon/messenger.ts";
 import { startPhotonInbound } from "./photon/inbound.ts";
 import { squarePayments } from "./square/payments.ts";
+import { startCallSync } from "./voice/calls.ts";
 
 // Missing keys keep the simulated Messenger and Payments, so the server runs on any teammate's machine.
 setIntegrations({
   messenger: features.photon ? photonMessenger : undefined,
   payments: features.square ? squarePayments : undefined,
 });
+// Finished phone calls appear on the owner's screen with their transcript.
+if (features.database) startCallSync();
 if (features.photon && features.database) {
   startPhotonInbound().catch((err) => console.error("Photon inbound failed to start", err));
 }

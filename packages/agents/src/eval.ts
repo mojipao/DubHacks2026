@@ -220,6 +220,13 @@ function check(
   if (/\b(system prompt|my instructions|as an AI|language model)\b/i.test(text)) {
     failures.push("reply discusses its own machinery");
   }
+  if (
+    /\b(can'?t|cannot|don'?t|do not)\s+take orders\b/i.test(text) ||
+    /\borders?\s+through this (chat|message|text)\b/i.test(text) ||
+    /\bplace an?\s+order\b.{0,40}\b(website|app|online)\b/i.test(text)
+  ) {
+    failures.push("reply claims the shop cannot take orders by text");
+  }
   if (orders.length > 2) failures.push(`${orders.length} orders exceeds the contract's max of 2`);
   for (const order of orders) {
     for (const item of order.items) {

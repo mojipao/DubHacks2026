@@ -31,7 +31,7 @@ const INJECTION_PATTERNS: readonly RegExp[] = [
 
 const OFF_POLICY_PATTERNS: readonly RegExp[] = [
   /\bfor\s+free\b/i,
-  /\bfree\s+(bread|food|pastry|pastries|croissants?|coffee|stuff|everything|order)\b/i,
+  /\bfree\s+(bread|food|pastry|pastries|milk cakes?|coffee|stuff|everything|order)\b/i,
   /\b100%\s*off\b/i,
   /\bgive\s+me\s+(everything|it\s+all)\b/i,
   /\b(full\s+)?refund\b/i,
@@ -231,7 +231,39 @@ export function checkReply(text: string, facts: GuardFacts): GuardResult {
   // gets a reply that does not contain the word, rather than one that denies having one.
   if (/\b(prompts?|instructions?|language\s+model|\bLLM\b|as\s+an\s+AI|AI\s+(model|assistant))\b/i.test(text)) {
     blocking.push(
-      "Do not use the words prompt, instruction, or AI, and do not mention how you work. Reply only as the coffee shop.",
+      "Do not use the words prompt, instruction, or AI, and do not mention how you work. Reply only as the coffee house.",
+    );
+  }
+
+  // 10. Ordering by text is the product. A live model has drafted "we can't take orders
+  //     through this chat" on "hi" and on a pickup time, which sends the customer away.
+  if (
+    /\b(can'?t|cannot|can not|don'?t|do not|unable to)\s+(take|accept|place|process)\s+orders?\b/i.test(text) ||
+    /\borders?\s+(through|in|via|on)\s+this\s+(chat|message|text|thread)\b/i.test(text) ||
+    /\b(place\s+an?\s+order|see our menu|full menu|the menu)\b.{0,40}\b(website|app|online)\b/i.test(text) ||
+    /\b(website|app)\b.{0,30}\b(menu|order)\b/i.test(text)
+  ) {
+    blocking.push(
+      "Do not say the shop cannot take orders by text, and do not send them to a website or app. This shop takes orders by iMessage. If they asked for the menu, list items and prices here.",
+    );
+  }
+
+  // 10b. "what's the menu?" must get prices, not hours.
+  if (/\bmenu\b/i.test(facts.inboundText) && !facts.hasOrder) {
+    if (!/\$\s?\d/.test(text)) {
+      blocking.push("They asked for the menu. List items with their menu prices from the facts. Do not answer with hours.");
+    }
+  }
+
+  // 11. Without an attached order, never promise that something is ready or being made.
+  if (
+    !facts.hasOrder &&
+    /\b(we('ll| will) (get|have|make|prepare)\b.{0,60}\bready\b|ready for (you|pickup)|let you know when (it'?s|your order is) ready)\b/i.test(
+      text,
+    )
+  ) {
+    blocking.push(
+      "Do not promise anything is being prepared: no order is scheduled. Ask for the missing item or pickup time instead.",
     );
   }
 
