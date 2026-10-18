@@ -195,14 +195,14 @@ async function deliveryConversation(conversation: Conversation): Promise<Convers
 export async function sendAndRecord(conversation: Conversation, body: string, proposalId: string | null, idempotencyKey?: string) {
   const via = await deliveryConversation(conversation);
   const sent = await messenger.send({ conversation: via, text: body, proposalId: proposalId ?? "", idempotencyKey });
-  const write = async (convId: string) => {
+  const write = async (convId: string, photonMessageId: string | null) => {
     const { data: message, error } = await db()
       .from("messages")
       .insert({
         conversation_id: convId,
         direction: "outbound",
         body,
-        photon_message_id: sent.photonMessageId,
+        photon_message_id: photonMessageId,
         status: "sent",
       })
       .select("id")
@@ -211,9 +211,11 @@ export async function sendAndRecord(conversation: Conversation, body: string, pr
     await db().from("conversations").update({ last_message_at: new Date().toISOString() }).eq("id", convId);
     return message;
   };
-  const message = await write(conversation.id);
   // The call transcript stays on the simulated thread; the iMessage thread also gets the text the phone received.
-  if (via.id !== conversation.id) await write(via.id);
+  // One send, one Photon id: it belongs to the thread it went out on (photon_message_id is unique).
+  const rerouted = via.id !== conversation.id;
+  const message = await write(conversation.id, rerouted ? null : sent.photonMessageId);
+  if (rerouted) await write(via.id, sent.photonMessageId);
   // `key` says why it went out (hold:, hold-yes:, campaign:, owner-message:, owner-reply:, notify:), for the owner's log.
   await logEvent("system", "message.sent", { type: "message", id: message.id }, {
     proposalId,
