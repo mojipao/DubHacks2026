@@ -79,7 +79,7 @@ export function ControlRoom() {
       if (e.key === "r" || e.key === "R") {
         e.preventDefault();
         void reject(focused.id, { includeLinked: hasChildren })
-          .then(() => toast.message("86'd"))
+          .then(() => toast.message(hasChildren ? "Skipped both" : "Skipped"))
           .catch((err: Error) => toast.error(err.message));
       }
       if (e.key === "e" || e.key === "E") {
@@ -143,6 +143,7 @@ export function ControlRoom() {
       <div className="surface sticky top-3 z-30 rounded-full bg-surface/90 backdrop-blur-md">
         <TopBar
           onOpenSim={() => setSimOpen(true)}
+          onOpenKeys={() => setHelpOpen(true)}
           tabs={<ViewTabs view={view} onChange={setView} counts={counts} />}
         />
       </div>

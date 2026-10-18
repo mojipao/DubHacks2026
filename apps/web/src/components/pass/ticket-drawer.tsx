@@ -313,9 +313,14 @@ export function TicketDrawer({
                 </GlowButton>
                 <GlowButton
                   tone="tomato"
-                  onClick={() => run(reject(proposal.id, { includeLinked: children.length > 0 }), "86'd")}
+                  onClick={() =>
+                    run(
+                      reject(proposal.id, { includeLinked: children.length > 0 }),
+                      children.length > 0 ? "Skipped both" : "Skipped",
+                    )
+                  }
                 >
-                  {children.length > 0 ? "Reject both" : "Reject"}
+                  {children.length > 0 ? "Skip both" : "Skip"}
                 </GlowButton>
                 {children.length > 0 && (
                   <span className="text-[12px] text-muted">Includes the linked reorder.</span>

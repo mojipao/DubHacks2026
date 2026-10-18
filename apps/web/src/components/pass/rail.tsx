@@ -126,7 +126,7 @@ export function PassRail({
         .catch((e: Error) => toast.error(e.message)),
     onReject: () =>
       void reject(p.id)
-        .then(() => toast.message("86'd"))
+        .then(() => toast.message("Skipped"))
         .catch((e: Error) => toast.error(e.message)),
     onRetry: () =>
       void retry(p.id)
@@ -146,12 +146,14 @@ export function PassRail({
 
   return (
     <section className="surface relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden rounded-[28px]">
-      <div className="relative flex flex-wrap items-end justify-between gap-2 px-6 pt-5 pb-1">
+      <div className="relative flex flex-wrap items-end justify-between gap-3 px-6 pt-6 pb-2">
         <div>
-          <h1 className="heading text-[30px] text-fg">Waiting for you</h1>
-          <p className="mt-1 text-[14px] text-muted">The agents drafted these. Nothing goes out until you approve it.</p>
+          <h1 className="heading text-[34px] text-fg">Waiting for you</h1>
+          <p className="mt-1.5 max-w-[42ch] text-[16px] leading-snug text-muted">
+            The agents drafted these. Nothing goes out until you approve it.
+          </p>
         </div>
-        <span className="text-[13px] font-semibold text-muted">
+        <span className="text-[15px] font-semibold text-muted">
           {pendingCount} waiting
           {hiddenCount > 0 ? ` · ${hiddenCount} more below` : ""}
         </span>
@@ -175,12 +177,14 @@ export function PassRail({
                 >
                   {children.length > 0 ? (
                     <div className="relative">
-                      <div className="mb-3 flex items-center gap-2">
-                        <span className="badge-brand">
+                      <div className="mb-3 flex flex-wrap items-center gap-2">
+                        <span className="badge-brand text-[13px]">
                           <Link2 className="size-3.5" />
                           These go together
                         </span>
-                        <span className="text-[13px] text-muted">Approve both and the reply and restock go out in one step.</span>
+                        <span className="text-[14px] text-muted">
+                          Approve both and the reply and restock go out in one step.
+                        </span>
                       </div>
                       <div className="grid gap-3 md:grid-cols-2">
                         {ticket(parent, {
@@ -190,11 +194,11 @@ export function PassRail({
                               .catch((e: Error) => toast.error(e.message)),
                           onRejectBoth: () =>
                             void reject(parent.id, { includeLinked: true })
-                              .then(() => toast.message("86'd both"))
+                              .then(() => toast.message("Skipped both"))
                               .catch((e: Error) => toast.error(e.message)),
                         })}
                         {children.map((child) => (
-                          <div key={child.id}>{ticket(child)}</div>
+                          <div key={child.id}>{ticket(child, { linkedChild: true })}</div>
                         ))}
                       </div>
                     </div>

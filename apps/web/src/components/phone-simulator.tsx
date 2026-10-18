@@ -11,7 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { BRAND_SHORT, BUSINESS } from "@/lib/business";
+import { BRAND_SHORT, SHOP_NAME } from "@/lib/business";
 import { useStore } from "@/lib/data/store";
 import type { UiCustomer } from "@/lib/data/types";
 import { money } from "@/lib/format";
@@ -188,7 +188,7 @@ export function PhoneSimulator({
                     {personaId === "owner" ? "BH" : BRAND_SHORT.split(/\s*&\s*|\s+/).map((w) => w[0]).join("&")}
                   </div>
                   <div className="mt-0.5 text-[11px] text-fg/90">
-                    {personaId === "owner" ? "Back of House" : BUSINESS.name}
+                    {personaId === "owner" ? "Back of House" : SHOP_NAME}
                   </div>
                 </div>
                 <div className="w-5" />
